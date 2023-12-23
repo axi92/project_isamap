@@ -122,11 +122,6 @@ const router = createRouter({
           component: () => import('@/views/utilities/Icons.vue')
         },
         {
-          path: '/pages/timeline',
-          name: 'timeline',
-          component: () => import('@/views/pages/Timeline.vue')
-        },
-        {
           path: '/pages/empty',
           name: 'empty',
           component: () => import('@/views/pages/Empty.vue')
@@ -135,11 +130,6 @@ const router = createRouter({
           path: '/pages/crud',
           name: 'crud',
           component: () => import('@/views/pages/Crud.vue')
-        },
-        {
-          path: '/documentation',
-          name: 'documentation',
-          component: () => import('@/views/utilities/Documentation.vue')
         }
       ]
     },
