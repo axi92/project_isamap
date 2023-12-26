@@ -2,7 +2,7 @@
   "name": "nest-with-vue",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "axi92",
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
@@ -26,9 +26,12 @@
     "@nestjs/platform-socket.io": "^10.3.0",
     "@nestjs/serve-static": "^4.0.0",
     "@nestjs/websockets": "^10.3.0",
+    "lodash": "^4.17.21",
+    "lowdb": "^6.1.1",
     "npm-check-updates": "^16.14.12",
     "rimraf": "^5.0.5",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.2.1",
