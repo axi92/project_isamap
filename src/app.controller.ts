@@ -1,12 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Logger, Post, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
+  private readonly logger = new Logger(AppController.name)
+
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Post('v1')
+  digestServerData(@Query() json: JSON): string {
+    this.logger.log(json)
+    return `This action returns a\n ${JSON.stringify(json, null, 2)}`;
   }
 }
