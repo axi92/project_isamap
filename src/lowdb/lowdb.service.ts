@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { JSONPreset  } from 'lowdb/node'
-import { Low } from 'lowdb/lib';
+import { Injectable, Logger } from '@nestjs/common';
+// import { JSONFilePreset } from 'lowdb/node'
+// import { Low } from 'lowdb/lib';
 import * as uuid from 'uuid';
-import { DataBaseStructure } from './lowdb.interface';
-import { LowWithLodash } from './lowWithLodash';
+import { DataBaseStructure } from './lowdb.interface.js';
+import { LowWithLodash } from './lowWithLodash.js';
 import { JSONFile } from 'lowdb/node';
 
 type CollctionName = 'servers';
@@ -12,6 +12,7 @@ const defaultData: DataBaseStructure = { servers: [] }
 @Injectable()
 export class LowdbService {
   private db: LowWithLodash<DataBaseStructure>
+  private readonly logger = new Logger(LowdbService.name);
 
   constructor() {
     this.initDatabase('servers');
@@ -23,6 +24,7 @@ export class LowdbService {
     this.db = new LowWithLodash(adapter, defaultData)
 
     const listUsers = await this.db.chain.get(collctionName).value();
+    this.logger.log(listUsers)
     if (!listUsers) {
       await this.db.chain.set(collctionName, []).write();
     }
