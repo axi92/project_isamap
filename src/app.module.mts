@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppController } from './app.controller.mts';
+import { AppService } from './app.service.mts';
 import { ServeStaticModule} from '@nestjs/serve-static'; // New
 import { join } from 'path'; // New
-import { GatewayModule } from './gateway/gateway.module';
+import { GatewayModule } from './gateway/gateway.module.mts';
 
 @Module({
   imports: [
