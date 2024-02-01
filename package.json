@@ -1,6 +1,7 @@
 {
   "name": "project-isamap",
   "version": "0.0.1",
+  "type": "module",
   "description": "",
   "author": "axi92",
   "license": "MIT",
