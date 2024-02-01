@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LowdbService } from './lowdb.service.mts';
+import { LowdbService } from './lowdb.service.js';
 
 describe('LowdbService', () => {
   let service: LowdbService;

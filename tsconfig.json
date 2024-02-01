@@ -2,8 +2,6 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
