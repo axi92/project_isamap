@@ -5,6 +5,9 @@
   "description": "",
   "author": "axi92",
   "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",

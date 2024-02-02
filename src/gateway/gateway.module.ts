@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { MySocketGateway } from "./gateway.mts";
+import { MySocketGateway } from "./gateway.js";
 
 @Module({
   providers: [MySocketGateway]

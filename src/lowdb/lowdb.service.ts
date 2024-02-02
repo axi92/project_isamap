@@ -2,8 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 // import { JSONFilePreset } from 'lowdb/node'
 // import { Low } from 'lowdb/lib';
 import * as uuid from 'uuid';
-import { DataBaseStructure } from './lowdb.interface.mts';
-import { LowWithLodash } from './lowWithLodash.mts';
+import { DataBaseStructure } from './lowdb.interface.js';
+import { LowWithLodash } from './lowWithLodash.js';
 import { JSONFile } from 'lowdb/node';
 
 type CollctionName = 'servers';
