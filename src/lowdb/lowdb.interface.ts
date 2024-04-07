@@ -1,8 +1,9 @@
 export interface DataBaseStructure {
-  servers: Server[];
+  servers: ServerEntry[];
 }
 
-export interface Server {
+export interface ServerEntry {
+  owner: number;
   privateid: string;
   publicid:  string;
   notes?:    string;

@@ -15,8 +15,9 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('api endpoint should exist"', () => {
+      const json: JSON = JSON.parse({} as string);
+      expect(appController.digestServerData(json)).toBeDefined();
     });
   });
 });
