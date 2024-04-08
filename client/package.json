@@ -1,29 +1,29 @@
 {
-    "name": "sakai-vue",
-    "version": "3.9.0",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview",
-        "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
-    },
-    "dependencies": {
-        "chart.js": "4.4.1",
-        "primeflex": "^3.3.1",
-        "primeicons": "^6.0.1",
-        "primevue": "3.45.0",
-        "socket.io-client": "^4.7.2",
-        "vue": "^3.3.13",
-        "vue-router": "^4.2.5"
-    },
-    "devDependencies": {
-        "@rushstack/eslint-patch": "^1.6.1",
-        "@vitejs/plugin-vue": "^5.0.0",
-        "@vue/eslint-config-prettier": "^8.0.0",
-        "eslint": "^8.56.0",
-        "eslint-plugin-vue": "^9.19.2",
-        "prettier": "^3.1.1",
-        "sass": "^1.69.5",
-        "vite": "^5.0.10"
-    }
+  "name": "sakai-vue",
+  "version": "3.9.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "chart.js": "4.4.1",
+    "primeflex": "^3.3.1",
+    "primeicons": "^6.0.1",
+    "primevue": "3.45.0",
+    "socket.io-client": "^4.7.2",
+    "vue": "^3.3.13",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.6.1",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-vue": "^9.19.2",
+    "prettier": "^3.1.1",
+    "sass": "^1.69.5",
+    "vite": "^5.0.10"
+  }
 }
