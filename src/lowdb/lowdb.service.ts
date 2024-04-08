@@ -38,6 +38,7 @@ export class LowdbService {
   }
 
   async add(owner: number, notes: string, collctionName: CollctionName): Promise<any> {
+    await this.db.read();
     const listData = this.db.chain.get(collctionName).value();
     this.logger.log(listData);
     const newEntry: ServerEntry = {
