@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
+import { Test, TestingModule } from "@nestjs/testing";
+import { AppController } from "./app.controller.js";
+import { AppService } from "./app.service.js";
 
-describe('AppController', () => {
+describe("AppController", () => {
   let appController: AppController;
 
   beforeEach(async () => {
@@ -14,7 +14,7 @@ describe('AppController', () => {
     appController = app.get<AppController>(AppController);
   });
 
-  describe('root', () => {
+  describe("root", () => {
     it('api endpoint should exist"', () => {
       const json: JSON = JSON.parse({} as string);
       expect(appController.digestServerData(json)).toBeDefined();
