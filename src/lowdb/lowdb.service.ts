@@ -58,7 +58,7 @@ export class LowdbService implements OnModuleInit {
     // })
 
     // TODO: move this to tests:
-    const findResult = await this.findUserById(1).catch((reason)=>
+    const findResult = await this.findServerByOwner(0).catch((reason)=>
     {
       this.logger.log('User not found.');
     })
@@ -100,7 +100,7 @@ export class LowdbService implements OnModuleInit {
     });
   }
 
-  async creatServer(owner: number, notes: string): Promise<ServerEntry> {
+  async creatServer(owner: number, description: string): Promise<ServerEntry> {
     return new Promise(async (resolve) => {
       await this.db.read();
       const dbData = this.db.chain
@@ -110,7 +110,7 @@ export class LowdbService implements OnModuleInit {
         owner: owner,
         privateId: uuidv4(),
         publicId: uuidv4(),
-        notes: notes
+        description: description
       } as ServerEntry;
       dbData.push(newEntry);
       this.db.chain.set(COLLECTION.USERS, dbData);
@@ -146,6 +146,16 @@ export class LowdbService implements OnModuleInit {
       const result = this.db.chain
         .get("servers")
         .find({ privateId: privateId })
+        .value();
+      resolve(result);
+    });
+  }
+
+  async findServerByOwner(owner: number): Promise<ServerEntry> {
+    return new Promise(async (resolve) => {
+      const result = this.db.chain
+        .get("servers")
+        .find({ owner: owner })
         .value();
       resolve(result);
     });

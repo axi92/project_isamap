@@ -7,7 +7,7 @@ export interface ServerEntry {
   owner: number;
   privateId: string;
   publicId: string;
-  notes?: string;
+  description: string;
 }
 
 // https://discord.com/developers/docs/resources/user#user-object
