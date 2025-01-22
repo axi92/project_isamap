@@ -58,25 +58,31 @@ export class LowdbService implements OnModuleInit {
     // })
 
     // TODO: move this to tests:
-    // const findResult = await this.findUserById(0)
-    // this.logger.log(findResult);
+    const findResult = await this.findUserById(1).catch((reason)=>
+    {
+      this.logger.log('User not found.');
+    })
+    this.logger.log(findResult);
 
     // TODO: move this to tests:
     // const createdServer = await this.creatServer(0, 'first test');
     // this.logger.log(createdServer);
 
     // TODO: move this to tests:
-    const findResult = await this.findServerByPrivateId('b92d8f0f-2bd2-4358-b991-0f2ce2f2160e');
-    this.logger.log(findResult);
+    // const findResult = await this.findServerByPrivateId('b92d8f0f-2bd2-4358-b991-0f2ce2f2160e');
+    // this.logger.log(findResult);
   }
 
   async creatUser(details: UserDetails): Promise<UserDetails> {
-    return new Promise(async (resolve) => {
+    return new Promise(async (resolve, reject) => {
       await this.db.read();
       const dbData = this.db.chain
         .get(COLLECTION.USERS)
         .value() as UserDetails[];
-      // this.logger.log(dbData);
+      // Check if entry already exists with that discordId
+      if(await this.doesUserExist(details.discordId)){
+        reject('User already exists!')
+      }
       const newEntry = {
         discordId: details.discordId,
         bot: details.bot,
@@ -87,7 +93,6 @@ export class LowdbService implements OnModuleInit {
         verified: details.verified,
         level: 1,
       } as UserDetails;
-
       dbData.push(newEntry);
       this.db.chain.set(COLLECTION.USERS, dbData);
       await this.db.write();
@@ -114,13 +119,25 @@ export class LowdbService implements OnModuleInit {
     });
   }
 
-  async findUserById(discordId: number): Promise<UserDetails> {
-    return new Promise(async (resolve) => {
+  async doesUserExist(discordId: number): Promise<boolean> {
+    return new Promise(async (resolve, reject) =>{
+      let checkExistingUser = await this.findUserById(discordId);
+      if(checkExistingUser){
+        resolve(true)
+      } else {
+        reject(false)
+      }
+    })
+  }
+
+  async findUserById(discordId: number): Promise<UserDetails|undefined> {
+    return new Promise(async (resolve, reject) => {
       const result = this.db.chain
         .get("users")
         .find({ discordId: discordId })
         .value();
-      resolve(result);
+      if(result === undefined) reject('User not found!')
+      else resolve(result);
     });
   }
 
