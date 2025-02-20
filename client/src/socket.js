@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 export const state = reactive({
   connected: false,
   fooEvents: [],
-  barEvents: []
+  barEvents: [],
 });
 
 // "undefined" means the URL will be computed from the `window.location` object

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { onMounted, reactive, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import ProductService from '@/service/ProductService';
 import { useLayout } from '@/layout/composables/layout';
-import ConnectionManager from '@/views/socket/ConnectionManager.vue';
-import ConnectionState from '@/views/socket/ConnectionState.vue';
+// import ConnectionManager from '@/views/socket/ConnectionManager.vue';
+// import ConnectionState from '@/views/socket/ConnectionState.vue';
 
 const { isDarkTheme } = useLayout();
 
@@ -15,9 +15,9 @@ onMounted(() => {
   productService.getProductsSmall().then((data) => (products.value = data));
 });
 
-const formatCurrency = (value) => {
-  return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-};
+// const formatCurrency = (value) => {
+//   return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+// };
 const applyLightTheme = () => {
   lineOptions.value = {
     plugins: {
@@ -92,8 +92,8 @@ watch(
 </script>
 
 <template>
-  <connection-manager></connection-manager>
-  <connection-state></connection-state>
+  <!-- <connection-manager></connection-manager> -->
+  <!-- <connection-state></connection-state> -->
   <div class="grid">
     <div class="col-12 lg:col-6 xl:col-3">
       <div class="card mb-0">
