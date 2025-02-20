@@ -1,21 +1,18 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 
 import AppMenuItem from './AppMenuItem.vue';
-
+// let currentUser = inject('pocketbase');
+// console.log(currentUser);
 const model = ref([
   {
     label: 'Home',
-    items: [
-      { label: 'Blank', icon: 'pi pi-fw pi-map', to: '/servers/list' }
-    ]
+    items: [{ label: 'Blank', icon: 'pi pi-fw pi-home', to: '/' }],
   },
   {
     label: 'Players',
-    items: [
-    { label: 'Player1', icon: 'pi pi-fw pi-user' }
-    ]
-  }
+    items: [{ label: 'Player', icon: 'pi pi-fw pi-user' }],
+  },
   // {
   //   label: 'UI Components',
   //   items: [

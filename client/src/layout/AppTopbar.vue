@@ -1,8 +1,7 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, inject } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 // import { useRouter } from 'vue-router';
-import PocketBase from 'pocketbase';
 
 const { layoutConfig, onMenuToggle } = useLayout();
 
@@ -10,20 +9,14 @@ const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
 // const router = useRouter();
 
-let pb = null;
-let currentUser = ref();
-
 onMounted(async () => {
   bindOutsideClickListener();
-  pb = new PocketBase('http://127.0.0.1:8090');
-  currentUser.value = pb.authStore.record;
-  console.log(pb.authStore.record);
-  pb.authStore.onChange(() => {
-    console.log('authStore onChange');
-    currentUser.value = pb.authStore.record;
-  }, true);
-  // console.log(pb.files.getURL(pb.authStore.record, 'd4c868f13345db8c809bcfbe786aec94_a5gxszys5z_edwqfdi9qt.png'));
-  // console.log(pb.getFile(pb.authStore.record, pb.authStore.record.avatar));
+  let pb = inject('pocketbase');
+  console.log('pockebatse', pb);
+
+  let currentUser = ref();
+  currentUser.value = inject('currentUser');
+  console.log('currentUser', currentUser.value);
 });
 
 onBeforeUnmount(() => {
