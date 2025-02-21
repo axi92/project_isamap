@@ -8,15 +8,13 @@ const { layoutConfig, onMenuToggle } = useLayout();
 const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
 // const router = useRouter();
+let pb = null;
+let currentUser = ref();
 
 onMounted(async () => {
   bindOutsideClickListener();
-  let pb = inject('pocketbase');
-  console.log('pockebatse', pb);
-
-  let currentUser = ref();
+  pb = inject('pocketbase');
   currentUser.value = inject('currentUser');
-  console.log('currentUser', currentUser.value);
 });
 
 onBeforeUnmount(() => {
