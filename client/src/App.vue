@@ -12,8 +12,10 @@ onMounted(async () => {
   pb.authStore.onChange(() => {
     currentUser.value = pb.authStore.record;
   }, true);
+  // console.log('user', currentUser.value.id);
   // console.log(pb.files.getURL(pb.authStore.record, 'd4c868f13345db8c809bcfbe786aec94_a5gxszys5z_edwqfdi9qt.png'));
   // console.log(pb.getFile(pb.authStore.record, pb.authStore.record.avatar));
+  // provide('servers', servers.items);
   provide('pocketbase', pb);
   provide('currentUser', currentUser.value);
 });
