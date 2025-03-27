@@ -1,0 +1,18 @@
+services:
+#  frontend:
+#    image: node:latest
+#    volumes:
+#      - ./client:/client
+#    ports:
+#      - ${BIND-9014}:9014
+#    restart: on-failure:10
+#    entrypoint: "npm i && "
+  pocketbase:
+    build:
+      context: .
+      dockerfile: ./client/pocketbase/Dockerfile
+    ports:
+      - 127.0.0.1:8090:8090
+    volumes:
+      - ./pb_data:/pb/pb_data
+    restart: on-failure:10
