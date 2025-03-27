@@ -6,6 +6,8 @@ A sample demonstrating serving a VueJS website from a NestJS backend.
 
 Download [Pocketbase](https://github.com/pocketbase/pocketbase/releases)
 
+`./pocketbase serve`
+
 ```bash
 $ npm install
 # Install Vue dependencies

@@ -1,8 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { ref, inject, onMounted } from 'vue';
+import PocketBase from 'pocketbase';
 
 import AppMenuItem from './AppMenuItem.vue';
-let pb = null;
+let pb:PocketBase = null;
 let currentUser = ref();
 const menuList = [
   {
@@ -19,11 +20,11 @@ const model = ref(menuList);
 onMounted(async () => {
   pb = inject('pocketbase');
   currentUser.value = inject('currentUser');
-  // console.log('currentUser', currentUser.value);
+  console.log('currentUser', currentUser.value);
   // you can also fetch all records at once via getFullList
   let servers = await pb.collection('servers').getFullList();
-  // console.log('servers');
-  // console.log(servers);
+  console.log('servers');
+  console.log(servers);
   let localmenuList = model.value;
   for (let i = 0; i < servers.length; i++) {
     if ('' == servers[i].serverName) {
