@@ -1,7 +1,10 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue';
+import { inject, onMounted, ref, watch } from 'vue';
 import ProductService from '@/service/ProductService';
 import { useLayout } from '@/layout/composables/layout';
+import StatsServers from './stats/StatsServers.vue';
+import StatsUsers from './stats/StatsUsers.vue';
+import PocketBase from 'pocketbase';
 // import ConnectionManager from '@/views/socket/ConnectionManager.vue';
 // import ConnectionState from '@/views/socket/ConnectionState.vue';
 
@@ -10,14 +13,20 @@ const { isDarkTheme } = useLayout();
 const products = ref(null);
 const lineOptions = ref(null);
 const productService = new ProductService();
+const pb: PocketBase = inject('pocketbase');
+const userCount = ref<number>(0);
+const serverCount = ref<number>(0);
 
 onMounted(() => {
   productService.getProductsSmall().then((data) => (products.value = data));
 });
+const getStats = async () => {
+  const stats = await pb.collection('stats').getFullList();
+  userCount.value = stats[0].user_count;
+  serverCount.value = stats[0].server_count;
+}
+getStats();
 
-// const formatCurrency = (value) => {
-//   return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-// };
 const applyLightTheme = () => {
   lineOptions.value = {
     plugins: {
@@ -95,22 +104,9 @@ watch(
   <!-- <connection-manager></connection-manager> -->
   <!-- <connection-state></connection-state> -->
   <div class="grid">
-    <div class="col-12 lg:col-6 xl:col-3">
-      <div class="card mb-0">
-        <div class="flex justify-content-between mb-3">
-          <div>
-            <span class="block text-500 font-medium mb-3">Orders</span>
-            <div class="text-900 font-medium text-xl">152</div>
-          </div>
-          <div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width: 2.5rem; height: 2.5rem">
-            <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
-          </div>
-        </div>
-        <span class="text-green-500 font-medium">24 new </span>
-        <span class="text-500">since last visit</span>
-      </div>
-    </div>
-    <div class="col-12 lg:col-6 xl:col-3">
+    <stats-servers :count="serverCount"></stats-servers>
+    <stats-users :count="userCount"></stats-users>
+    <!-- <div class="col-12 lg:col-6 xl:col-3">
       <div class="card mb-0">
         <div class="flex justify-content-between mb-3">
           <div>
@@ -154,6 +150,6 @@ watch(
         <span class="text-green-500 font-medium">85 </span>
         <span class="text-500">responded</span>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
