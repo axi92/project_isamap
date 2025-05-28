@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { LowdbService } from "./lowdb.service.js";
+import { LowdbService } from "./lowdb.service";
 
 @Module({
   providers: [LowdbService],
