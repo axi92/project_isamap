@@ -31,7 +31,8 @@ export class LowdbService implements OnModuleInit {
   constructor() {}
 
   async onModuleInit() {
-    await this.initDatabase();
+    // TODO: Not working, some issue with lodash
+    // await this.initDatabase();
   }
 
   private async initDatabase() {
@@ -85,13 +86,8 @@ export class LowdbService implements OnModuleInit {
       }
       const newEntry = {
         discordId: details.discordId,
-        bot: details.bot,
-        discriminator: details.discriminator,
-        global_name: details.global_name,
-        locale: details.locale,
         username: details.username,
         verified: details.verified,
-        level: 1,
       } as UserDetails;
       dbData.push(newEntry);
       this.db.chain.set(COLLECTION.USERS, dbData);

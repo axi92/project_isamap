@@ -1,7 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { readFileSync } from "fs";
-import path from "path";
 
 @Injectable()
 export class ConfigurationService {
@@ -13,12 +11,19 @@ export class ConfigurationService {
   private DISCORD_REDIRECT_URI: string;
 
   constructor(private configService: ConfigService) {
-    this.DISCORD_CLIENT_ID = this.configService.get("DISCORD_CLIENT_ID");
-    this.DISCORD_CLIENT_SECRET = this.configService.get(
+    const discordClientID = this.configService.get("DISCORD_CLIENT_ID");
+    const discordClientSecret = this.configService.get(
       "DISCORD_CLIENT_SECRET",
     );
-    this.DISCORD_REDIRECT_URI = this.configService.get("DISCORD_REDIRECT_URI");
-    this.logger.log("Config loaded");
+    const discordClientRedirectUri =  this.configService.get("DISCORD_REDIRECT_URI");
+    if(discordClientID == undefined) {
+      throw new Error("Some config not set! Check for: DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, DISCORD_REDIRECT_URI")
+    } else {
+      this.DISCORD_CLIENT_ID = discordClientID;
+      this.DISCORD_CLIENT_SECRET = discordClientSecret
+      this.DISCORD_REDIRECT_URI = discordClientRedirectUri
+      this.logger.log("Config loaded");
+    }
   }
 
   getDiscordClientId(): string {
