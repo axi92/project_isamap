@@ -10,36 +10,43 @@ import {
   DataBaseStructure,
   ServerEntry,
   UserDetails,
-} from "./lowdb.interface.js";
-import { LowWithLodash } from "./lowWithLodash.js";
+} from "./lowdb.interface";
+import { LowWithLodash } from "./lowWithLodash";
 import { JSONFile } from "lowdb/node";
-import { Collection } from "typeorm";
-import { Server } from "http";
-import { ExceptionsHandler } from "@nestjs/core/exceptions/exceptions-handler.js";
+import { defaultData } from "./lowdb.constants";
 
 const COLLECTION = {
   SERVERS: "servers",
   USERS: "users",
 };
-const defaultData: DataBaseStructure = { users: [], servers: [] };
+
 
 @Injectable()
-export class LowdbService implements OnModuleInit {
+export class LowdbService implements OnModuleInit, OnModuleDestroy {
   private db: LowWithLodash<DataBaseStructure>;
   private readonly logger = new Logger(LowdbService.name);
 
-  constructor() {}
+  constructor() { }
 
   async onModuleInit() {
-    // TODO: Not working, some issue with lodash
-    // await this.initDatabase();
+    await this.initDatabase();
   }
+
+  async onModuleDestroy() {
+    this.logger.warn('Saving databases on shutdown!');
+    await this.db.write();
+    await new Promise(resolve => setTimeout(resolve, 1.5 * 1000));
+    this.logger.warn('Save complete, shutting down!')
+    process.exit()
+  }
+
 
   private async initDatabase() {
     // Read or create db.json
     const adapter = new JSONFile<DataBaseStructure>("db.json");
     this.db = new LowWithLodash(adapter, defaultData);
     await this.db.read();
+    await this.db.initializeChain(); // Initialize chain dynamically
 
     const listEntries = this.db.chain.value();
     if (listEntries.servers.length < 1) {
@@ -47,23 +54,12 @@ export class LowdbService implements OnModuleInit {
       await this.db.write();
     }
     this.logger.log("DB initiated!");
-    // TODO: move this to tests:
-    // await this.creatUser({
-    //   discordId: 0,
-    //   bot: false,
-    //   discriminator: 'discriminator',
-    //   global_name: 'global_name',
-    //   locale: 'locale',
-    //   username: 'username',
-    //   verified: true,
-    // })
 
     // TODO: move this to tests:
-    const findResult = await this.findServerByOwner(0).catch((reason)=>
-    {
-      this.logger.log('User not found.');
-    })
-    this.logger.log(findResult);
+    // const findResult = await this.findServerByOwner(0).catch((reason) => {
+    //   this.logger.log('User not found.');
+    // })
+    // this.logger.log(findResult);
 
     // TODO: move this to tests:
     // const createdServer = await this.creatServer(0, 'first test');
@@ -74,20 +70,25 @@ export class LowdbService implements OnModuleInit {
     // this.logger.log(findResult);
   }
 
+  getDb() {
+    return this.db
+  }
+
   async creatUser(details: UserDetails): Promise<UserDetails> {
     return new Promise(async (resolve, reject) => {
-      await this.db.read();
+      // await this.db.read();
       const dbData = this.db.chain
         .get(COLLECTION.USERS)
         .value() as UserDetails[];
       // Check if entry already exists with that discordId
-      if(await this.doesUserExist(details.discordId)){
+      if (await this.doesUserExist(details.discordId)) {
         reject('User already exists!')
       }
       const newEntry = {
         discordId: details.discordId,
         username: details.username,
         verified: details.verified,
+        avatar: details.avatar
       } as UserDetails;
       dbData.push(newEntry);
       this.db.chain.set(COLLECTION.USERS, dbData);
@@ -116,24 +117,23 @@ export class LowdbService implements OnModuleInit {
   }
 
   async doesUserExist(discordId: number): Promise<boolean> {
-    return new Promise(async (resolve, reject) =>{
+    return new Promise(async (resolve) => {
       let checkExistingUser = await this.findUserById(discordId);
-      if(checkExistingUser){
+      if (checkExistingUser) {
         resolve(true)
       } else {
-        reject(false)
+        resolve(false)
       }
     })
   }
 
-  async findUserById(discordId: number): Promise<UserDetails|undefined> {
-    return new Promise(async (resolve, reject) => {
+  async findUserById(discordId: number): Promise<UserDetails | undefined> {
+    return new Promise(async (resolve) => {
       const result = this.db.chain
         .get("users")
         .find({ discordId: discordId })
         .value();
-      if(result === undefined) reject('User not found!')
-      else resolve(result);
+      resolve(result);
     });
   }
 

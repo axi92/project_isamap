@@ -1,0 +1,2 @@
+export const WARN_CONFIG_EMPTY = 'Some config not set! Check for: DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, DISCORD_REDIRECT_URI'
+export const ERROR_CONFIG_NOT_LOADED = 'Config was not loaded at all!'

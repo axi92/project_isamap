@@ -2,5 +2,14 @@ import lodash from "lodash";
 import { Low } from "lowdb";
 
 export class LowWithLodash<T> extends Low<T> {
-  chain: lodash.ExpChain<this["data"]> = lodash.chain(this).get("data");
+  chain: any;
+
+  async initializeChain() {
+    const lodash = await import("lodash");
+    if (this.data) {
+      this.chain = lodash.chain(this.data);
+    } else {
+      throw new Error("Data is not initialized yet.");
+    }
+  }
 }

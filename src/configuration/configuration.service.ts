@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { ERROR_CONFIG_NOT_LOADED, WARN_CONFIG_EMPTY } from "./configuration.constants";
 
 @Injectable()
 export class ConfigurationService {
@@ -16,15 +17,31 @@ export class ConfigurationService {
       "DISCORD_CLIENT_SECRET",
     );
     const discordClientRedirectUri =  this.configService.get("DISCORD_REDIRECT_URI");
-    if(discordClientID == undefined) {
-      throw new Error("Some config not set! Check for: DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, DISCORD_REDIRECT_URI")
+    // log a warning if any of the private vars are not set 
+    if (!discordClientID || !discordClientSecret || !discordClientRedirectUri) {
+      this.logger.warn(WARN_CONFIG_EMPTY);
+      this.logger.error(ERROR_CONFIG_NOT_LOADED)
     } else {
       this.DISCORD_CLIENT_ID = discordClientID;
       this.DISCORD_CLIENT_SECRET = discordClientSecret
       this.DISCORD_REDIRECT_URI = discordClientRedirectUri
-      this.logger.log("Config loaded");
+      this.logger.log('Config loaded');
     }
   }
+
+  // Functions for testing START!
+  setDiscordClientId(clientID: string) {
+    this.DISCORD_CLIENT_ID = clientID
+  }
+
+  setDiscordClientSecret(secret: string) {
+    this.DISCORD_CLIENT_SECRET = secret
+  }
+
+  setDiscordRedirectUri(uri: string){
+    this.DISCORD_REDIRECT_URI= uri
+  }
+  // Functions for testing END!
 
   getDiscordClientId(): string {
     return String(this.DISCORD_CLIENT_ID);
