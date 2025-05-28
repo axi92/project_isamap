@@ -14,10 +14,9 @@ export interface ServerEntry {
 export interface UserDetails {
   discordId: number;
   username: string;
-  discriminator: string;
-  global_name: string;
-  bot: boolean;
-  locale: string;
+  avatar: string | null;
   verified: boolean;
-  level: number;
 }
+// Avatar url can be optained like this:
+// https://cdn.discordapp.com/avatars/358154856046788609/d4c868f13345db8c809bcfbe786aec94
+// https://cdn.discordapp.com/avatars/<      userid    >/<avatar hashe in UserDetails   >
