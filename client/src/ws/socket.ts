@@ -11,7 +11,8 @@ export const state = reactive({
 // const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
 
 // eslint-disable-next-line no-undef
-const URL = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.hostname + window.location.port;
+// const URL = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.hostname + ':' + window.location.port;
+const URL = 'http://localhost:3000'
 
 const socket = io(URL);
 

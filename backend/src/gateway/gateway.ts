@@ -1,10 +1,11 @@
-import { Logger } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import {
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
 } from "@nestjs/websockets";
 
+@Injectable()
 @WebSocketGateway({
   cors: true,
 })
