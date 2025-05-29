@@ -13,7 +13,7 @@ import {
 } from "./lowdb.interface";
 import { LowWithLodash } from "./lowWithLodash";
 import { JSONFile } from "lowdb/node";
-import { defaultData } from "./lowdb.constants";
+import { defaultData, ERROR_USER_EXISTS, WARN_SAVING_DB_SHUTDOWN } from "./lowdb.constants";
 
 const COLLECTION = {
   SERVERS: "servers",
@@ -28,22 +28,21 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
 
   constructor() { }
 
-  async onModuleInit() {
-    await this.initDatabase();
+  async onModuleInit(dbName: string = "db.json") {
+    await this.initDatabase(dbName);
   }
 
   async onModuleDestroy() {
-    this.logger.warn('Saving databases on shutdown!');
+    this.logger.warn(WARN_SAVING_DB_SHUTDOWN);
     await this.db.write();
     await new Promise(resolve => setTimeout(resolve, 1.5 * 1000));
-    this.logger.warn('Save complete, shutting down!')
-    process.exit()
+    this.logger.warn(WARN_SAVING_DB_SHUTDOWN)
   }
 
 
-  private async initDatabase() {
+  private async initDatabase(dbName: string) {
     // Read or create db.json
-    const adapter = new JSONFile<DataBaseStructure>("db.json");
+    const adapter = new JSONFile<DataBaseStructure>(dbName);
     this.db = new LowWithLodash(adapter, defaultData);
     await this.db.read();
     await this.db.initializeChain(); // Initialize chain dynamically
@@ -82,7 +81,7 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
         .value() as UserDetails[];
       // Check if entry already exists with that discordId
       if (await this.doesUserExist(details.discordId)) {
-        reject('User already exists!')
+        reject(ERROR_USER_EXISTS)
       }
       const newEntry = {
         discordId: details.discordId,
@@ -147,11 +146,11 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
     });
   }
 
-  async findServerByOwner(owner: number): Promise<ServerEntry> {
+  async findServersByOwner(owner: number): Promise<ServerEntry[]> {
     return new Promise(async (resolve) => {
       const result = this.db.chain
         .get("servers")
-        .find({ owner: owner })
+        .filter({ owner: owner })
         .value();
       resolve(result);
     });
