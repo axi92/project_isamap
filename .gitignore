@@ -35,3 +35,4 @@ lerna-debug.log*
 db.json
 test-db.json
 .env
+coverage
