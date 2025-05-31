@@ -157,7 +157,7 @@ Body:
 
 ## Mod breaking changes
 
-- data structure from server to web players/dinos/tribes is no longer an object it is now an array on the webserver and will be validated as such. [LINK](###updated-structure)
+- data structure from server to web players/dinos/tribes is no longer an object it is now an array on the webserver and will be validated as such. [LINK](#updated-structure)
 
 ### Updated Structure
 
