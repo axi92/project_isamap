@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, ValidationPipe, ConflictException } from '@nestjs/common';
+import { Body, Controller, Get, Post, ValidationPipe } from '@nestjs/common';
 import { LowdbService } from '../lowdb/lowdb.service';
 import { UserDetails } from './user.interface';
 import { UserService } from './user.service';

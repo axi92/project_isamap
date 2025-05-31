@@ -31,7 +31,7 @@ export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
   ): Promise<any> {
     const { id, username, avatar, verified } = profile;
     const user: UserDetails = {
-      discordId: parseInt(id, 10),
+      userId: id,
       username,
       avatar,
       verified

@@ -10,6 +10,7 @@ import { UsersModule } from './user/user.module.js';
 import { ServerController } from './server/server.controller';
 import { ServerModule } from './server/server.module';
 import { LowdbModule } from "./lowdb/lowdb.module.js";
+import { UserService } from "./user/user.service.js";
 
 @Module({
   imports: [
@@ -18,12 +19,12 @@ import { LowdbModule } from "./lowdb/lowdb.module.js";
     AuthModule,
     UsersModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "..", "client/dist"),
+      rootPath: join(__dirname, "..", "..", "client/dist"),
     }),
     ServerModule,
     LowdbModule
   ],
   controllers: [AppController, ServerController],
-  providers: [AppService],
+  providers: [AppService, UserService],
 })
 export class AppModule {}
