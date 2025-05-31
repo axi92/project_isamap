@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { UsersService } from "../users/users.service.js";
+import { UserService } from "../user/user.service.js";
 import { UserDetails } from "src/lowdb/lowdb.interface.js";
 import { InterfaceAuthService } from "./auth.interface.js";
 
