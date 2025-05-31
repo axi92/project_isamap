@@ -1,9 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { LowdbService } from "./lowdb.service";
-import { DataBaseStructure, UserDetails } from "./lowdb.interface";
-import { JSONFile } from "lowdb/node";
-import { LowWithLodash } from "./lowWithLodash";
-import { ERROR_USER_EXISTS, WARN_SAVING_DB_SHUTDOWN } from "./lowdb.constants";
+import { UserDetails } from "./lowdb.interface";
+import { ERROR_USER_EXISTS, WARN_SAVING_DB_SHUTDOWN, WARN_SAVING_DB_SHUTDOWN_COMPLETE } from "./lowdb.constants";
 import { Logger } from "@nestjs/common";
 
 const DB_FILENAME = "test-db.json"
@@ -259,7 +257,7 @@ describe("LowdbService - onModuleDestroy", () => {
 
     // Check if the two warn messages were logged
     expect(loggerSpyWarn).toHaveBeenCalledWith(WARN_SAVING_DB_SHUTDOWN);
-    expect(loggerSpyWarn).toHaveBeenCalledWith(WARN_SAVING_DB_SHUTDOWN);
+    expect(loggerSpyWarn).toHaveBeenCalledWith(WARN_SAVING_DB_SHUTDOWN_COMPLETE);
 
     // Check if db.write was called
     expect(dbWriteSpy).toHaveBeenCalled();

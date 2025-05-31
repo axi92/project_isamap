@@ -3,6 +3,6 @@ import { LowdbService } from "./lowdb.service";
 
 @Module({
   providers: [LowdbService],
-  exports: [LowdbModule],
+  exports: [LowdbService],
 })
 export class LowdbModule {}

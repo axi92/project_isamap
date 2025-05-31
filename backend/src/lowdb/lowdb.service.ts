@@ -13,7 +13,7 @@ import {
 } from "./lowdb.interface";
 import { LowWithLodash } from "./lowWithLodash";
 import { JSONFile } from "lowdb/node";
-import { defaultData, ERROR_USER_EXISTS, WARN_SAVING_DB_SHUTDOWN } from "./lowdb.constants";
+import { defaultData, ERROR_USER_EXISTS, WARN_SAVING_DB_SHUTDOWN, WARN_SAVING_DB_SHUTDOWN_COMPLETE } from "./lowdb.constants";
 
 const COLLECTION = {
   SERVERS: "servers",
@@ -36,7 +36,7 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
     this.logger.warn(WARN_SAVING_DB_SHUTDOWN);
     await this.db.write();
     await new Promise(resolve => setTimeout(resolve, 1.5 * 1000));
-    this.logger.warn(WARN_SAVING_DB_SHUTDOWN)
+    this.logger.warn(WARN_SAVING_DB_SHUTDOWN_COMPLETE)
   }
 
 
@@ -53,20 +53,6 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
       await this.db.write();
     }
     this.logger.log("DB initiated!");
-
-    // TODO: move this to tests:
-    // const findResult = await this.findServerByOwner(0).catch((reason) => {
-    //   this.logger.log('User not found.');
-    // })
-    // this.logger.log(findResult);
-
-    // TODO: move this to tests:
-    // const createdServer = await this.creatServer(0, 'first test');
-    // this.logger.log(createdServer);
-
-    // TODO: move this to tests:
-    // const findResult = await this.findServerByPrivateId('b92d8f0f-2bd2-4358-b991-0f2ce2f2160e');
-    // this.logger.log(findResult);
   }
 
   getDb() {

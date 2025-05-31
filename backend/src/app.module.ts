@@ -7,7 +7,11 @@ import { GatewayModule } from "./gateway/gateway.module";
 import { LowdbService } from "./lowdb/lowdb.service";
 import { AuthModule } from "./auth/auth.module";
 import { ConfigModule } from "@nestjs/config";
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './user/user.module.js';
+import { ServerController } from './server/server.controller';
+import { ServerService } from './server/server.service';
+import { ServerModule } from './server/server.module';
+import { LowdbModule } from "./lowdb/lowdb.module.js";
 
 @Module({
   imports: [
@@ -18,8 +22,9 @@ import { UsersModule } from './users/users.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, "..", "client/dist"),
     }),
+    ServerModule
   ],
-  controllers: [AppController],
-  providers: [AppService, LowdbService],
+  controllers: [AppController, ServerController],
+  providers: [AppService, LowdbService, ServerService],
 })
 export class AppModule {}
