@@ -5,6 +5,9 @@ import { DB_FILENAME, WARN_SAVING_DB_SHUTDOWN, WARN_SAVING_DB_SHUTDOWN_COMPLETE 
 import { Logger } from "@nestjs/common";
 import { ServerService } from "../server/server.service";
 import { UserService } from "../user/user.service";
+import { ServerEntry } from "../server/server.interface";
+import { ServerCreateDto } from "../server/dto/serverCreate.dto";
+import { testDiscordID1, testDiscordID2 } from "../user/user.constants";
 
 describe("LowdbService", () => {
   let dbService: LowdbService
@@ -36,29 +39,34 @@ describe("LowdbService", () => {
   })
 
   it("should create a server for an existing user", async () => {
-    const ownerDiscordId = 1;
+    const ownerDiscordId = testDiscordID1;
     const userTemplate: UserDetails = {
-      discordId: ownerDiscordId,
+      userId: ownerDiscordId,
       username: "testuser",
       avatar: "testAvatarString",
       verified: true,
     };
-  
+
     const serverDescription = "Test server description";
-  
+
     // Step 1: Create the user
     const createdUser = await userService.create(userTemplate);
     expect(createdUser).toMatchObject(userTemplate);
-  
+
+    const serverCreate: ServerCreateDto = {
+      owner: testDiscordID1,
+      description: serverDescription
+    }
+
     // Step 2: Create the server
-    const createdServer = await serverService.create(ownerDiscordId, serverDescription);
-  
+    const createdServer = await serverService.create(serverCreate) as ServerEntry
+
     // Verify the server creation
     expect(createdServer).toMatchObject({
       owner: ownerDiscordId,
       description: serverDescription,
-    });
-  
+    } as ServerCreateDto);
+
     // Ensure the server has valid UUIDs for privateId and publicId
     expect(createdServer.privateId).toBeDefined();
     expect(createdServer.publicId).toBeDefined();
@@ -71,27 +79,32 @@ describe("LowdbService", () => {
   });
 
   it("should find a server by its private ID", async () => {
-    const ownerDiscordId = 1;
+    const ownerDiscordId = testDiscordID1;
     const serverDescription = "Test server description";
-  
+
     // Step 1: Create a user (required for server creation)
     const userTemplate: UserDetails = {
-      discordId: ownerDiscordId,
+      userId: ownerDiscordId,
       username: "testuser",
       avatar: "testAvatarString",
       verified: true,
     };
     const createdUser = await userService.create(userTemplate);
     expect(createdUser).toMatchObject(userTemplate);
-  
+
+    const serverCreate: ServerCreateDto = {
+      owner: testDiscordID1,
+      description: serverDescription
+    }
+
     // Step 2: Create a server
-    const createdServer = await serverService.creatServer(ownerDiscordId, serverDescription);
+    const createdServer = await serverService.create(serverCreate) as ServerEntry ;
     expect(createdServer).toBeDefined();
     expect(createdServer.privateId).toBeDefined();
-  
+
     // Step 3: Find the server by its private ID
     const foundServer = await serverService.findServerByPrivateId(createdServer.privateId);
-  
+
     // Verify the server retrieval
     expect(foundServer).toBeDefined();
     expect(foundServer).toMatchObject({
@@ -99,36 +112,46 @@ describe("LowdbService", () => {
       description: serverDescription,
       privateId: createdServer.privateId,
       publicId: createdServer.publicId,
-    });
+    } as ServerEntry);
   });
 
   it("should find all servers by its owner when multiple servers exist", async () => {
-    const ownerDiscordId = 1;
+    const ownerDiscordId = testDiscordID1;
     const serverDescription1 = "Test server description 1";
     const serverDescription2 = "Test server description 2";
-  
+
     // Step 1: Create a user (required for server creation)
     const userTemplate: UserDetails = {
-      discordId: ownerDiscordId,
+      userId: testDiscordID1,
       username: "testuser",
       avatar: "testAvatarString",
       verified: true,
     };
+
     const createdUser = await userService.create(userTemplate);
     expect(createdUser).toMatchObject(userTemplate);
-  
+
+    const serverCreate1: ServerCreateDto = {
+      owner: testDiscordID1,
+      description: serverDescription1
+    }
+    const serverCreate2: ServerCreateDto = {
+      owner: testDiscordID1,
+      description: serverDescription2
+    }
+
     // Step 2: Create two servers for the same owner
-    const createdServer1 = await serverService.creatServer(ownerDiscordId, serverDescription1);
-    const createdServer2 = await serverService.creatServer(ownerDiscordId, serverDescription2);
-  
+    const createdServer1 = await serverService.create(serverCreate1) as ServerEntry;
+    const createdServer2 = await serverService.create(serverCreate2) as ServerEntry;
+
     expect(createdServer1).toBeDefined();
     expect(createdServer2).toBeDefined();
     expect(createdServer1.owner).toBe(ownerDiscordId);
     expect(createdServer2.owner).toBe(ownerDiscordId);
-  
+
     // Step 3: Find all servers by their owner
     const foundServers = await serverService.findServersByOwner(ownerDiscordId);
-  
+
     // Verify the servers retrieval
     expect(foundServers).toBeDefined();
     expect(foundServers).toHaveLength(2); // Ensure two servers are returned
@@ -139,36 +162,39 @@ describe("LowdbService", () => {
           description: serverDescription1,
           privateId: createdServer1.privateId,
           publicId: createdServer1.publicId,
-        }),
+        } as ServerEntry),
         expect.objectContaining({
           owner: ownerDiscordId,
           description: serverDescription2,
           privateId: createdServer2.privateId,
           publicId: createdServer2.publicId,
-        }),
+        } as ServerEntry),
       ])
     );
   });
 
   it("should retrieve all entries for users and servers", async () => {
-    const ownerDiscordId = 1;
     const serverDescription = "Test server description";
-  
+
     // Step 1: Create a user
     const userTemplate: UserDetails = {
-      discordId: ownerDiscordId,
+      userId: testDiscordID1,
       username: "testuser",
       avatar: "testAvatarString",
       verified: true,
     };
     const createdUser = await userService.create(userTemplate);
     expect(createdUser).toMatchObject(userTemplate);
-  
+
     // Step 2: Create a server
-    const createdServer = await serverService.creatServer(ownerDiscordId, serverDescription);
+    const serverCreateDto: ServerCreateDto = {
+      owner: testDiscordID1,
+      description: serverDescription
+    }
+    const createdServer = await serverService.create(serverCreateDto) as ServerEntry;
     expect(createdServer).toBeDefined();
-    expect(createdServer.owner).toBe(ownerDiscordId);
-  
+    expect(createdServer.owner).toBe(serverCreateDto.owner);
+
     // Step 3: Retrieve all users
     const allUsers = await userService.getAll();
     expect(allUsers).toBeDefined();
@@ -176,14 +202,14 @@ describe("LowdbService", () => {
     expect(allUsers).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          discordId: ownerDiscordId,
+          userId: serverCreateDto.owner,
           username: "testuser",
           avatar: "testAvatarString",
           verified: true,
-        }),
+        } as UserDetails),
       ])
     );
-  
+
     // Step 4: Retrieve all servers
     const allServers = await serverService.getAll();
     expect(allServers).toBeDefined();
@@ -191,11 +217,11 @@ describe("LowdbService", () => {
     expect(allServers).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          owner: ownerDiscordId,
+          owner: serverCreateDto.owner,
           description: serverDescription,
           privateId: createdServer.privateId,
           publicId: createdServer.publicId,
-        }),
+        } as ServerEntry),
       ])
     );
   });

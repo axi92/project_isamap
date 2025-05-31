@@ -1,50 +1,43 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { LowdbService } from '../lowdb/lowdb.service';
 import { ServerEntry } from './server.interface';
 import { COLLECTION } from '../lowdb/lowdb.constants';
 import { v4 as uuidv4 } from "uuid";
+import { ServerCreateDto } from './dto/serverCreate.dto';
+import { UserService } from '../user/user.service';
+import { ERROR_INVALID_OWNER } from './server.constants';
 
 @Injectable()
 export class ServerService {
   private readonly logger = new Logger('ServerService');
-  constructor(private readonly dbService: LowdbService) { }
+  constructor(
+    private readonly dbService: LowdbService, 
+    private readonly userService: UserService
+  ) { }
 
   async getAll() {
     return this.dbService.getAllEntries('servers')
   }
 
-  async create(owner: number, description: string): Promise<ServerEntry> {
-    return new Promise(async (resolve) => {
+  async create(serverCreateDto: ServerCreateDto): Promise<ServerEntry | BadRequestException> {
+    return new Promise(async (resolve, reject) => {
+      // check if owner exists
+      if(!await this.userService.doesUserExist(serverCreateDto.owner)){
+        return reject(new BadRequestException(ERROR_INVALID_OWNER))
+      }
       const chain = this.dbService.getDBChain()
       const dbData = chain
         .get(COLLECTION.SERVERS)
         .value() as ServerEntry[];
       const newEntry = {
-        owner: owner,
+        owner: serverCreateDto.owner,
         privateId: uuidv4(),
         publicId: uuidv4(),
-        description: description
+        description: serverCreateDto.description
       } as ServerEntry;
       dbData.push(newEntry);
       chain.set(COLLECTION.USERS, dbData);
-      resolve(newEntry);
-    });
-  }
-
-  async creatServer(owner: number, description: string): Promise<ServerEntry> {
-    return new Promise(async (resolve) => {
-      const dbData = this.dbService.getDBChain()
-        .get(COLLECTION.SERVERS)
-        .value() as ServerEntry[];
-      const newEntry = {
-        owner: owner,
-        privateId: uuidv4(),
-        publicId: uuidv4(),
-        description: description
-      } as ServerEntry;
-      dbData.push(newEntry);
-      this.dbService.getDBChain().set(COLLECTION.USERS, dbData);
-      resolve(newEntry);
+      return resolve(newEntry);
     });
   }
 
@@ -58,7 +51,7 @@ export class ServerService {
     });
   }
 
-  async findServersByOwner(owner: number): Promise<ServerEntry[]> {
+  async findServersByOwner(owner: string): Promise<ServerEntry[]> {
     return new Promise(async (resolve) => {
       const result = this.dbService.getDBChain()
         .get("servers")

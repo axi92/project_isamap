@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { UserDetails } from './user.interface';
 import { LowdbService } from '../lowdb/lowdb.service';
 import { DB_FILENAME } from '../lowdb/lowdb.constants';
+import { testDiscordID1 } from "./user.constants";
 
 describe('UserService', () => {
   let service: UserService;
@@ -27,7 +28,7 @@ describe('UserService', () => {
 
   it("should create a user", async () => {
     const userTemplate = {
-      discordId: 0,
+      userId: testDiscordID1,
       username: 'username',
       avatar: 'testAvatarString',
       verified: true,
@@ -38,7 +39,7 @@ describe('UserService', () => {
 
   it("should create a user and resolve when creating a new one without really creating a new one", async () => {
     const userTemplate: UserDetails = {
-      discordId: 1,
+      userId: testDiscordID1,
       username: "testuser",
       avatar: "testAvatarString",
       verified: true,
