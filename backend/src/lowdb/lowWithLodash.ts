@@ -1,4 +1,3 @@
-import lodash from "lodash";
 import { Low } from "lowdb";
 
 export class LowWithLodash<T> extends Low<T> {
