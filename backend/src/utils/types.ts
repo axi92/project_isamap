@@ -1,3 +1,3 @@
-import { UserDetails } from "src/user/user.interface";
+import { UserCreatDto } from "src/user/dto/userCreate.dto";
 
-export type Done = (err: Error, user: UserDetails, accessToken?: string, refreshToken?: string) => void;
+export type Done = (err: Error, user: UserCreatDto, accessToken?: string, refreshToken?: string) => void;

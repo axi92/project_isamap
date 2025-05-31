@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { UserDetails } from "src/user/user.interface";
+import { UserCreatDto } from "src/user/dto/userCreate.dto";
 
 @Injectable()
 export class InterfaceAuthService {
-  // validateUser(datails: UserDetails): Promise<User>;
-  // createUser(details: UserDetails): Promise<User>;
-  // updateUser(details: UserDetails): Promise<User>;
+  // validateUser(datails: UserCreatDto): Promise<User>;
+  // createUser(details: UserCreatDto): Promise<User>;
+  // updateUser(details: UserCreatDto): Promise<User>;
   // findUser(params: FindUserParams): Promise<User>;
   // validateOAuth2(details: OAuth2Details): Promise<OAuth2Details>;
   // createOAuth2(details: OAuth2Details): Promise<OAuth2Details>;

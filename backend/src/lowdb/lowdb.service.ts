@@ -5,12 +5,9 @@ import {
   OnModuleInit,
 } from "@nestjs/common";
 
-import { v4 as uuidv4 } from "uuid";
 import {
   DataBaseStructure,
 } from "./lowdb.interface";
-import { UserDetails } from "../user/user.interface";
-import { ServerEntry } from "src/server/server.interface";
 import { LowWithLodash } from "./lowWithLodash";
 import { JSONFile } from "lowdb/node";
 import { defaultData, WARN_SAVING_DB_SHUTDOWN, WARN_SAVING_DB_SHUTDOWN_COMPLETE } from "./lowdb.constants";

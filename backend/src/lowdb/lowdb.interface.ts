@@ -1,9 +1,9 @@
-import { ServerEntry } from "src/server/server.interface";
-import { UserDetails } from "../user/user.interface";
+import { ServerEntry } from "../server/server.interface";
+import { UserCreatDto } from "../user/dto/userCreate.dto";
 
 export interface DataBaseStructure {
   servers: ServerEntry[];
-  users: UserDetails[];
+  users: UserCreatDto[];
 }
 
 
