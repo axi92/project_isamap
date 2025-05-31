@@ -8,9 +8,9 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import {
   DataBaseStructure,
-  ServerEntry,
-  UserDetails,
 } from "./lowdb.interface";
+import { UserDetails } from "../user/user.interface";
+import { ServerEntry } from "src/server/server.interface";
 import { LowWithLodash } from "./lowWithLodash";
 import { JSONFile } from "lowdb/node";
 import { defaultData, ERROR_USER_EXISTS, WARN_SAVING_DB_SHUTDOWN, WARN_SAVING_DB_SHUTDOWN_COMPLETE } from "./lowdb.constants";
@@ -60,21 +60,21 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
   }
 
   async creatUser(details: UserDetails): Promise<UserDetails> {
-    return new Promise(async (resolve, reject) => {
-      // await this.db.read();
-      const dbData = this.db.chain
-        .get(COLLECTION.USERS)
-        .value() as UserDetails[];
-      // Check if entry already exists with that discordId
-      if (await this.doesUserExist(details.discordId)) {
-        reject(ERROR_USER_EXISTS)
-      }
-      const newEntry = {
+    return new Promise(async (resolve) => {
+            const newEntry = {
         discordId: details.discordId,
         username: details.username,
         verified: details.verified,
         avatar: details.avatar
       } as UserDetails;
+      // Check if entry already exists with that discordId
+      if (await this.doesUserExist(details.discordId)) {
+        // Resolve without doing anything, status now is the desired status => Nothing to do
+        return resolve(newEntry)
+      }
+      const dbData = this.db.chain
+        .get(COLLECTION.USERS)
+        .value() as UserDetails[];
       dbData.push(newEntry);
       this.db.chain.set(COLLECTION.USERS, dbData);
       await this.db.write();

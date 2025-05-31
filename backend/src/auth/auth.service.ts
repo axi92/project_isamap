@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service.js";
-import { UserDetails } from "src/lowdb/lowdb.interface.js";
+import { UserDetails } from "src/user/user.interface.js";
 import { InterfaceAuthService } from "./auth.interface.js";
 
 @Injectable()

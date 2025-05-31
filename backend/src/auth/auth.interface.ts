@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { UserDetails } from "src/lowdb/lowdb.interface.js";
+import { UserDetails } from "src/user/user.interface";
 
 @Injectable()
 export class InterfaceAuthService {

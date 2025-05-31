@@ -6,7 +6,7 @@ import { Profile, Strategy } from "passport-discord";
 import { Done } from "../utils/types.js";
 import { encrypt } from "../utils/encrypt.js";
 import { ConfigurationService } from "../configuration/configuration.service.js";
-import { UserDetails } from "src/lowdb/lowdb.interface.js";
+import { UserDetails } from "src/user/user.interface.js";
 
 @Injectable()
 export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
