@@ -7,8 +7,6 @@ export class LowWithLodash<T> extends Low<T> {
     const lodash = await import("lodash");
     if (this.data) {
       this.chain = lodash.chain(this.data);
-    } else {
-      throw new Error("Data is not initialized yet.");
     }
   }
 }

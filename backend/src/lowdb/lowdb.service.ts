@@ -13,13 +13,7 @@ import { UserDetails } from "../user/user.interface";
 import { ServerEntry } from "src/server/server.interface";
 import { LowWithLodash } from "./lowWithLodash";
 import { JSONFile } from "lowdb/node";
-import { defaultData, ERROR_USER_EXISTS, WARN_SAVING_DB_SHUTDOWN, WARN_SAVING_DB_SHUTDOWN_COMPLETE } from "./lowdb.constants";
-
-const COLLECTION = {
-  SERVERS: "servers",
-  USERS: "users",
-};
-
+import { defaultData, WARN_SAVING_DB_SHUTDOWN, WARN_SAVING_DB_SHUTDOWN_COMPLETE } from "./lowdb.constants";
 
 @Injectable()
 export class LowdbService implements OnModuleInit, OnModuleDestroy {
@@ -59,87 +53,8 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
     return this.db
   }
 
-  async creatUser(details: UserDetails): Promise<UserDetails> {
-    return new Promise(async (resolve) => {
-            const newEntry = {
-        discordId: details.discordId,
-        username: details.username,
-        verified: details.verified,
-        avatar: details.avatar
-      } as UserDetails;
-      // Check if entry already exists with that discordId
-      if (await this.doesUserExist(details.discordId)) {
-        // Resolve without doing anything, status now is the desired status => Nothing to do
-        return resolve(newEntry)
-      }
-      const dbData = this.db.chain
-        .get(COLLECTION.USERS)
-        .value() as UserDetails[];
-      dbData.push(newEntry);
-      this.db.chain.set(COLLECTION.USERS, dbData);
-      await this.db.write();
-      resolve(newEntry);
-    });
-  }
-
-  async creatServer(owner: number, description: string): Promise<ServerEntry> {
-    return new Promise(async (resolve) => {
-      await this.db.read();
-      const dbData = this.db.chain
-        .get(COLLECTION.SERVERS)
-        .value() as ServerEntry[];
-      const newEntry = {
-        owner: owner,
-        privateId: uuidv4(),
-        publicId: uuidv4(),
-        description: description
-      } as ServerEntry;
-      dbData.push(newEntry);
-      this.db.chain.set(COLLECTION.USERS, dbData);
-      await this.db.write();
-      resolve(newEntry);
-    });
-  }
-
-  async doesUserExist(discordId: number): Promise<boolean> {
-    return new Promise(async (resolve) => {
-      let checkExistingUser = await this.findUserById(discordId);
-      if (checkExistingUser) {
-        resolve(true)
-      } else {
-        resolve(false)
-      }
-    })
-  }
-
-  async findUserById(discordId: number): Promise<UserDetails | undefined> {
-    return new Promise(async (resolve) => {
-      const result = this.db.chain
-        .get("users")
-        .find({ discordId: discordId })
-        .value();
-      resolve(result);
-    });
-  }
-
-  async findServerByPrivateId(privateId: string): Promise<ServerEntry> {
-    return new Promise(async (resolve) => {
-      const result = this.db.chain
-        .get("servers")
-        .find({ privateId: privateId })
-        .value();
-      resolve(result);
-    });
-  }
-
-  async findServersByOwner(owner: number): Promise<ServerEntry[]> {
-    return new Promise(async (resolve) => {
-      const result = this.db.chain
-        .get("servers")
-        .filter({ owner: owner })
-        .value();
-      resolve(result);
-    });
+  getDBChain(){
+    return this.db.chain
   }
 
   async getAllEntries(collctionName: "servers" | "users"): Promise<any> {

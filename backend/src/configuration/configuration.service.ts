@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { ERROR_CONFIG_NOT_LOADED, WARN_CONFIG_EMPTY } from "./configuration.constants";
+import { ENV_VARS, ERROR_CONFIG_NOT_LOADED, WARN_CONFIG_EMPTY } from "./configuration.constants";
 
 @Injectable()
 export class ConfigurationService {
@@ -12,11 +12,11 @@ export class ConfigurationService {
   private DISCORD_REDIRECT_URI: string;
 
   constructor(private configService: ConfigService) {
-    const discordClientID = this.configService.get("DISCORD_CLIENT_ID");
+    const discordClientID = this.configService.get(ENV_VARS.DISCORD_CLIENT_ID);
     const discordClientSecret = this.configService.get(
-      "DISCORD_CLIENT_SECRET",
+      ENV_VARS.DISCORD_CLIENT_SECRET,
     );
-    const discordClientRedirectUri =  this.configService.get("DISCORD_REDIRECT_URI");
+    const discordClientRedirectUri =  this.configService.get(ENV_VARS.DISCORD_REDIRECT_URI);
     // log a warning if any of the private vars are not set 
     if (!discordClientID || !discordClientSecret || !discordClientRedirectUri) {
       this.logger.warn(WARN_CONFIG_EMPTY);

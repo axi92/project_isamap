@@ -4,12 +4,10 @@ import { AppService } from "./app.service.js";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 import { GatewayModule } from "./gateway/gateway.module";
-import { LowdbService } from "./lowdb/lowdb.service";
 import { AuthModule } from "./auth/auth.module";
 import { ConfigModule } from "@nestjs/config";
 import { UsersModule } from './user/user.module.js';
 import { ServerController } from './server/server.controller';
-import { ServerService } from './server/server.service';
 import { ServerModule } from './server/server.module';
 import { LowdbModule } from "./lowdb/lowdb.module.js";
 

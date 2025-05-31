@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Get, ValidationPipe, Param, ParseIntPipe } from '@nestjs/common';
 import { ServerService } from './server.service';
-import { LiveMapDTO } from './server.dto';
+import { LiveMapDTO } from './dto/server.dto';
 
 @Controller('servers')
 export class ServerController {
@@ -20,7 +20,7 @@ export class ServerController {
 
   @Get() // GET /users
   async allServers(){
-    const users = await this.server.listAll()
+    const users = await this.server.getAll()
     return users
   }
 
@@ -30,7 +30,7 @@ export class ServerController {
   }
 
   @Post('create') // Create a new server
-  createServer(@Param('owner', ParseIntPipe) id: number){
+  createServer(@Body(ValidationPipe) owner: number){
     // check if owner exists
     // create server
     // return publicID, privateID, description

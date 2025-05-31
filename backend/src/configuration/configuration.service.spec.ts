@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { ConfigurationService } from "./configuration.service";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { ERROR_CONFIG_NOT_LOADED, WARN_CONFIG_EMPTY } from "./configuration.constants";
+import { ENV_VARS, ERROR_CONFIG_NOT_LOADED, WARN_CONFIG_EMPTY } from "./configuration.constants";
 import { Logger } from "@nestjs/common";
 
 describe("ConfigurationServiceWithMissingConfig", () => {
@@ -54,7 +54,14 @@ describe("ConfigurationServiceWithValidConfig", () => {
 
   beforeAll(async () => {
     mockConfigService = {
-      get: jest.fn(), // Mock the get method to return undefined 
+      get: jest.fn((key: string) => {
+        const mockConfig = {
+          [ENV_VARS.DISCORD_CLIENT_ID]: clientID,
+          [ENV_VARS.DISCORD_CLIENT_SECRET]: secret,
+          [ENV_VARS.DISCORD_REDIRECT_URI]: redirectUri
+        }
+        return mockConfig[key]
+      }), // Mock the get method to return
     };
 
     const module: TestingModule = await Test.createTestingModule({

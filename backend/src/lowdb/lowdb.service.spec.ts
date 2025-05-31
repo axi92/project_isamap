@@ -1,66 +1,39 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { LowdbService } from "./lowdb.service";
 import { UserDetails } from "../user/user.interface";
-import { ERROR_USER_EXISTS, WARN_SAVING_DB_SHUTDOWN, WARN_SAVING_DB_SHUTDOWN_COMPLETE } from "./lowdb.constants";
+import { DB_FILENAME, WARN_SAVING_DB_SHUTDOWN, WARN_SAVING_DB_SHUTDOWN_COMPLETE } from "./lowdb.constants";
 import { Logger } from "@nestjs/common";
-
-const DB_FILENAME = "test-db.json"
+import { ServerService } from "../server/server.service";
+import { UserService } from "../user/user.service";
 
 describe("LowdbService", () => {
-  let service: LowdbService;
+  let dbService: LowdbService
+  let userService: UserService
+  let serverService: ServerService
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [LowdbService],
+      providers: [LowdbService, ServerService, UserService],
     }).compile();
 
-    service = module.get<LowdbService>(LowdbService);
+    dbService = module.get<LowdbService>(LowdbService);
+    userService = module.get<UserService>(UserService)
+    serverService = module.get<ServerService>(ServerService)
+
 
     // Mock the database initialization
-    await service.onModuleInit(DB_FILENAME)
-    service.getDb().data = { users: [], servers: [] }
+    await dbService.onModuleInit(DB_FILENAME)
+    dbService.getDb().data = { users: [], servers: [] }
   });
 
   it("should be defined", () => {
-    expect(service).toBeDefined();
+    expect(dbService).toBeDefined();
   });
 
   it('get db handle', () => {
-    const db = service.getDb();
+    const db = dbService.getDb();
     expect(db).toBeDefined(); // Ensure the db is initialized
   })
-
-  it("should create a user", async () => {
-    const userTemplate = {
-      discordId: 0,
-      username: 'username',
-      avatar: 'testAvatarString',
-      verified: true,
-    }
-    const userCreated = await service.creatUser(userTemplate)
-    expect(userCreated).toMatchObject<UserDetails>(userTemplate);
-  })
-
-  it("should create a user and resolve when creating a new one without really creating a new one", async () => {
-    const userTemplate: UserDetails = {
-      discordId: 1,
-      username: "testuser",
-      avatar: "testAvatarString",
-      verified: true,
-    };
-
-    // Create the first user
-    const createdUser = await service.creatUser(userTemplate);
-    expect(createdUser).toMatchObject(userTemplate);
-
-    // Attempt to create the same user again and expect rejection
-    await expect(service.creatUser(userTemplate)).resolves.toEqual(
-      createdUser
-    );
-
-    const users = await service.getAllEntries('users');
-    expect(users.length).toBe(1)
-  });
 
   it("should create a server for an existing user", async () => {
     const ownerDiscordId = 1;
@@ -74,11 +47,11 @@ describe("LowdbService", () => {
     const serverDescription = "Test server description";
   
     // Step 1: Create the user
-    const createdUser = await service.creatUser(userTemplate);
+    const createdUser = await userService.create(userTemplate);
     expect(createdUser).toMatchObject(userTemplate);
   
     // Step 2: Create the server
-    const createdServer = await service.creatServer(ownerDiscordId, serverDescription);
+    const createdServer = await serverService.create(ownerDiscordId, serverDescription);
   
     // Verify the server creation
     expect(createdServer).toMatchObject({
@@ -108,16 +81,16 @@ describe("LowdbService", () => {
       avatar: "testAvatarString",
       verified: true,
     };
-    const createdUser = await service.creatUser(userTemplate);
+    const createdUser = await userService.create(userTemplate);
     expect(createdUser).toMatchObject(userTemplate);
   
     // Step 2: Create a server
-    const createdServer = await service.creatServer(ownerDiscordId, serverDescription);
+    const createdServer = await serverService.creatServer(ownerDiscordId, serverDescription);
     expect(createdServer).toBeDefined();
     expect(createdServer.privateId).toBeDefined();
   
     // Step 3: Find the server by its private ID
-    const foundServer = await service.findServerByPrivateId(createdServer.privateId);
+    const foundServer = await serverService.findServerByPrivateId(createdServer.privateId);
   
     // Verify the server retrieval
     expect(foundServer).toBeDefined();
@@ -141,12 +114,12 @@ describe("LowdbService", () => {
       avatar: "testAvatarString",
       verified: true,
     };
-    const createdUser = await service.creatUser(userTemplate);
+    const createdUser = await userService.create(userTemplate);
     expect(createdUser).toMatchObject(userTemplate);
   
     // Step 2: Create two servers for the same owner
-    const createdServer1 = await service.creatServer(ownerDiscordId, serverDescription1);
-    const createdServer2 = await service.creatServer(ownerDiscordId, serverDescription2);
+    const createdServer1 = await serverService.creatServer(ownerDiscordId, serverDescription1);
+    const createdServer2 = await serverService.creatServer(ownerDiscordId, serverDescription2);
   
     expect(createdServer1).toBeDefined();
     expect(createdServer2).toBeDefined();
@@ -154,7 +127,7 @@ describe("LowdbService", () => {
     expect(createdServer2.owner).toBe(ownerDiscordId);
   
     // Step 3: Find all servers by their owner
-    const foundServers = await service.findServersByOwner(ownerDiscordId);
+    const foundServers = await serverService.findServersByOwner(ownerDiscordId);
   
     // Verify the servers retrieval
     expect(foundServers).toBeDefined();
@@ -188,16 +161,16 @@ describe("LowdbService", () => {
       avatar: "testAvatarString",
       verified: true,
     };
-    const createdUser = await service.creatUser(userTemplate);
+    const createdUser = await userService.create(userTemplate);
     expect(createdUser).toMatchObject(userTemplate);
   
     // Step 2: Create a server
-    const createdServer = await service.creatServer(ownerDiscordId, serverDescription);
+    const createdServer = await serverService.creatServer(ownerDiscordId, serverDescription);
     expect(createdServer).toBeDefined();
     expect(createdServer.owner).toBe(ownerDiscordId);
   
     // Step 3: Retrieve all users
-    const allUsers = await service.getAllEntries("users");
+    const allUsers = await userService.getAll();
     expect(allUsers).toBeDefined();
     expect(allUsers).toHaveLength(1); // Ensure one user is returned
     expect(allUsers).toEqual(
@@ -212,7 +185,7 @@ describe("LowdbService", () => {
     );
   
     // Step 4: Retrieve all servers
-    const allServers = await service.getAllEntries("servers");
+    const allServers = await serverService.getAll();
     expect(allServers).toBeDefined();
     expect(allServers).toHaveLength(1); // Ensure one server is returned
     expect(allServers).toEqual(
