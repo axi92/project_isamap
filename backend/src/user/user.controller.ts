@@ -9,11 +9,11 @@ export class UserController {
   
   @Get() // get all users
   async allUsers(){
-    return this.users.listAll()
+    return this.users.getAll()
   }
 
   @Post('create') // Create a new user
   async createUser(@Body(ValidationPipe) user: UserDetails) {
-    return await this.db.creatUser(user)
+    return await this.users.create(user)
   }
 }
