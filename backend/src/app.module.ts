@@ -22,9 +22,10 @@ import { LowdbModule } from "./lowdb/lowdb.module.js";
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, "..", "client/dist"),
     }),
-    ServerModule
+    ServerModule,
+    LowdbModule
   ],
   controllers: [AppController, ServerController],
-  providers: [AppService, LowdbService, ServerService],
+  providers: [AppService],
 })
 export class AppModule {}

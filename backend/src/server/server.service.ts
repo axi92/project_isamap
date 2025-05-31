@@ -6,8 +6,7 @@ export class ServerService {
   private readonly logger = new Logger('ServerService');
   constructor(private readonly db: LowdbService){}
 
-  async listAllServers(){
+  async listAll(){
     return this.db.getAllEntries('servers')
   }
 }
-// private db: LowWithLodash<DataBaseStructure>;

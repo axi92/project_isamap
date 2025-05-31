@@ -1,6 +1,5 @@
 import { Controller, Logger, Post, Query } from "@nestjs/common";
 import { AppService } from "./app.service";
-import { LowdbService } from "./lowdb/lowdb.service";
 
 @Controller()
 export class AppController {

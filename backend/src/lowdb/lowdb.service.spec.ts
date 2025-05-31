@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { LowdbService } from "./lowdb.service";
-import { UserDetails } from "./lowdb.interface";
+import { UserDetails } from "../user/user.interface";
 import { ERROR_USER_EXISTS, WARN_SAVING_DB_SHUTDOWN, WARN_SAVING_DB_SHUTDOWN_COMPLETE } from "./lowdb.constants";
 import { Logger } from "@nestjs/common";
 
@@ -41,7 +41,7 @@ describe("LowdbService", () => {
     expect(userCreated).toMatchObject<UserDetails>(userTemplate);
   })
 
-  it("should create a user and reject when creating the same user again", async () => {
+  it("should create a user and resolve when creating a new one without really creating a new one", async () => {
     const userTemplate: UserDetails = {
       discordId: 1,
       username: "testuser",
@@ -54,9 +54,12 @@ describe("LowdbService", () => {
     expect(createdUser).toMatchObject(userTemplate);
 
     // Attempt to create the same user again and expect rejection
-    await expect(service.creatUser(userTemplate)).rejects.toEqual(
-      ERROR_USER_EXISTS
+    await expect(service.creatUser(userTemplate)).resolves.toEqual(
+      createdUser
     );
+
+    const users = await service.getAllEntries('users');
+    expect(users.length).toBe(1)
   });
 
   it("should create a server for an existing user", async () => {
