@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
-import { UserDetails } from './user.interface';
+import { UserCreatDto } from './dto/userCreate.dto';
 import { LowdbService } from '../lowdb/lowdb.service';
 import { DB_FILENAME } from '../lowdb/lowdb.constants';
 import { testDiscordID1 } from "./user.constants";
@@ -34,11 +34,11 @@ describe('UserService', () => {
       verified: true,
     }
     const userCreated = await service.create(userTemplate)
-    expect(userCreated).toMatchObject<UserDetails>(userTemplate);
+    expect(userCreated).toMatchObject<UserCreatDto>(userTemplate);
   })
 
   it("should create a user and resolve when creating a new one without really creating a new one", async () => {
-    const userTemplate: UserDetails = {
+    const userTemplate: UserCreatDto = {
       userId: testDiscordID1,
       username: "testuser",
       avatar: "testAvatarString",

@@ -6,7 +6,7 @@ import { Profile, Strategy } from "passport-discord";
 import { Done } from "../utils/types.js";
 import { encrypt } from "../utils/encrypt.js";
 import { ConfigurationService } from "../configuration/configuration.service.js";
-import { UserDetails } from "src/user/user.interface.js";
+import { UserCreatDto } from "../user/dto/userCreate.dto.js";
 
 @Injectable()
 export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
@@ -30,7 +30,7 @@ export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
     done: Done,
   ): Promise<any> {
     const { id, username, avatar, verified } = profile;
-    const user: UserDetails = {
+    const user: UserCreatDto = {
       userId: id,
       username,
       avatar,

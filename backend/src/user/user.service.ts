@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { LowdbService } from '../lowdb/lowdb.service';
-import { UserDetails } from './user.interface';
+import { UserCreatDto } from './dto/userCreate.dto';
 import { COLLECTION } from '../lowdb/lowdb.constants';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class UserService {
     return this.dbService.getAllEntries('users')
   }
 
-  async findUserById(userId: string): Promise<UserDetails | undefined> {
+  async findUserById(userId: string): Promise<UserCreatDto | undefined> {
     return new Promise(async (resolve) => {
       const result = this.dbService.getDBChain()
         .get("users")
@@ -34,14 +34,14 @@ export class UserService {
     })
   }
 
-  async create(details: UserDetails): Promise<UserDetails> {
+  async create(details: UserCreatDto): Promise<UserCreatDto> {
     return new Promise(async (resolve) => {
       const newEntry = {
         userId: details.userId,
         username: details.username,
         verified: details.verified,
         avatar: details.avatar
-      } as UserDetails;
+      } as UserCreatDto;
       // Check if entry already exists with that discordId
       if (await this.doesUserExist(details.userId)) {
         // Resolve without doing anything, status now is the desired status => Nothing to do
@@ -50,7 +50,7 @@ export class UserService {
       const chain = this.dbService.getDBChain()
       const dbData = chain
         .get(COLLECTION.USERS)
-        .value() as UserDetails[];
+        .value() as UserCreatDto[];
       dbData.push(newEntry);
       chain.set(COLLECTION.USERS, dbData);
       await this.dbService.getDb().write();

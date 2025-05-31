@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { LowdbService } from "./lowdb.service";
-import { UserDetails } from "../user/user.interface";
+import { UserCreatDto } from "../user/dto/userCreate.dto";
 import { DB_FILENAME, WARN_SAVING_DB_SHUTDOWN, WARN_SAVING_DB_SHUTDOWN_COMPLETE } from "./lowdb.constants";
 import { Logger } from "@nestjs/common";
 import { ServerService } from "../server/server.service";
@@ -40,7 +40,7 @@ describe("LowdbService", () => {
 
   it("should create a server for an existing user", async () => {
     const ownerDiscordId = testDiscordID1;
-    const userTemplate: UserDetails = {
+    const userTemplate: UserCreatDto = {
       userId: ownerDiscordId,
       username: "testuser",
       avatar: "testAvatarString",
@@ -83,7 +83,7 @@ describe("LowdbService", () => {
     const serverDescription = "Test server description";
 
     // Step 1: Create a user (required for server creation)
-    const userTemplate: UserDetails = {
+    const userTemplate: UserCreatDto = {
       userId: ownerDiscordId,
       username: "testuser",
       avatar: "testAvatarString",
@@ -121,7 +121,7 @@ describe("LowdbService", () => {
     const serverDescription2 = "Test server description 2";
 
     // Step 1: Create a user (required for server creation)
-    const userTemplate: UserDetails = {
+    const userTemplate: UserCreatDto = {
       userId: testDiscordID1,
       username: "testuser",
       avatar: "testAvatarString",
@@ -177,7 +177,7 @@ describe("LowdbService", () => {
     const serverDescription = "Test server description";
 
     // Step 1: Create a user
-    const userTemplate: UserDetails = {
+    const userTemplate: UserCreatDto = {
       userId: testDiscordID1,
       username: "testuser",
       avatar: "testAvatarString",
@@ -206,7 +206,7 @@ describe("LowdbService", () => {
           username: "testuser",
           avatar: "testAvatarString",
           verified: true,
-        } as UserDetails),
+        } as UserCreatDto),
       ])
     );
 
