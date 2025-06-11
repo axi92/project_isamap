@@ -1,9 +1,9 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger } from '@nestjs/common';
 import {
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
-} from "@nestjs/websockets";
+} from '@nestjs/websockets';
 
 @Injectable()
 @WebSocketGateway({
@@ -12,7 +12,7 @@ import {
 export class MySocketGateway {
   private readonly logger = new Logger(MySocketGateway.name);
 
-  @SubscribeMessage("newMessage")
+  @SubscribeMessage('newMessage')
   onNewMessage(@MessageBody() body: any) {
     this.logger.log(body);
   }

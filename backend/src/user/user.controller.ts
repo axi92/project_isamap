@@ -5,15 +5,18 @@ import { UserService } from './user.service';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly db: LowdbService, private readonly users: UserService){}
-  
+  constructor(
+    private readonly db: LowdbService,
+    private readonly users: UserService,
+  ) {}
+
   @Get() // get all users
-  async allUsers(){
-    return this.users.getAll()
+  async allUsers() {
+    return this.users.getAll();
   }
 
   @Post('create') // Create a new user
   async createUser(@Body(ValidationPipe) createUserDto: UserCreatDto) {
-    return await this.users.create(createUserDto)
+    return await this.users.create(createUserDto);
   }
 }

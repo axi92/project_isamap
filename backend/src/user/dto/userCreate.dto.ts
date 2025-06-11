@@ -1,6 +1,12 @@
 // https://discord.com/developers/docs/resources/user#user-object
 
-import { IsBoolean, IsNotEmpty, IsOptional, IsString, Length, Matches } from "class-validator";
+import {
+  IsBoolean,
+  IsOptional,
+  IsString,
+  Length,
+  Matches,
+} from 'class-validator';
 
 export class UserCreatDto {
   @IsString()

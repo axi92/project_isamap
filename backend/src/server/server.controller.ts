@@ -1,14 +1,11 @@
-import { Body, Controller, Post, Get, ValidationPipe, Param, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Post, Get, ValidationPipe } from '@nestjs/common';
 import { ServerService } from './server.service';
 import { LiveMapDTO } from './dto/server.dto';
 import { ServerCreateDto } from './dto/serverCreate.dto';
 
 @Controller('servers')
 export class ServerController {
-
-  constructor(
-    private readonly servers:ServerService,
-  ){}
+  constructor(private readonly servers: ServerService) {}
   /*
   GET /servers
   - Get one user:
@@ -22,9 +19,9 @@ export class ServerController {
   */
 
   @Get() // GET /users
-  async allServers(){
-    const users = await this.servers.getAll()
-    return users
+  async allServers() {
+    const users = await this.servers.getAll();
+    return users;
   }
 
   @Post('data') // Gameserver sending data to webserver
@@ -33,8 +30,8 @@ export class ServerController {
   }
 
   @Post('create') // Create a new server
-  async createServer(@Body(ValidationPipe) serverCreateDto: ServerCreateDto){
-    return await this.servers.create(serverCreateDto)
+  async createServer(@Body(ValidationPipe) serverCreateDto: ServerCreateDto) {
+    return await this.servers.create(serverCreateDto);
     // create server
     // return publicID, privateID, description
   }

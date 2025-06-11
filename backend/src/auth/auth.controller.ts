@@ -1,13 +1,13 @@
-import { Controller, Get, Query, Req, UseGuards  } from "@nestjs/common";
-import { AuthService } from "./auth.service";
+import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
+import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller("auth")
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   // localhost:3000/api/v1/auth/login
-  @Get("login") // auth/login
+  @Get('login') // auth/login
   @UseGuards(AuthGuard('discord'))
   login() {
     // Redirects to Discord OAuth

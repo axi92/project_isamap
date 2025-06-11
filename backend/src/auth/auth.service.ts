@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { UserService } from "../user/user.service.js";
-import { UserCreatDto } from "../user/dto/userCreate.dto.js";
-import { InterfaceAuthService } from "./auth.interface.js";
+import { Injectable } from '@nestjs/common';
+import { UserService } from '../user/user.service';
+import { UserCreatDto } from '../user/dto/userCreate.dto';
+import { InterfaceAuthService } from './auth.interface';
 
 @Injectable()
 export class AuthService implements InterfaceAuthService {

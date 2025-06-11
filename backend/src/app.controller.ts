@@ -1,11 +1,9 @@
-import { Controller, Logger, Post, Query } from "@nestjs/common";
-import { AppService } from "./app.service";
+import { Controller, Logger } from '@nestjs/common';
+import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
   private readonly logger = new Logger(AppController.name);
 
-  constructor(
-    private readonly appService: AppService,
-  ) {}
+  constructor(private readonly appService: AppService) {}
 }

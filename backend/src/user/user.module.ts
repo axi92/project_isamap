@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { LowdbModule } from 'src/lowdb/lowdb.module';
+import { LowdbModule } from '../lowdb/lowdb.module';
 
 @Module({
   providers: [UserService],
   controllers: [UserController],
-  imports: [LowdbModule]
+  imports: [LowdbModule],
 })
 export class UsersModule {}

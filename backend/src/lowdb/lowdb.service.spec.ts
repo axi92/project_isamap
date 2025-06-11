@@ -1,18 +1,22 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { LowdbService } from "./lowdb.service";
-import { UserCreatDto } from "../user/dto/userCreate.dto";
-import { DB_FILENAME, WARN_SAVING_DB_SHUTDOWN, WARN_SAVING_DB_SHUTDOWN_COMPLETE } from "./lowdb.constants";
-import { Logger } from "@nestjs/common";
-import { ServerService } from "../server/server.service";
-import { UserService } from "../user/user.service";
-import { ServerEntry } from "../server/server.interface";
-import { ServerCreateDto } from "../server/dto/serverCreate.dto";
-import { testDiscordID1, testDiscordID2 } from "../user/user.constants";
+import { Test, TestingModule } from '@nestjs/testing';
+import { LowdbService } from './lowdb.service';
+import { UserCreatDto } from '../user/dto/userCreate.dto';
+import {
+  DB_FILENAME,
+  WARN_SAVING_DB_SHUTDOWN,
+  WARN_SAVING_DB_SHUTDOWN_COMPLETE,
+} from './lowdb.constants';
+import { Logger } from '@nestjs/common';
+import { ServerService } from '../server/server.service';
+import { UserService } from '../user/user.service';
+import { ServerEntry } from '../server/server.interface';
+import { ServerCreateDto } from '../server/dto/serverCreate.dto';
+import { testDiscordID1 } from '../user/user.constants';
 
-describe("LowdbService", () => {
-  let dbService: LowdbService
-  let userService: UserService
-  let serverService: ServerService
+describe('LowdbService', () => {
+  let dbService: LowdbService;
+  let userService: UserService;
+  let serverService: ServerService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,34 +24,33 @@ describe("LowdbService", () => {
     }).compile();
 
     dbService = module.get<LowdbService>(LowdbService);
-    userService = module.get<UserService>(UserService)
-    serverService = module.get<ServerService>(ServerService)
-
+    userService = module.get<UserService>(UserService);
+    serverService = module.get<ServerService>(ServerService);
 
     // Mock the database initialization
-    await dbService.onModuleInit(DB_FILENAME)
-    dbService.getDb().data = { users: [], servers: [] }
+    await dbService.onModuleInit(DB_FILENAME);
+    dbService.getDb().data = { users: [], servers: [] };
   });
 
-  it("should be defined", () => {
+  it('should be defined', () => {
     expect(dbService).toBeDefined();
   });
 
   it('get db handle', () => {
     const db = dbService.getDb();
     expect(db).toBeDefined(); // Ensure the db is initialized
-  })
+  });
 
-  it("should create a server for an existing user", async () => {
+  it('should create a server for an existing user', async () => {
     const ownerDiscordId = testDiscordID1;
     const userTemplate: UserCreatDto = {
       userId: ownerDiscordId,
-      username: "testuser",
-      avatar: "testAvatarString",
+      username: 'testuser',
+      avatar: 'testAvatarString',
       verified: true,
     };
 
-    const serverDescription = "Test server description";
+    const serverDescription = 'Test server description';
 
     // Step 1: Create the user
     const createdUser = await userService.create(userTemplate);
@@ -55,11 +58,13 @@ describe("LowdbService", () => {
 
     const serverCreate: ServerCreateDto = {
       owner: testDiscordID1,
-      description: serverDescription
-    }
+      description: serverDescription,
+    };
 
     // Step 2: Create the server
-    const createdServer = await serverService.create(serverCreate) as ServerEntry
+    const createdServer = (await serverService.create(
+      serverCreate,
+    )) as ServerEntry;
 
     // Verify the server creation
     expect(createdServer).toMatchObject({
@@ -71,22 +76,22 @@ describe("LowdbService", () => {
     expect(createdServer.privateId).toBeDefined();
     expect(createdServer.publicId).toBeDefined();
     expect(createdServer.privateId).toMatch(
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
     );
     expect(createdServer.publicId).toMatch(
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
     );
   });
 
-  it("should find a server by its private ID", async () => {
+  it('should find a server by its private ID', async () => {
     const ownerDiscordId = testDiscordID1;
-    const serverDescription = "Test server description";
+    const serverDescription = 'Test server description';
 
     // Step 1: Create a user (required for server creation)
     const userTemplate: UserCreatDto = {
       userId: ownerDiscordId,
-      username: "testuser",
-      avatar: "testAvatarString",
+      username: 'testuser',
+      avatar: 'testAvatarString',
       verified: true,
     };
     const createdUser = await userService.create(userTemplate);
@@ -94,16 +99,20 @@ describe("LowdbService", () => {
 
     const serverCreate: ServerCreateDto = {
       owner: testDiscordID1,
-      description: serverDescription
-    }
+      description: serverDescription,
+    };
 
     // Step 2: Create a server
-    const createdServer = await serverService.create(serverCreate) as ServerEntry ;
+    const createdServer = (await serverService.create(
+      serverCreate,
+    )) as ServerEntry;
     expect(createdServer).toBeDefined();
     expect(createdServer.privateId).toBeDefined();
 
     // Step 3: Find the server by its private ID
-    const foundServer = await serverService.findServerByPrivateId(createdServer.privateId);
+    const foundServer = await serverService.findServerByPrivateId(
+      createdServer.privateId,
+    );
 
     // Verify the server retrieval
     expect(foundServer).toBeDefined();
@@ -115,16 +124,16 @@ describe("LowdbService", () => {
     } as ServerEntry);
   });
 
-  it("should find all servers by its owner when multiple servers exist", async () => {
+  it('should find all servers by its owner when multiple servers exist', async () => {
     const ownerDiscordId = testDiscordID1;
-    const serverDescription1 = "Test server description 1";
-    const serverDescription2 = "Test server description 2";
+    const serverDescription1 = 'Test server description 1';
+    const serverDescription2 = 'Test server description 2';
 
     // Step 1: Create a user (required for server creation)
     const userTemplate: UserCreatDto = {
       userId: testDiscordID1,
-      username: "testuser",
-      avatar: "testAvatarString",
+      username: 'testuser',
+      avatar: 'testAvatarString',
       verified: true,
     };
 
@@ -133,16 +142,20 @@ describe("LowdbService", () => {
 
     const serverCreate1: ServerCreateDto = {
       owner: testDiscordID1,
-      description: serverDescription1
-    }
+      description: serverDescription1,
+    };
     const serverCreate2: ServerCreateDto = {
       owner: testDiscordID1,
-      description: serverDescription2
-    }
+      description: serverDescription2,
+    };
 
     // Step 2: Create two servers for the same owner
-    const createdServer1 = await serverService.create(serverCreate1) as ServerEntry;
-    const createdServer2 = await serverService.create(serverCreate2) as ServerEntry;
+    const createdServer1 = (await serverService.create(
+      serverCreate1,
+    )) as ServerEntry;
+    const createdServer2 = (await serverService.create(
+      serverCreate2,
+    )) as ServerEntry;
 
     expect(createdServer1).toBeDefined();
     expect(createdServer2).toBeDefined();
@@ -169,18 +182,18 @@ describe("LowdbService", () => {
           privateId: createdServer2.privateId,
           publicId: createdServer2.publicId,
         } as ServerEntry),
-      ])
+      ]),
     );
   });
 
-  it("should retrieve all entries for users and servers", async () => {
-    const serverDescription = "Test server description";
+  it('should retrieve all entries for users and servers', async () => {
+    const serverDescription = 'Test server description';
 
     // Step 1: Create a user
     const userTemplate: UserCreatDto = {
       userId: testDiscordID1,
-      username: "testuser",
-      avatar: "testAvatarString",
+      username: 'testuser',
+      avatar: 'testAvatarString',
       verified: true,
     };
     const createdUser = await userService.create(userTemplate);
@@ -189,9 +202,11 @@ describe("LowdbService", () => {
     // Step 2: Create a server
     const serverCreateDto: ServerCreateDto = {
       owner: testDiscordID1,
-      description: serverDescription
-    }
-    const createdServer = await serverService.create(serverCreateDto) as ServerEntry;
+      description: serverDescription,
+    };
+    const createdServer = (await serverService.create(
+      serverCreateDto,
+    )) as ServerEntry;
     expect(createdServer).toBeDefined();
     expect(createdServer.owner).toBe(serverCreateDto.owner);
 
@@ -203,11 +218,11 @@ describe("LowdbService", () => {
       expect.arrayContaining([
         expect.objectContaining({
           userId: serverCreateDto.owner,
-          username: "testuser",
-          avatar: "testAvatarString",
+          username: 'testuser',
+          avatar: 'testAvatarString',
           verified: true,
         } as UserCreatDto),
-      ])
+      ]),
     );
 
     // Step 4: Retrieve all servers
@@ -222,13 +237,12 @@ describe("LowdbService", () => {
           privateId: createdServer.privateId,
           publicId: createdServer.publicId,
         } as ServerEntry),
-      ])
+      ]),
     );
   });
-
 });
 
-describe("LowdbService - onModuleDestroy", () => {
+describe('LowdbService - onModuleDestroy', () => {
   let service: LowdbService;
   let loggerSpyWarn: jest.SpyInstance;
   let dbWriteSpy: jest.SpyInstance;
@@ -241,25 +255,27 @@ describe("LowdbService - onModuleDestroy", () => {
     service = module.get<LowdbService>(LowdbService);
 
     // Mock the database initialization
-    service["db"] = {
+    service['db'] = {
       write: jest.fn(), // Mock the db.write method
-    } as any;
+    } as never;
 
     // Spy on Logger.warn
-    loggerSpyWarn = jest.spyOn(Logger.prototype, "warn").mockImplementation();
-    dbWriteSpy = jest.spyOn(service["db"], "write");
+    loggerSpyWarn = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+    dbWriteSpy = jest.spyOn(service['db'], 'write');
   });
 
   afterEach(() => {
     jest.restoreAllMocks(); // Restore original implementations
   });
 
-  it("should log two warn messages and call db.write", async () => {
+  it('should log two warn messages and call db.write', async () => {
     await service.onModuleDestroy();
 
     // Check if the two warn messages were logged
     expect(loggerSpyWarn).toHaveBeenCalledWith(WARN_SAVING_DB_SHUTDOWN);
-    expect(loggerSpyWarn).toHaveBeenCalledWith(WARN_SAVING_DB_SHUTDOWN_COMPLETE);
+    expect(loggerSpyWarn).toHaveBeenCalledWith(
+      WARN_SAVING_DB_SHUTDOWN_COMPLETE,
+    );
 
     // Check if db.write was called
     expect(dbWriteSpy).toHaveBeenCalled();

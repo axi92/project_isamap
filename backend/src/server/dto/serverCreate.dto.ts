@@ -1,4 +1,4 @@
-import { IsOptional, IsString, Length, Matches } from "class-validator";
+import { IsOptional, IsString, Length, Matches } from 'class-validator';
 
 export class ServerCreateDto {
   @IsString()
@@ -8,5 +8,5 @@ export class ServerCreateDto {
 
   @IsOptional()
   @IsString()
-  description?: string
- }
+  description?: string;
+}
