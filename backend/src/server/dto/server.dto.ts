@@ -1,12 +1,8 @@
-import {
-  Transform,
-  Type,
-} from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsString,
   IsNumber,
   ValidateNested,
-  IsObject,
   IsNotEmpty,
   IsArray,
   IsOptional,

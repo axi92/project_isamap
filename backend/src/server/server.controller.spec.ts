@@ -10,7 +10,7 @@ describe('ServerController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ServerController],
-      providers: [ServerService, LowdbService, UserService]
+      providers: [ServerService, LowdbService, UserService],
     }).compile();
 
     controller = module.get<ServerController>(ServerController);

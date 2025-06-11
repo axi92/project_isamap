@@ -1,10 +1,14 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { ConfigurationService } from "./configuration.service";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { ENV_VARS, ERROR_CONFIG_NOT_LOADED, WARN_CONFIG_EMPTY } from "./configuration.constants";
-import { Logger } from "@nestjs/common";
+import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigurationService } from './configuration.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import {
+  ENV_VARS,
+  ERROR_CONFIG_NOT_LOADED,
+  WARN_CONFIG_EMPTY,
+} from './configuration.constants';
+import { Logger } from '@nestjs/common';
 
-describe("ConfigurationServiceWithMissingConfig", () => {
+describe('ConfigurationServiceWithMissingConfig', () => {
   let mockConfigService: Partial<ConfigService>;
   let loggerSpyWarn: jest.SpyInstance;
   let loggerSpyError: jest.SpyInstance;
@@ -15,8 +19,8 @@ describe("ConfigurationServiceWithMissingConfig", () => {
     };
 
     // Spy on Logger methods
-    loggerSpyWarn = jest.spyOn(Logger.prototype, "warn").mockImplementation();
-    loggerSpyError = jest.spyOn(Logger.prototype, "error").mockImplementation();
+    loggerSpyWarn = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+    loggerSpyError = jest.spyOn(Logger.prototype, 'error').mockImplementation();
     expect.hasAssertions();
   });
 
@@ -24,7 +28,7 @@ describe("ConfigurationServiceWithMissingConfig", () => {
     jest.restoreAllMocks(); // Restore original Logger methods
   });
 
-  it("should log a warning and an error on empty config", async () => {
+  it('should log a warning and an error on empty config', async () => {
     let service: ConfigurationService;
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -35,22 +39,17 @@ describe("ConfigurationServiceWithMissingConfig", () => {
 
     service = module.get<ConfigurationService>(ConfigurationService);
     // Check if the warning and error were logged
-    expect(loggerSpyWarn).toHaveBeenCalledWith(
-      WARN_CONFIG_EMPTY
-    );
-    expect(loggerSpyError).toHaveBeenCalledWith(
-      ERROR_CONFIG_NOT_LOADED
-    );
+    expect(loggerSpyWarn).toHaveBeenCalledWith(WARN_CONFIG_EMPTY);
+    expect(loggerSpyError).toHaveBeenCalledWith(ERROR_CONFIG_NOT_LOADED);
   });
 });
 
-
-describe("ConfigurationServiceWithValidConfig", () => {
+describe('ConfigurationServiceWithValidConfig', () => {
   let service: ConfigurationService;
   let mockConfigService: Partial<ConfigService>;
-  const clientID = 'mock-client-id'
-  const secret = 'mock-client-secret'
-  const redirectUri = 'mock-redirect-uri'
+  const clientID = 'mock-client-id';
+  const secret = 'mock-client-secret';
+  const redirectUri = 'mock-redirect-uri';
 
   beforeAll(async () => {
     mockConfigService = {
@@ -58,9 +57,9 @@ describe("ConfigurationServiceWithValidConfig", () => {
         const mockConfig = {
           [ENV_VARS.DISCORD_CLIENT_ID]: clientID,
           [ENV_VARS.DISCORD_CLIENT_SECRET]: secret,
-          [ENV_VARS.DISCORD_REDIRECT_URI]: redirectUri
-        }
-        return mockConfig[key]
+          [ENV_VARS.DISCORD_REDIRECT_URI]: redirectUri,
+        };
+        return mockConfig[key];
       }), // Mock the get method to return
     };
 
@@ -79,19 +78,19 @@ describe("ConfigurationServiceWithValidConfig", () => {
     service.setDiscordRedirectUri(redirectUri);
   });
 
-  it("should be defined", () => {
+  it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it("should return the correct DISCORD_CLIENT_ID", () => {
+  it('should return the correct DISCORD_CLIENT_ID', () => {
     expect(service.getDiscordClientId()).toBe(clientID);
   });
 
-  it("should return the correct DISCORD_CLIENT_SECRET", () => {
+  it('should return the correct DISCORD_CLIENT_SECRET', () => {
     expect(service.getDiscordClientSecret()).toBe(secret);
   });
 
-  it("should return the correct DISCORD_REDIRECT_URI", () => {
+  it('should return the correct DISCORD_REDIRECT_URI', () => {
     expect(service.getDiscordRedirectUri()).toBe(redirectUri);
   });
 });

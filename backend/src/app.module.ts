@@ -1,16 +1,16 @@
-import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller.js";
-import { AppService } from "./app.service.js";
-import { ServeStaticModule } from "@nestjs/serve-static";
-import { join } from "path";
-import { GatewayModule } from "./gateway/gateway.module";
-import { AuthModule } from "./auth/auth.module";
-import { ConfigModule } from "@nestjs/config";
-import { UsersModule } from './user/user.module.js';
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { GatewayModule } from './gateway/gateway.module';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './user/user.module';
 import { ServerController } from './server/server.controller';
 import { ServerModule } from './server/server.module';
-import { LowdbModule } from "./lowdb/lowdb.module.js";
-import { UserService } from "./user/user.service.js";
+import { LowdbModule } from './lowdb/lowdb.module';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -19,10 +19,10 @@ import { UserService } from "./user/user.service.js";
     AuthModule,
     UsersModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "..", "..", "client/dist"),
+      rootPath: join(__dirname, '..', '..', 'client/dist'),
     }),
     ServerModule,
-    LowdbModule
+    LowdbModule,
   ],
   controllers: [AppController, ServerController],
   providers: [AppService, UserService],

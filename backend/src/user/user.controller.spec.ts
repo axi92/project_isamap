@@ -10,7 +10,7 @@ describe('UserController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
       imports: [LowdbModule],
-      providers: [UserService]
+      providers: [UserService],
     }).compile();
 
     controller = module.get<UserController>(UserController);
