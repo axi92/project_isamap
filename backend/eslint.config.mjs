@@ -13,6 +13,9 @@ const compat = new FlatCompat({
 export default defineConfig([
   // JavaScript and TypeScript base config
   {
+    ignores: ['dist/', 'node_modules/, src/coverage/'],
+  },
+  {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
     languageOptions: {
       parser: tseslint.parser,
@@ -37,7 +40,7 @@ export default defineConfig([
       'import/no-absolute-path': 'error',
       'import/no-unresolved': 'off', // handled by TS
       // Prettier integration (optional)
-      'prettier/prettier': 'error',
+      'prettier/prettier': ['error', { singleQuote: true }],
     },
     ignores: ['dist/', 'node_modules/'],
   },
