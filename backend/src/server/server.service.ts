@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { LowdbService } from '../lowdb/lowdb.service';
 import { ServerEntry } from './server.interface';
 import { COLLECTION } from '../lowdb/lowdb.constants';
@@ -6,10 +6,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { ServerCreateDto } from './dto/serverCreate.dto';
 import { UserService } from '../user/user.service';
 import { ERROR_INVALID_OWNER } from './server.constants';
+import { LiveMapDTO } from './dto/server.dto';
 
 @Injectable()
 export class ServerService {
   private readonly logger = new Logger('ServerService');
+  private serverData = new Map<string, LiveMapDTO>();
+
   constructor(
     private readonly dbService: LowdbService,
     private readonly userService: UserService,
@@ -41,14 +44,22 @@ export class ServerService {
     });
   }
 
-  async findServerByPrivateId(privateId: string): Promise<ServerEntry> {
-    return new Promise(async (resolve) => {
+  async findServerByPrivateId(
+    privateId: string,
+  ): Promise<ServerEntry | NotFoundException> {
+    return new Promise(async (resolve, reject) => {
       const result = this.dbService
         .getDBChain()
         .get('servers')
         .find({ privateId: privateId })
         .value();
-      resolve(result);
+      if (!result) {
+        return reject(
+          new NotFoundException(`Server with privateId ${privateId} not found`),
+        );
+      } else {
+        resolve(result);
+      }
     });
   }
 
@@ -61,5 +72,25 @@ export class ServerService {
         .value();
       resolve(result);
     });
+  }
+
+  async processData(
+    liveMapDto: LiveMapDTO,
+  ): Promise<ServerEntry | NotFoundException> {
+    this.logger.debug(`Processing data for server: ${liveMapDto.servername}`);
+    // Store the data in the serverData map
+    const result = await this.findServerByPrivateId(liveMapDto.privateid);
+    if (result instanceof ServerEntry) {
+      this.serverData.set(result.publicId, liveMapDto);
+    }
+    return result;
+    // Here you can add logic to handle the data, e.g., save it to a database
+  }
+
+  getServerDataByPublicId(publicId: string): LiveMapDTO | NotFoundException {
+    return (
+      this.serverData.get(publicId) ||
+      new NotFoundException(`Server data with publicId ${publicId} not found`)
+    );
   }
 }

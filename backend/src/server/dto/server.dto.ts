@@ -120,7 +120,7 @@ class PlayerDTO {
   tribename: string;
 }
 
-class BodyDTO {
+export class LiveMapDTO {
   @IsNotEmpty()
   @IsString()
   privateid: string;
@@ -141,23 +141,17 @@ class BodyDTO {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => TribeDTO)
-  tribes?: Record<string, TribeDTO>;
+  tribes?: TribeDTO[];
 
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => DinoDTO)
-  dinos?: Record<string, DinoDTO>;
+  dinos?: DinoDTO[];
 
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => PlayerDTO)
-  players?: Record<string, PlayerDTO>;
-}
-
-export class LiveMapDTO {
-  @ValidateNested()
-  @Type(() => BodyDTO)
-  body: BodyDTO;
+  players?: PlayerDTO[];
 }
