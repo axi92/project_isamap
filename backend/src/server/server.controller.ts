@@ -25,7 +25,7 @@ export class ServerController {
   }
 
   @Post('data') // Gameserver sending data to webserver
-  processData(@Body(ValidationPipe) liveMapDto: LiveMapDTO) {
+  async processData(@Body(ValidationPipe) liveMapDto: LiveMapDTO) {
     return { received: liveMapDto };
   }
 

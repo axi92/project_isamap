@@ -11,7 +11,7 @@ import { ServerService } from '../server/server.service';
 import { UserService } from '../user/user.service';
 import { ServerEntry } from '../server/server.interface';
 import { ServerCreateDto } from '../server/dto/serverCreate.dto';
-import { testDiscordID1 } from '../user/user.constants';
+import { testDiscordID1, userTestTemplate } from '../user/user.constants';
 
 describe('LowdbService', () => {
   let dbService: LowdbService;
@@ -43,18 +43,12 @@ describe('LowdbService', () => {
 
   it('should create a server for an existing user', async () => {
     const ownerDiscordId = testDiscordID1;
-    const userTemplate: UserCreatDto = {
-      userId: ownerDiscordId,
-      username: 'testuser',
-      avatar: 'testAvatarString',
-      verified: true,
-    };
 
     const serverDescription = 'Test server description';
 
     // Step 1: Create the user
-    const createdUser = await userService.create(userTemplate);
-    expect(createdUser).toMatchObject(userTemplate);
+    const createdUser = await userService.create(userTestTemplate);
+    expect(createdUser).toMatchObject(userTestTemplate);
 
     const serverCreate: ServerCreateDto = {
       owner: testDiscordID1,
@@ -84,18 +78,11 @@ describe('LowdbService', () => {
   });
 
   it('should find a server by its private ID', async () => {
-    const ownerDiscordId = testDiscordID1;
     const serverDescription = 'Test server description';
 
     // Step 1: Create a user (required for server creation)
-    const userTemplate: UserCreatDto = {
-      userId: ownerDiscordId,
-      username: 'testuser',
-      avatar: 'testAvatarString',
-      verified: true,
-    };
-    const createdUser = await userService.create(userTemplate);
-    expect(createdUser).toMatchObject(userTemplate);
+    const createdUser = await userService.create(userTestTemplate);
+    expect(createdUser).toMatchObject(userTestTemplate);
 
     const serverCreate: ServerCreateDto = {
       owner: testDiscordID1,
@@ -117,7 +104,7 @@ describe('LowdbService', () => {
     // Verify the server retrieval
     expect(foundServer).toBeDefined();
     expect(foundServer).toMatchObject({
-      owner: ownerDiscordId,
+      owner: testDiscordID1,
       description: serverDescription,
       privateId: createdServer.privateId,
       publicId: createdServer.publicId,
