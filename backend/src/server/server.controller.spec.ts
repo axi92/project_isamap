@@ -3,6 +3,9 @@ import { ServerController } from './server.controller';
 import { ServerService } from './server.service';
 import { LowdbService } from '../lowdb/lowdb.service';
 import { UserService } from '../user/user.service';
+import { LiveMapDTO } from './dto/server.dto';
+import { exampleServerData } from './server.test.data';
+import { validate } from 'class-validator';
 
 describe('ServerController', () => {
   let controller: ServerController;
@@ -33,5 +36,19 @@ describe('ServerController', () => {
     const result = await controller.allServers();
     expect(result).toEqual(mockServers);
     expect(serverService.getAll).toHaveBeenCalledTimes(1);
+  });
+
+  it('should pass the validation on the LiveMapDTO', async () => {
+    const dto = new LiveMapDTO();
+    dto.map = exampleServerData.map;
+    dto.privateid = exampleServerData.privateid;
+    dto.serverclock = exampleServerData.serverclock;
+    dto.servername = exampleServerData.servername;
+    dto.players = exampleServerData.players;
+    dto.tribes = exampleServerData.tribes;
+
+    const errors = await validate(dto);
+    console.log(errors);
+    expect(errors.length).toBe(0);
   });
 });

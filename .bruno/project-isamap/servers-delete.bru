@@ -1,0 +1,17 @@
+meta {
+  name: servers/delete
+  type: http
+  seq: 5
+}
+
+delete {
+  url: http://localhost:3000/api/v1/servers/delete
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "privateid": "f8bd56e5-6344-4d97-b15c-5490890aa39c"
+  }
+}

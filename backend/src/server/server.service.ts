@@ -1,8 +1,8 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   Logger,
-  NotFoundException,
 } from '@nestjs/common';
 import { LowdbService } from '../lowdb/lowdb.service';
 import { ServerEntry } from './server.interface';
@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ServerCreateDto } from './dto/serverCreate.dto';
 import { UserService } from '../user/user.service';
 import { ERROR_INVALID_OWNER } from './server.constants';
-import { LiveMapDTO } from './dto/server.dto';
+import { LiveMapDTO, privateIdDTO } from './dto/server.dto';
 
 @Injectable()
 export class ServerService {
@@ -45,7 +45,23 @@ export class ServerService {
       } as ServerEntry;
       dbData.push(newEntry);
       chain.set(COLLECTION.USERS, dbData);
+      this.dbService.flushDataToDisk = true;
       return resolve(newEntry);
+    });
+  }
+
+  async delete(privateId: string): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      const result = await this.findServerByPrivateId(privateId);
+      if (result === null) {
+        return resolve(false);
+      } else {
+        this.dbService.getDb().data.servers = this.dbService
+          .getDb()
+          .data.servers.filter((item) => item.privateId !== privateId);
+        this.dbService.flushDataToDisk = true;
+        return resolve(true);
+      }
     });
   }
 
@@ -75,7 +91,7 @@ export class ServerService {
     });
   }
 
-  async processData(liveMapDto: LiveMapDTO): Promise<ServerEntry> {
+  async processData(liveMapDto: LiveMapDTO): Promise<ServerEntry | null> {
     return new Promise(async (resolve) => {
       this.logger.debug(`Processing data for server: ${liveMapDto.servername}`);
       // Store the data in the serverData map
@@ -84,6 +100,7 @@ export class ServerService {
         return resolve(result);
       } else {
         this.serverData.set(result.publicId, liveMapDto);
+        this.logger.verbose(this.serverData);
         return resolve(result);
       }
     });

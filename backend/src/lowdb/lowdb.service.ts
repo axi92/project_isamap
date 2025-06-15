@@ -4,6 +4,7 @@ import {
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
+import { Interval } from '@nestjs/schedule';
 
 import { DataBaseStructure } from './lowdb.interface';
 import { LowWithLodash } from './lowWithLodash';
@@ -18,6 +19,7 @@ import {
 export class LowdbService implements OnModuleInit, OnModuleDestroy {
   private db: LowWithLodash<DataBaseStructure>;
   private readonly logger = new Logger(LowdbService.name);
+  flushDataToDisk: boolean = false;
 
   constructor() {}
 
@@ -42,9 +44,18 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
     const listEntries = this.db.chain.value();
     if (listEntries.servers.length < 1) {
       // If there are no entries read than the db is not there or empty so create one.
-      await this.db.write();
+      await this.writeDB();
     }
     this.logger.log('DB initiated!');
+  }
+
+  @Interval(30 * 60 * 1000) // minutes * s per min. * ms per s
+  async writeDB() {
+    if (this.flushDataToDisk) {
+      this.logger.debug('Write db...');
+      await this.getDb().write();
+      this.logger.debug('Writing db done!');
+    }
   }
 
   getDb() {

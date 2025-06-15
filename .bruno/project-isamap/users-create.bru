@@ -1,0 +1,20 @@
+meta {
+  name: users/create
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/api/v1/users/create
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "userId": "358154856046788609",
+    "username": "username",
+    "avatar": "testAvatarString",
+    "verified": true
+  }
+}
