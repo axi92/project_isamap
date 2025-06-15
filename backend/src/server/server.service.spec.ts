@@ -6,7 +6,6 @@ import { exampleServerData, serverCreateTestData } from './server.test.data';
 import { DB_FILENAME } from '../lowdb/lowdb.constants';
 import { userTestTemplate } from '../user/user.constants';
 import { ServerEntry } from './server.interface';
-import { NotFoundException } from '@nestjs/common';
 
 describe('ServerService', () => {
   let serverService: ServerService;
@@ -32,18 +31,17 @@ describe('ServerService', () => {
     expect(serverService).toBeDefined();
   });
 
-  it('get server data by publicId and throw exception', () => {
+  it('get server data by false publicId and result should be null', () => {
     // Give false id, it does not matter because ther is no data yet
     const data = serverService.getServerDataByPublicId(
       exampleServerData.privateid,
     );
-    expect(data).toBeInstanceOf(NotFoundException);
+    expect(data).toBeNull();
   });
 
-  it('handle livemap data with exception', async () => {
-    await expect(
-      serverService.processData(exampleServerData),
-    ).rejects.toBeInstanceOf(NotFoundException);
+  it('handle incomming livemap data with no matching server entry', async () => {
+    const data = await serverService.processData(exampleServerData);
+    expect(data).toBeNull();
   });
 
   it('handle livemap data with success', async () => {
