@@ -11,6 +11,7 @@ import { ServerController } from './server/server.controller';
 import { ServerModule } from './server/server.module';
 import { LowdbModule } from './lowdb/lowdb.module';
 import { UserService } from './user/user.service';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { UserService } from './user/user.service';
     }),
     ServerModule,
     LowdbModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController, ServerController],
   providers: [AppService, UserService],

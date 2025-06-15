@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "project-isamap",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

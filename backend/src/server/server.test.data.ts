@@ -19,6 +19,20 @@ export const exampleServerData: LiveMapDTO = {
       tribename: 'Tribe1',
     },
   ],
+  tribes: [
+    {
+      decayDestructionTime: 6678,
+      elapsedTime: 567,
+      lastInAllyRangeTime: 56,
+      tribeid: 98767654,
+      x_pos: 100,
+      y_pos: 200,
+      x_ue4: 300,
+      y_ue4: 400,
+      z_ue4: 500,
+      tribename: 'Tribe1',
+    },
+  ],
   serverclock: '00:00',
 };
 

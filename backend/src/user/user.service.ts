@@ -51,7 +51,8 @@ export class UserService {
       const dbData = chain.get(COLLECTION.USERS).value() as UserCreatDto[];
       dbData.push(newEntry);
       chain.set(COLLECTION.USERS, dbData);
-      await this.dbService.getDb().write();
+      this.dbService.flushDataToDisk = true;
+      await this.dbService.writeDB();
       resolve(newEntry);
     });
   }
