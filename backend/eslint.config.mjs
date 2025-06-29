@@ -40,7 +40,7 @@ export default defineConfig([
       'import/no-absolute-path': 'error',
       'import/no-unresolved': 'off', // handled by TS
       // Prettier integration (optional)
-      'prettier/prettier': ['error', { singleQuote: true }],
+      'prettier/prettier': ['error', { singleQuote: true, endOfLine: auto }],
     },
     ignores: ['dist/', 'node_modules/'],
   },
