@@ -51,6 +51,7 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
 
   @Interval(30 * 60 * 1000) // minutes * s per min. * ms per s
   async writeDB() {
+    this.logger.debug('Checking if db needs to be flushed to file')
     if (this.flushDataToDisk) {
       this.logger.debug('Write db...');
       await this.getDb().write();

@@ -152,6 +152,11 @@ Body:
 }
 ```
 
+### /api/v1/servers/data/<publicId>
+
+Method: GET
+Description: Get livemap data from one server
+
 
 ## Mod breaking changes
 
@@ -248,8 +253,6 @@ Body:
 }
 ```
 
-## Additional Info
+## Credits
 
-- Author - [Zak Miller](https://zakmiller.com)
-- License - [MIT licensed](LICENSE).
-- [Blog post](https://www.zakmiller.com/code/serve-vue-with-nest/).
+- [Zak Miller](https://www.zakmiller.com/code/serve-vue-with-nest/).
