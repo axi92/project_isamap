@@ -1,12 +1,12 @@
 // import { Strategy } from 'passport-local';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { AuthService } from './auth.service.js';
+import { AuthService } from './auth.service';
 import { Profile, Strategy } from 'passport-discord';
-import { Done } from '../utils/types.js';
-import { encrypt } from '../utils/encrypt.js';
-import { ConfigurationService } from '../configuration/configuration.service.js';
-import { UserCreatDto } from '../user/dto/userCreate.dto.js';
+import { Done } from '../utils/types';
+import { encrypt } from '../utils/encrypt';
+import { ConfigurationService } from '../configuration/configuration.service';
+import { UserCreatDto } from '../user/dto/userCreate.dto';
 
 @Injectable()
 export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
