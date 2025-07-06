@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigurationService } from './configuration.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import {
   ENV_VARS,
   ERROR_CONFIG_NOT_LOADED,
@@ -29,7 +29,6 @@ describe('ConfigurationServiceWithMissingConfig', () => {
   });
 
   it('should log a warning and an error on empty config', async () => {
-    let service: ConfigurationService;
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ConfigurationService,
@@ -37,7 +36,8 @@ describe('ConfigurationServiceWithMissingConfig', () => {
       ],
     }).compile();
 
-    service = module.get<ConfigurationService>(ConfigurationService);
+    // Call module to trigger constructor
+    module.get<ConfigurationService>(ConfigurationService);
     // Check if the warning and error were logged
     expect(loggerSpyWarn).toHaveBeenCalledWith(WARN_CONFIG_EMPTY);
     expect(loggerSpyError).toHaveBeenCalledWith(ERROR_CONFIG_NOT_LOADED);

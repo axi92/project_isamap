@@ -1,11 +1,21 @@
-import { Body, Controller, Post, Get, ValidationPipe, NotFoundException, Delete, Logger, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  ValidationPipe,
+  NotFoundException,
+  Delete,
+  Logger,
+  Param,
+} from '@nestjs/common';
 import { ServerService } from './server.service';
 import { LiveMapDTO, privateIdDTO } from './dto/server.dto';
 import { ServerCreateDto } from './dto/serverCreate.dto';
 
 @Controller('servers')
 export class ServerController {
-  private readonly logger = new Logger('ServerController')
+  private readonly logger = new Logger('ServerController');
   constructor(private readonly servers: ServerService) {}
   /*
   GET /servers
@@ -36,7 +46,7 @@ export class ServerController {
   }
 
   @Get('data/:id') // Getting map data for livemap view
-  getData(@Param('id') id: string){
+  getData(@Param('id') id: string) {
     this.logger.log(id);
     const response = this.servers.getServerDataByPublicId(id);
     if (response === null) {

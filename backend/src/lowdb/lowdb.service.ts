@@ -8,6 +8,7 @@ import { Interval } from '@nestjs/schedule';
 
 import { DataBaseStructure } from './lowdb.interface';
 import { LowWithLodash } from './lowWithLodash';
+// eslint-disable-next-line import/no-unresolved
 import { JSONFile } from 'lowdb/node';
 import {
   defaultData,
@@ -51,7 +52,7 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
 
   @Interval(30 * 60 * 1000) // minutes * s per min. * ms per s
   async writeDB() {
-    this.logger.debug('Checking if db needs to be flushed to file')
+    this.logger.debug('Checking if db needs to be flushed to file');
     if (this.flushDataToDisk) {
       this.logger.debug('Write db...');
       await this.getDb().write();
@@ -67,6 +68,7 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
     return this.db.chain;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getAllEntries(collctionName: 'servers' | 'users'): Promise<any> {
     return new Promise(async (resolve) => {
       const result = this.db.chain.get(collctionName).value();
