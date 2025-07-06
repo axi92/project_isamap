@@ -11,6 +11,8 @@
   "dependencies": {
     "chart.js": "4.4.1",
     "eventemitter2": "^6.4.9",
+    "leaflet": "^1.9.4",
+    "pinia": "^3.0.3",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primevue": "3.45.0",
@@ -21,6 +23,7 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.6.1",
     "@tsconfig/node22": "^22.0.2",
+    "@types/leaflet": "^1.9.19",
     "@types/node": "^22.15.24",
     "@vitejs/plugin-vue": "^5.0.0",
     "@vitest/eslint-plugin": "^1.2.1",
@@ -33,7 +36,9 @@
     "prettier": "3.5.3",
     "sass": "^1.88.0",
     "sass-loader": "^16.0.5",
+    "typescript": "^5.8.3",
     "vite": "^6.3.5",
-    "vite-plugin-vue-devtools": "^7.7.6"
+    "vite-plugin-vue-devtools": "^7.7.6",
+    "vue-tsc": "^3.0.1"
   }
 }

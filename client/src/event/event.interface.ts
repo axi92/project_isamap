@@ -9,4 +9,6 @@ export enum EventType {
   STATE = 'state',
   LOGIN = 'login',
   LOGOUT = 'logout',
+  DATA = 'data',
+  MAPDATA = 'mapdata',
 }

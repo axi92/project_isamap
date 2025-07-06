@@ -10,6 +10,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+// import { EventType } from '../../../client/src/event/event.interface';
 
 @Injectable()
 @WebSocketGateway({
@@ -26,16 +27,17 @@ export class EventGateway
   afterInit() {
     this.logger.log('Websocket initialized');
   }
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: Socket) {
+    this.logger.log(`client connected ${client.id}`);
     client.emit('data', 'connected to server');
   }
   handleDisconnect(client: Socket) {
-    this.logger.log('Websocket client', client.id, 'disconnected');
+    this.logger.log(`Websocket client ${client.id} disconnected`);
   }
 
-  @SubscribeMessage('newMessage')
+  @SubscribeMessage('mapdata')
   async onNewMessage(
-    @MessageBody() body: any,
+    @MessageBody() body: string,
     @ConnectedSocket() socket: Socket,
   ) {
     this.logger.log(body);

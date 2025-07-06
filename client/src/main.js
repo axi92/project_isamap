@@ -1,7 +1,10 @@
 import { createApp } from 'vue';
+import { createPinia } from 'pinia'
 import App from './App.vue';
 import router from './router';
-// import VueSocketIO from 'vue-socket.io';
+import { EventEmitter2 } from 'eventemitter2'
+
+import { EventService } from './event/event.service';
 
 import PrimeVue from 'primevue/config';
 import AutoComplete from 'primevue/autocomplete';
@@ -107,14 +110,19 @@ import '@/assets/styles.scss';
 
 const app = createApp(App);
 
+app.use(createPinia())
+app.use({
+  install: (app) => {
+    const em = new EventEmitter2()
+    const es = new EventService(em)
+    app.provide('es', es)
+  }
+})
 app.use(router);
 app.use(PrimeVue, { ripple: true });
 app.use(ToastService);
 app.use(DialogService);
 app.use(ConfirmationService);
-// app.use(new VueSocketIO({
-//   connection: 'http://localhost:3000'
-// }));
 
 app.directive('tooltip', Tooltip);
 app.directive('badge', BadgeDirective);
@@ -213,4 +221,6 @@ app.component('TreeTable', TreeTable);
 app.component('TriStateCheckbox', TriStateCheckbox);
 app.component('VirtualScroller', VirtualScroller);
 
-app.mount('#app');
+router.isReady().then(() => {
+  app.mount('#app');
+})

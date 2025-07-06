@@ -14,6 +14,10 @@ export class EventService {
     return this.em2
   }
 
+  public requestMapData(publicId: string){
+    socket.emit(EventType.MAPDATA, publicId)
+  }
+
   private registerEvents(){
     socket.on('connect', () => {
       this.em2.emit(EventType.CONNECT, true)
@@ -21,6 +25,10 @@ export class EventService {
 
     socket.on('disconnect', () => {
       this.em2.emit(EventType.CONNECT, false)
+    })
+
+    socket.on('data', (data) => {
+      this.em2.emit(EventType.DATA, data)
     })
   }
 
