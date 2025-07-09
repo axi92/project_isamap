@@ -24,7 +24,7 @@ const logoUrl = computed(() => {
 const onTopBarMenuButton = () => {
     topbarMenuActive.value = !topbarMenuActive.value;
 };
-const onSettingsClick = () => {
+const onLoginClick = () => {
     topbarMenuActive.value = false;
     router.push('/documentation');
 };
@@ -64,12 +64,14 @@ const isOutsideClicked = (event) => {
     <div class="layout-topbar">
         <router-link to="/" class="layout-topbar-logo">
             <img :src="logoUrl" alt="logo" />
-            <span>SAKAI</span>
+            <span>LiveMap</span>
         </router-link>
 
-        <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
+        <!-- <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
             <i class="pi pi-bars"></i>
-        </button>
+        </button> -->
+
+        <Button class="p-link layout-menu-button" icon="pi pi-bars" aria-label="Save" @click="onMenuToggle()" />
 
         <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()">
             <i class="pi pi-ellipsis-v"></i>
@@ -84,10 +86,11 @@ const isOutsideClicked = (event) => {
                 <i class="pi pi-user"></i>
                 <span>Profile</span>
             </button>
-            <button @click="onSettingsClick()" class="p-link layout-topbar-button">
-                <i class="pi pi-cog"></i>
-                <span>Settings</span>
+            <button @click="onLoginClick()" label="Sogin" class="p-link layout-topbar-button">
+                <i class="pi pi-discord"></i>
+                <span>Login</span>
             </button>
+            <Button as="a" href="https://vuejs.org/" target="_blank" rel="noopener" label="Login" icon="pi pi-discord" />
         </div>
     </div>
 </template>

@@ -126,11 +126,6 @@ const router = createRouter({
           name: 'empty',
           component: () => import('@/views/pages/Empty.vue'),
         },
-        {
-          path: '/pages/crud',
-          name: 'crud',
-          component: () => import('@/views/pages/Crud.vue'),
-        },
       ],
     },
     {
