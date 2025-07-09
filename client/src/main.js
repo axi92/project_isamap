@@ -103,13 +103,22 @@ import TreeSelect from 'primevue/treeselect';
 import TreeTable from 'primevue/treetable';
 // import TriStateCheckbox from 'primevue/tristatecheckbox';
 import VirtualScroller from 'primevue/virtualscroller';
-
+import Aura from '@primeuix/themes/aura';
 import BlockViewer from '@/components/BlockViewer.vue';
 
 import '@/assets/styles.scss';
 
 const app = createApp(App);
 
+app.use(PrimeVue, {
+    // Default theme configuration
+    theme: {
+        preset: Aura,
+        options: {
+            darkModeSelector: '.my-app-dark',
+        }
+    }
+ });
 app.use(createPinia())
 app.use({
   install: (app) => {
