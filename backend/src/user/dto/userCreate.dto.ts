@@ -23,4 +23,12 @@ export class UserCreatDto {
 
   @IsBoolean()
   verified: boolean;
+
+  @IsOptional()
+  @IsString()
+  accessToken?: string;
+
+  @IsOptional()
+  @IsString()
+  refreshToken?: string;
 }

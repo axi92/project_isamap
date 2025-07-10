@@ -18,6 +18,7 @@ export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
       clientID: configurationService.getDiscordClientId(),
       clientSecret: configurationService.getDiscordClientSecret(),
       callbackURL: configurationService.getDiscordRedirectUri(),
+      // TODO: implement state and save state value for a little, state is used like a nonce
       scope: ['identify', 'email', 'guilds'],
     });
   }
@@ -35,8 +36,12 @@ export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
       username,
       avatar,
       verified,
+      accessToken,
+      refreshToken,
     };
     console.log(user);
+    // How do I get the expire time of the token?
+    // Looks like the default expires_in is 604800s thats 7d
     done(null, user, accessToken, refreshToken);
 
     // const encryptedAccessToken = encrypt(accessToken).toString();

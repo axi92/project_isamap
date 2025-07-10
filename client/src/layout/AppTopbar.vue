@@ -87,7 +87,7 @@ const isOutsideClicked = (event) => {
                 <i class="pi pi-discord"></i>
                 <span>Login</span>
             </button> -->
-            <Button as="a" href="https://vuejs.org/" target="_blank" rel="noopener" label="Login" icon="pi pi-discord" />
+            <Button as="a" href="http://localhost:3000/api/v1/auth/login" label="Login" icon="pi pi-discord" />
         </div>
     </div>
 </template>
