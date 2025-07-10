@@ -71,14 +71,11 @@ const isOutsideClicked = (event) => {
             <i class="pi pi-bars"></i>
         </button> -->
 
-        <Button class="p-link layout-menu-button" icon="pi pi-bars" aria-label="Save" @click="onMenuToggle()" />
-
-        <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()">
-            <i class="pi pi-ellipsis-v"></i>
-        </button>
+        <Button class="layout-menu-button" icon="pi pi-bars" aria-label="Expand Sidebar" @click="onMenuToggle()" />
+        <Button class="layout-topbar-menu-button" @click="onTopBarMenuButton()" icon="pi pi-ellipsis-v" />
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
-            <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
+            <!-- <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
                 <i class="pi pi-calendar"></i>
                 <span>Calendar</span>
             </button>
@@ -89,7 +86,7 @@ const isOutsideClicked = (event) => {
             <button @click="onLoginClick()" label="Sogin" class="p-link layout-topbar-button">
                 <i class="pi pi-discord"></i>
                 <span>Login</span>
-            </button>
+            </button> -->
             <Button as="a" href="https://vuejs.org/" target="_blank" rel="noopener" label="Login" icon="pi pi-discord" />
         </div>
     </div>
