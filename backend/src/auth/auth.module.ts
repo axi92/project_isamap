@@ -7,7 +7,11 @@ import { ConfigurationModule } from '../configuration/configuration.module';
 import { AuthController } from './auth.controller';
 
 @Module({
-  imports: [UsersModule, PassportModule, ConfigurationModule],
+  imports: [
+    UsersModule,
+    PassportModule.register({ session: true }),
+    ConfigurationModule,
+  ],
   providers: [AuthService, DiscordStrategy],
   controllers: [AuthController],
 })

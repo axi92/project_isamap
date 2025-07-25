@@ -36,13 +36,11 @@ export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
       username,
       avatar,
       verified,
-      accessToken,
-      refreshToken,
     };
     console.log(user);
     // How do I get the expire time of the token?
     // Looks like the default expires_in is 604800s thats 7d
-    done(null, user, accessToken, refreshToken);
+    done(null, user);
 
     // const encryptedAccessToken = encrypt(accessToken).toString();
     // const encryptedRefreshToken = encrypt(refreshToken).toString();
