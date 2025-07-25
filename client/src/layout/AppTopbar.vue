@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/auth.store'
 
 const { layoutConfig, onMenuToggle } = useLayout();
 
@@ -9,12 +10,14 @@ const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
 const router = useRouter();
 
-onMounted(() => {
-    bindOutsideClickListener();
+const userStore = useUserStore();
+onMounted(async () => {
+  bindOutsideClickListener();
+  await userStore.loadUser();
 });
 
 onBeforeUnmount(() => {
-    unbindOutsideClickListener();
+  unbindOutsideClickListener();
 });
 
 const logoUrl = computed(() => {
@@ -87,7 +90,10 @@ const isOutsideClicked = (event) => {
                 <i class="pi pi-discord"></i>
                 <span>Login</span>
             </button> -->
-            <Button as="a" href="http://localhost:3000/api/v1/auth/login" label="Login" icon="pi pi-discord" />
+            <div v-if="userStore.user">Welcome, {{ userStore.user.username }}!</div>
+            <div v-else>
+              <Button as="a" href="http://localhost:3000/api/v1/auth/redirect" label="Login" icon="pi pi-discord" />
+            </div>
         </div>
     </div>
 </template>
