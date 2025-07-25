@@ -19,9 +19,9 @@ import { ScheduleModule } from '@nestjs/schedule';
     GatewayModule,
     AuthModule,
     UsersModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'client/dist'),
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', '..', 'client/dist'),
+    // }),
     ServerModule,
     LowdbModule,
     ScheduleModule.forRoot(),
