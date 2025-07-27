@@ -14,6 +14,7 @@ export class ConfigurationService {
   private DISCORD_CLIENT_ID: string;
   private DISCORD_CLIENT_SECRET: string;
   private DISCORD_REDIRECT_URI: string;
+  private SESSION_SECRET: string;
 
   constructor(private configService: ConfigService) {
     const discordClientID = this.configService.get(ENV_VARS.DISCORD_CLIENT_ID);
@@ -23,14 +24,21 @@ export class ConfigurationService {
     const discordClientRedirectUri = this.configService.get(
       ENV_VARS.DISCORD_REDIRECT_URI,
     );
+    const sessionSecret = this.configService.get(ENV_VARS.SESSION_SECRET);
     // log a warning if any of the private vars are not set
-    if (!discordClientID || !discordClientSecret || !discordClientRedirectUri) {
+    if (
+      !discordClientID ||
+      !discordClientSecret ||
+      !discordClientRedirectUri ||
+      !sessionSecret
+    ) {
       this.logger.warn(WARN_CONFIG_EMPTY);
       this.logger.error(ERROR_CONFIG_NOT_LOADED);
     } else {
       this.DISCORD_CLIENT_ID = discordClientID;
       this.DISCORD_CLIENT_SECRET = discordClientSecret;
       this.DISCORD_REDIRECT_URI = discordClientRedirectUri;
+      this.SESSION_SECRET = sessionSecret;
       this.logger.log('Config loaded');
     }
   }
@@ -47,6 +55,10 @@ export class ConfigurationService {
   setDiscordRedirectUri(uri: string) {
     this.DISCORD_REDIRECT_URI = uri;
   }
+
+  setSessionSecret(secret: string) {
+    this.SESSION_SECRET = secret;
+  }
   // Functions for testing END!
 
   getDiscordClientId(): string {
@@ -59,5 +71,9 @@ export class ConfigurationService {
 
   getDiscordRedirectUri(): string {
     return this.DISCORD_REDIRECT_URI;
+  }
+
+  getSessionSecret(): string {
+    return this.SESSION_SECRET;
   }
 }

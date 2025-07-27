@@ -3,9 +3,15 @@ import * as passport from 'passport';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigurationService } from './configuration/configuration.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Get ConfigurationService from Nest application context
+  const configService = app.get(ConfigurationService);
+  const sessionSecret = configService.getSessionSecret();
+
   app.enableCors({
     origin: 'http://localhost:5173', // frontend url
     credentials: true, // Needed for cookies
@@ -13,13 +19,12 @@ async function bootstrap() {
 
   app.use(
     session({
-      // TODO: load from .env in config module
-      secret: 'super-secret-key',
+      secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
-        secure: false, // set to true if using HTTPS
+        secure: false, // TODO: set to true if using HTTPS
         maxAge: 1000 * 60 * 60 * 24, // 1 day
       },
     }),
