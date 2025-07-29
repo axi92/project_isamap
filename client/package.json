@@ -19,7 +19,7 @@
     "primevue": "^4.3.6",
     "socket.io-client": "^4.7.2",
     "vue": "^3.3.13",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.6.1",
