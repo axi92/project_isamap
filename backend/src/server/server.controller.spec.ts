@@ -6,6 +6,7 @@ import { UserService } from '../user/user.service';
 import { LiveMapDTO } from './dto/server.dto';
 import { exampleServerData } from './server.test.data';
 import { validate } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
 
 describe('ServerController', () => {
   let controller: ServerController;
@@ -39,16 +40,8 @@ describe('ServerController', () => {
   });
 
   it('should pass the validation on the LiveMapDTO', async () => {
-    const dto = new LiveMapDTO();
-    dto.map = exampleServerData.map;
-    dto.privateid = exampleServerData.privateid;
-    dto.serverclock = exampleServerData.serverclock;
-    dto.servername = exampleServerData.servername;
-    dto.players = exampleServerData.players;
-    dto.tribes = exampleServerData.tribes;
-
+    const dto = plainToInstance(LiveMapDTO, exampleServerData);
     const errors = await validate(dto);
-    console.log(errors);
     expect(errors.length).toBe(0);
   });
 });
