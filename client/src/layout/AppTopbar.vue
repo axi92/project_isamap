@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/auth.store'
 
 const { layoutConfig, onMenuToggle } = useLayout();
 
@@ -9,12 +10,14 @@ const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
 const router = useRouter();
 
-onMounted(() => {
-    bindOutsideClickListener();
+const userStore = useUserStore();
+onMounted(async () => {
+  bindOutsideClickListener();
+  await userStore.loadUser();
 });
 
 onBeforeUnmount(() => {
-    unbindOutsideClickListener();
+  unbindOutsideClickListener();
 });
 
 const logoUrl = computed(() => {
@@ -24,7 +27,7 @@ const logoUrl = computed(() => {
 const onTopBarMenuButton = () => {
     topbarMenuActive.value = !topbarMenuActive.value;
 };
-const onSettingsClick = () => {
+const onLoginClick = () => {
     topbarMenuActive.value = false;
     router.push('/documentation');
 };
@@ -64,19 +67,18 @@ const isOutsideClicked = (event) => {
     <div class="layout-topbar">
         <router-link to="/" class="layout-topbar-logo">
             <img :src="logoUrl" alt="logo" />
-            <span>SAKAI</span>
+            <span>LiveMap</span>
         </router-link>
 
-        <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
+        <!-- <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
             <i class="pi pi-bars"></i>
-        </button>
+        </button> -->
 
-        <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()">
-            <i class="pi pi-ellipsis-v"></i>
-        </button>
+        <Button class="layout-menu-button" icon="pi pi-bars" aria-label="Expand Sidebar" @click="onMenuToggle()" />
+        <Button class="layout-topbar-menu-button" @click="onTopBarMenuButton()" icon="pi pi-ellipsis-v" />
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
-            <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
+            <!-- <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
                 <i class="pi pi-calendar"></i>
                 <span>Calendar</span>
             </button>
@@ -84,10 +86,14 @@ const isOutsideClicked = (event) => {
                 <i class="pi pi-user"></i>
                 <span>Profile</span>
             </button>
-            <button @click="onSettingsClick()" class="p-link layout-topbar-button">
-                <i class="pi pi-cog"></i>
-                <span>Settings</span>
-            </button>
+            <button @click="onLoginClick()" label="Sogin" class="p-link layout-topbar-button">
+                <i class="pi pi-discord"></i>
+                <span>Login</span>
+            </button> -->
+            <div v-if="userStore.user">Welcome, {{ userStore.user.username }}!</div>
+            <div v-else>
+              <Button as="a" href="http://localhost:3000/api/v1/auth/redirect" label="Login" icon="pi pi-discord" />
+            </div>
         </div>
     </div>
 </template>

@@ -126,11 +126,6 @@ const router = createRouter({
           name: 'empty',
           component: () => import('@/views/pages/Empty.vue'),
         },
-        {
-          path: '/pages/crud',
-          name: 'crud',
-          component: () => import('@/views/pages/Crud.vue'),
-        },
       ],
     },
     {
@@ -147,7 +142,8 @@ const router = createRouter({
     {
       path: '/auth/login',
       name: 'login',
-      component: () => import('@/views/pages/auth/Login.vue'),
+      // component: () => import('@/views/pages/auth/Login.vue'),
+      redirect: '/api/v1/auth/login'
     },
     {
       path: '/auth/access',
@@ -158,6 +154,11 @@ const router = createRouter({
       path: '/auth/error',
       name: 'error',
       component: () => import('@/views/pages/auth/Error.vue'),
+    },
+    {
+      path: '/map',
+      name: 'map',
+      component: () => import('@/views/pages/Map.vue')
     },
   ],
 });

@@ -1,7 +1,10 @@
 import { createApp } from 'vue';
+import { createPinia } from 'pinia'
 import App from './App.vue';
 import router from './router';
-// import VueSocketIO from 'vue-socket.io';
+import { EventEmitter2 } from 'eventemitter2'
+
+import { EventService } from './event/event.service';
 
 import PrimeVue from 'primevue/config';
 import AutoComplete from 'primevue/autocomplete';
@@ -31,7 +34,7 @@ import ConfirmationService from 'primevue/confirmationservice';
 import ContextMenu from 'primevue/contextmenu';
 import DataTable from 'primevue/datatable';
 import DataView from 'primevue/dataview';
-import DataViewLayoutOptions from 'primevue/dataviewlayoutoptions';
+// import DataViewLayoutOptions from 'primevue/dataviewlayoutoptions';
 import DeferredContent from 'primevue/deferredcontent';
 import Dialog from 'primevue/dialog';
 import DialogService from 'primevue/dialogservice';
@@ -98,23 +101,37 @@ import Tooltip from 'primevue/tooltip';
 import Tree from 'primevue/tree';
 import TreeSelect from 'primevue/treeselect';
 import TreeTable from 'primevue/treetable';
-import TriStateCheckbox from 'primevue/tristatecheckbox';
+// import TriStateCheckbox from 'primevue/tristatecheckbox';
 import VirtualScroller from 'primevue/virtualscroller';
-
+import Aura from '@primeuix/themes/aura';
 import BlockViewer from '@/components/BlockViewer.vue';
 
 import '@/assets/styles.scss';
 
 const app = createApp(App);
 
+app.use(PrimeVue, {
+    // Default theme configuration
+    theme: {
+        preset: Aura,
+        options: {
+            darkModeSelector: '.my-app-dark',
+        }
+    }
+ });
+app.use(createPinia())
+app.use({
+  install: (app) => {
+    const em = new EventEmitter2()
+    const es = new EventService(em)
+    app.provide('es', es)
+  }
+})
 app.use(router);
 app.use(PrimeVue, { ripple: true });
 app.use(ToastService);
 app.use(DialogService);
 app.use(ConfirmationService);
-// app.use(new VueSocketIO({
-//   connection: 'http://localhost:3000'
-// }));
 
 app.directive('tooltip', Tooltip);
 app.directive('badge', BadgeDirective);
@@ -148,7 +165,7 @@ app.component('ConfirmPopup', ConfirmPopup);
 app.component('ContextMenu', ContextMenu);
 app.component('DataTable', DataTable);
 app.component('DataView', DataView);
-app.component('DataViewLayoutOptions', DataViewLayoutOptions);
+// app.component('DataViewLayoutOptions', DataViewLayoutOptions);
 app.component('DeferredContent', DeferredContent);
 app.component('Dialog', Dialog);
 app.component('Divider', Divider);
@@ -210,7 +227,9 @@ app.component('ToggleButton', ToggleButton);
 app.component('Tree', Tree);
 app.component('TreeSelect', TreeSelect);
 app.component('TreeTable', TreeTable);
-app.component('TriStateCheckbox', TriStateCheckbox);
+// app.component('TriStateCheckbox', TriStateCheckbox);
 app.component('VirtualScroller', VirtualScroller);
 
-app.mount('#app');
+router.isReady().then(() => {
+  app.mount('#app');
+})

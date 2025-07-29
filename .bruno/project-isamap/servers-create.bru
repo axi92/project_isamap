@@ -1,0 +1,18 @@
+meta {
+  name: servers/create
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/api/v1/servers/create
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "owner": "358154856046788609",
+    "description": "blubserver"
+  }
+}
