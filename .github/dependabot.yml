@@ -4,8 +4,10 @@ updates:
     directory: "/client"
     schedule:
       interval: "weekly"
+    security-updates-only: true
 
   - package-ecosystem: "npm"
     directory: "/backend"
     schedule:
       interval: "weekly"
+    security-updates-only: true
