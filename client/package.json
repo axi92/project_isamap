@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@primeuix/themes": "^1.2.2",
+    "@primeuix/themes": "^1.2.3",
     "chart.js": "4.4.1",
     "eventemitter2": "^6.4.9",
     "leaflet": "^1.9.4",
