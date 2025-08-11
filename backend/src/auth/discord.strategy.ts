@@ -1,10 +1,10 @@
 // import { Strategy } from 'passport-local';
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common'; // UnauthorizedException
 import { PassportStrategy } from '@nestjs/passport';
-import { AuthService } from './auth.service';
+// import { AuthService } from './auth.service';
 import { Profile, Strategy } from 'passport-discord';
 import { Done } from '../utils/types';
-import { encrypt } from '../utils/encrypt';
+// import { encrypt } from '../utils/encrypt';
 import { ConfigurationService } from '../configuration/configuration.service';
 import { UserCreatDto } from '../user/dto/userCreate.dto';
 
@@ -29,6 +29,7 @@ export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
     refreshToken: string,
     profile: Profile,
     done: Done,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
     const { id, username, avatar, verified } = profile;
     const user: UserCreatDto = {

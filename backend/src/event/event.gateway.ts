@@ -40,6 +40,6 @@ export class EventGateway
     @MessageBody() body: string,
     @ConnectedSocket() socket: Socket,
   ) {
-    this.logger.log(body);
+    this.logger.log(body, socket);
   }
 }
