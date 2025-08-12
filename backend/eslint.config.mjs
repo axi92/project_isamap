@@ -11,9 +11,8 @@ const compat = new FlatCompat({
 });
 
 export default defineConfig([
-  // JavaScript and TypeScript base config
   {
-    ignores: ['dist/', 'node_modules/, src/coverage/'],
+    ignores: ['dist/', 'node_modules/', 'src/coverage/', 'eslint.config.mjs', 'jest.config.js'],
   },
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
@@ -42,12 +41,11 @@ export default defineConfig([
       // Prettier integration (optional)
       'prettier/prettier': ['error', { singleQuote: true, endOfLine: 'lf' }],
     },
-    ignores: ['dist/', 'node_modules/'],
   },
-  // TypeScript recommended rules
+    // TypeScript recommended rules
   ...tseslint.configs.recommended,
-  // Import plugin recommended rules
+    // Import plugin recommended rules
   ...compat.extends('plugin:import/recommended', 'plugin:import/typescript'),
-  // Prettier recommended rules
+    // Prettier recommended rules
   ...compat.extends('prettier'),
 ]);
