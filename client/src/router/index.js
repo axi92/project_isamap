@@ -39,11 +39,6 @@ const router = createRouter({
           component: () => import('@/views/uikit/Button.vue'),
         },
         {
-          path: '/uikit/table',
-          name: 'table',
-          component: () => import('@/views/uikit/Table.vue'),
-        },
-        {
           path: '/uikit/list',
           name: 'list',
           component: () => import('@/views/uikit/List.vue'),
