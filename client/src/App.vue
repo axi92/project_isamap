@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject, onMounted, ref } from 'vue';
+import { inject, onMounted } from 'vue';
 import { EventService } from './event/event.service';
 import socket from '@/ws/socket'
 import { EventType, type EventResponse } from './event/event.interface';

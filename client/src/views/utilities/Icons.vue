@@ -13,7 +13,7 @@ onMounted(() => {
     fetch('/demo/data/icons.json', { headers: { 'Cache-Control': 'no-cache' } })
         .then((res) => res.json())
         .then((d) => {
-            let data = d.icons.filter((value) => {
+            const data = d.icons.filter((value) => {
                 return value.icon.tags.indexOf('deprecate') === -1;
             });
             data.sort((icon1, icon2) => {
