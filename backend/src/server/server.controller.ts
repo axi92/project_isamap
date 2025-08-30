@@ -12,6 +12,7 @@ import {
 import { ServerService } from './server.service';
 import { LiveMapDTO, privateIdDTO } from './dto/server.dto';
 import { ServerCreateDto } from './dto/serverCreate.dto';
+import { ServerEntry } from './server.interface';
 
 @Controller('servers')
 export class ServerController {
@@ -31,8 +32,8 @@ export class ServerController {
 
   @Get() // GET /servers
   async allServers() {
-    const users = await this.servers.getAll();
-    return users;
+    const servers = await this.servers.getAll() as ServerEntry[];
+    return servers;
   }
 
   @Post('data') // Gameserver sending data to webserver
