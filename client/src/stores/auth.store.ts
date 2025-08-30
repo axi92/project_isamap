@@ -1,9 +1,8 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { fetchCurrentUser } from '@/service/authService'
 
 const CACHE_KEY = 'userCache';
-const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+const CACHE_TTL_MS = 10 * 60 * 1000; // 30 minutes
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -16,10 +15,11 @@ export const useUserStore = defineStore('user', {
       if (cached) {
         const { user, timestamp } = JSON.parse(cached);
         const now = Date.now();
-
         if (now - timestamp < CACHE_TTL_MS) {
-          this.user = user;
-          return;
+          if(user != null) {
+            this.user = user;
+            return;
+          }
         }
       }
 
