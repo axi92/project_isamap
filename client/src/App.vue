@@ -6,7 +6,9 @@ import { EventType, type EventResponse } from './event/event.interface';
 import { useUserStore } from '@/stores/auth.store'
 
 const userStore = useUserStore();
-userStore.loadUser();
+onMounted(async () => {
+  await userStore.loadUser();
+});
 
 const es = inject<EventService>('es')!
 // TODO: make ws work

@@ -50,6 +50,7 @@ describe('ConfigurationServiceWithValidConfig', () => {
   const clientID = 'mock-client-id';
   const secret = 'mock-client-secret';
   const redirectUri = 'mock-redirect-uri';
+  const sessionSecret = 'mock-session-secret';
 
   beforeAll(async () => {
     mockConfigService = {
@@ -58,6 +59,7 @@ describe('ConfigurationServiceWithValidConfig', () => {
           [ENV_VARS.DISCORD_CLIENT_ID]: clientID,
           [ENV_VARS.DISCORD_CLIENT_SECRET]: secret,
           [ENV_VARS.DISCORD_REDIRECT_URI]: redirectUri,
+          [ENV_VARS.SESSION_SECRET]: sessionSecret,
         };
         return mockConfig[key];
       }), // Mock the get method to return
@@ -76,6 +78,7 @@ describe('ConfigurationServiceWithValidConfig', () => {
     service.setDiscordClientId(clientID);
     service.setDiscordClientSecret(secret);
     service.setDiscordRedirectUri(redirectUri);
+    service.setSessionSecret(sessionSecret);
   });
 
   it('should be defined', () => {
@@ -92,5 +95,9 @@ describe('ConfigurationServiceWithValidConfig', () => {
 
   it('should return the correct DISCORD_REDIRECT_URI', () => {
     expect(service.getDiscordRedirectUri()).toBe(redirectUri);
+  });
+
+  it('should return the correct SESSION_SECRET', () => {
+    expect(service.getSessionSecret()).toBe(sessionSecret);
   });
 });

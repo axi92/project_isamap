@@ -9,7 +9,9 @@
 
 <script setup lang="js">
 import { ref } from "vue";
+import { useUserStore } from '@/stores/auth.store'
 
+const userStore = useUserStore();
 const props = defineProps({
   userId: {
     type: String,
@@ -41,8 +43,9 @@ const items = ref([
         label: 'Logout',
         icon: 'pi pi-sign-out',
         command: () => {
-          window.location.href = '/api/auth/logout';
-          window.location.replace('https://your-backend.com/api/logout');
+          // window.location.href = '/api/v1/auth/logout';
+          userStore.logout();
+          window.location.assign('http://localhost:3000/api/v1/auth/logout');
 
         }
       }

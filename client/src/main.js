@@ -121,7 +121,6 @@ app.use({
   }
 })
 app.use(router);
-app.use(PrimeVue, { ripple: true });
 app.use(ToastService);
 app.use(DialogService);
 app.use(ConfirmationService);

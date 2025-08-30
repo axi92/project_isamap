@@ -7,7 +7,7 @@ const model = ref([
   {
     label: 'Home',
     items: [
-      { label: 'Blank', icon: 'pi pi-fw pi-map', to: '/servers/list' }
+      { label: 'Blank', icon: 'pi pi-fw pi-map', to: '/' }
     ]
   },
   {
