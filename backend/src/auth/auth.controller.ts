@@ -13,7 +13,7 @@ import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   // localhost:3000/api/v1/auth/login
   @Get('login') // auth/login
