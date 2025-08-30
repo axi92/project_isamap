@@ -32,7 +32,7 @@ export class ServerController {
 
   @Get() // GET /servers
   async allServers() {
-    const servers = await this.servers.getAll() as ServerEntry[];
+    const servers = (await this.servers.getAll()) as ServerEntry[];
     return servers;
   }
 

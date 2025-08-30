@@ -70,8 +70,9 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
     return this.db.chain;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async getAllEntries(collctionName: 'servers' | 'users'): Promise<ServerEntry[]|UserCreatDto[]> {
+  async getAllEntries(
+    collctionName: 'servers' | 'users',
+  ): Promise<ServerEntry[] | UserCreatDto[]> {
     return new Promise(async (resolve) => {
       const result = this.db.chain.get(collctionName).value();
       resolve(result);
