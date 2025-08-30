@@ -12,7 +12,6 @@ const topbarMenuActive = ref(false);
 const userStore = useUserStore();
 onMounted(async () => {
   bindOutsideClickListener();
-  await userStore.loadUser();
 });
 
 onBeforeUnmount(() => {
