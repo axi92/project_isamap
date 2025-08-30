@@ -7,6 +7,7 @@ import { LiveMapDTO } from './dto/server.dto';
 import { exampleServerData } from './server.test.data';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
+import { ServerEntry } from './server.interface';
 
 describe('ServerController', () => {
   let controller: ServerController;
@@ -29,9 +30,9 @@ describe('ServerController', () => {
 
   it('should return all servers from service', async () => {
     const mockServers = [
-      { id: 1, name: 'Server1' },
-      { id: 2, name: 'Server2' },
-    ];
+      { privateId: '1', publicId: '1', owner: 'Player1' },
+      { privateId: '2', publicId: '2', owner: 'Player2' },
+    ] as ServerEntry[];
     jest.spyOn(serverService, 'getAll').mockResolvedValueOnce(mockServers);
 
     const result = await controller.allServers();
