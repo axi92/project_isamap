@@ -96,6 +96,7 @@ import TreeTable from 'primevue/treetable';
 import VirtualScroller from 'primevue/virtualscroller';
 import Aura from '@primeuix/themes/aura';
 import BlockViewer from '@/components/BlockViewer.vue';
+import AvatarMenuButton from '@/components/AvatarMenuButton.vue'
 
 import '@/assets/styles.scss';
 import { Drawer, Popover, Select, Tabs, ToggleSwitch } from 'primevue';
@@ -217,6 +218,7 @@ app.component('Tree', Tree);
 app.component('TreeSelect', TreeSelect);
 app.component('TreeTable', TreeTable);
 app.component('VirtualScroller', VirtualScroller);
+app.component('AvatarMenuButton', AvatarMenuButton);
 
 router.isReady().then(() => {
   app.mount('#app');

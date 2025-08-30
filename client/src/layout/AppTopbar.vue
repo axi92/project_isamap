@@ -1,14 +1,13 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
-import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/auth.store'
+import AvatarMenuButton from '@/components/AvatarMenuButton.vue';
 
 const { layoutConfig, onMenuToggle } = useLayout();
 
 const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
-const router = useRouter();
 
 const userStore = useUserStore();
 onMounted(async () => {
@@ -26,10 +25,6 @@ const logoUrl = computed(() => {
 
 const onTopBarMenuButton = () => {
     topbarMenuActive.value = !topbarMenuActive.value;
-};
-const onLoginClick = () => {
-    topbarMenuActive.value = false;
-    router.push('/documentation');
 };
 const topbarMenuClasses = computed(() => {
     return {
@@ -61,6 +56,9 @@ const isOutsideClicked = (event) => {
 
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 };
+function toggleDarkMode() {
+    document.documentElement.classList.toggle('my-app-dark');
+}
 </script>
 
 <template>
@@ -85,12 +83,15 @@ const isOutsideClicked = (event) => {
             <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
                 <i class="pi pi-user"></i>
                 <span>Profile</span>
-            </button>
-            <button @click="onLoginClick()" label="Sogin" class="p-link layout-topbar-button">
-                <i class="pi pi-discord"></i>
-                <span>Login</span>
-            </button> -->
-            <div v-if="userStore.user">Welcome, {{ userStore.user.username }}!</div>
+            </button>-->
+            <Button label="Toggle Dark Mode WIP" @click="toggleDarkMode()" />
+            <div v-if="userStore.user">
+              <!-- <Button variant="outlined" class="!border-1">
+                <Avatar :image="avatarUrl" class="mr-2" size="large" shape="circle" />
+                {{ userStore.user.username }}
+              </Button> -->
+              <AvatarMenuButton :userId="userStore.user.userId" :avatar="userStore.user.avatar" :username="userStore.user.username"/>
+            </div>
             <div v-else>
               <Button as="a" href="http://localhost:3000/api/v1/auth/redirect" label="Login" icon="pi pi-discord" />
             </div>
