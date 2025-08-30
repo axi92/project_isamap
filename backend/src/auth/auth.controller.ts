@@ -27,23 +27,14 @@ export class AuthController {
   redirect(@Req() req: Request, @Res() res: Response) {
     // Discord redirects here after login
     if (!req.user) {
-      console.error('No user found after Discord login');
       return res.redirect('http://localhost:5173/?error=no-user');
     }
-    // TODO: create and return JWT, or save session
-    // Generate JWT token for user
-    // const jwtToken = sign({ ...req.user }, 'secret-CHANGEME', {
-    //   expiresIn: '7d',
-    // });
-    // Save JWT inside session
-    // req.session.jwt = jwtToken;
-    // ✅ Force login to trigger session + serializeUser
+
     req.login(req.user, (err) => {
       if (err) {
         console.error('req.login error:', err);
         return res.redirect('http://localhost:5173/?error=login-failed');
       }
-      // res.redirect(`http://localhost:5173/?token=${jwtToken}`);
       res.redirect(`http://localhost:5173`);
     });
   }
@@ -69,7 +60,6 @@ export class AuthController {
         if (err) {
           console.error('Session destroy error:', err);
         }
-        console.log('logout done');
         res.clearCookie('connect.sid'); // clear session cookie
         res.redirect('http://localhost:5173'); // TODO: redirect back to frontend
       });
