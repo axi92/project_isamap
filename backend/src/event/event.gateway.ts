@@ -28,11 +28,11 @@ export class EventGateway
     this.logger.log('Websocket initialized');
   }
   handleConnection(client: Socket) {
-    this.logger.log(`client connected ${client.id}`);
+    this.logger.verbose(`client connected ${client.id}`);
     client.emit('data', 'connected to server');
   }
   handleDisconnect(client: Socket) {
-    this.logger.log(`Websocket client ${client.id} disconnected`);
+    this.logger.verbose(`Websocket client ${client.id} disconnected`);
   }
 
   @SubscribeMessage('mapdata')
