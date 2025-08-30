@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LowdbService } from './lowdb.service';
-import { UserCreatDto } from '../user/dto/userCreate.dto';
+import { UserCreatDto } from '@/user/dto/userCreate.dto';
 import {
   DB_FILENAME,
   WARN_SAVING_DB_SHUTDOWN,
   WARN_SAVING_DB_SHUTDOWN_COMPLETE,
 } from './lowdb.constants';
 import { Logger } from '@nestjs/common';
-import { ServerService } from '../server/server.service';
-import { UserService } from '../user/user.service';
-import { ServerEntry } from '../server/server.interface';
-import { ServerCreateDto } from '../server/dto/serverCreate.dto';
-import { testDiscordID1, userTestTemplate } from '../user/user.constants';
+import { ServerService } from '@/server/server.service';
+import { UserService } from '@/user/user.service';
+import { ServerEntry } from '@/server/server.interface';
+import { ServerCreateDto } from '@/server/dto/serverCreate.dto';
+import { testDiscordID1, userTestTemplate } from '@/user/user.constants';
 
 describe('LowdbService', () => {
   let dbService: LowdbService;

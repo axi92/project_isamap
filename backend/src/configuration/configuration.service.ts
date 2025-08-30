@@ -4,7 +4,7 @@ import {
   ENV_VARS,
   ERROR_CONFIG_NOT_LOADED,
   WARN_CONFIG_EMPTY,
-} from './configuration.constants';
+} from '@/configuration/configuration.constants';
 
 @Injectable()
 export class ConfigurationService {

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { LowdbService } from '../lowdb/lowdb.service';
+import { LowdbService } from '@/lowdb/lowdb.service';
 import { UserCreatDto } from './dto/userCreate.dto';
-import { COLLECTION } from '../lowdb/lowdb.constants';
+import { COLLECTION } from '@/lowdb/lowdb.constants';
 
 @Injectable()
 export class UserService {

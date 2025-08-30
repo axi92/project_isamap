@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { NestFactory } from '@nestjs/core';

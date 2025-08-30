@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, ValidationPipe } from '@nestjs/common';
-import { LowdbService } from '../lowdb/lowdb.service';
+import { LowdbService } from '@/lowdb/lowdb.service';
 import { UserCreatDto } from './dto/userCreate.dto';
 import { UserService } from './user.service';
 

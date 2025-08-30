@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UsersModule } from '../user/user.module';
+import { UsersModule } from '@/user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { DiscordStrategy } from './discord.strategy';
-import { ConfigurationModule } from '../configuration/configuration.module';
+import { ConfigurationModule } from '@/configuration/configuration.module';
 import { AuthController } from './auth.controller';
 
 @Module({

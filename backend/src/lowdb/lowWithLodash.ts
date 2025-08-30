@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-unresolved
 import { Low } from 'lowdb';
 
 export class LowWithLodash<T> extends Low<T> {

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
-import { LowdbModule } from '../lowdb/lowdb.module';
+import { LowdbModule } from '@/lowdb/lowdb.module';
 import { UserService } from './user.service';
 
 describe('UserController', () => {

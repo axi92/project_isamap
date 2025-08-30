@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 import { LiveMapDTO } from './dto/server.dto';
 import { ServerCreateDto } from './dto/serverCreate.dto';
-import { testDiscordID1 } from '../user/user.constants';
+import { testDiscordID1 } from '@/user/user.constants';
 
 export const exampleServerData: LiveMapDTO = {
   map: 'TheIsland',

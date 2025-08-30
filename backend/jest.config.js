@@ -9,6 +9,9 @@ const config = {
   coverageDirectory: './coverage',
   testEnvironment: 'node',
   transformIgnorePatterns: ['node_modules/(?!(lowdb|steno)/)'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/$1',
+  },
 };
 
 module.exports = config;
