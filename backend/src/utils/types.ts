@@ -1,4 +1,4 @@
-import { UserCreatDto } from '../user/dto/userCreate.dto';
+import { UserCreatDto } from '@/user/dto/userCreate.dto';
 
 export type Done = (
   err: Error,

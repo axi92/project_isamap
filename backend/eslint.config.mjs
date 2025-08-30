@@ -19,7 +19,7 @@ export default defineConfig([
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        project: ['./tsconfig.json'],
+        project: ['./tsconfig.json'], // adjust if tsconfig is in ./backend/
         sourceType: 'module',
       },
       globals: {
@@ -40,12 +40,34 @@ export default defineConfig([
       'import/no-unresolved': 'off', // handled by TS
       // Prettier integration (optional)
       'prettier/prettier': ['error', { singleQuote: true, endOfLine: 'lf' }],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            // Block deep relative imports into src/
+            './src/*',
+            '../src/*',
+            '../../src/*',
+            // Block any relative path going deep
+            '../*',
+            '../../*',
+          ],
+        },
+      ],
+    },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          // This makes ESLint use your tsconfig paths
+          project: './tsconfig.json',
+        },
+      },
     },
   },
-    // TypeScript recommended rules
+  // TypeScript recommended rules
   ...tseslint.configs.recommended,
-    // Import plugin recommended rules
+  // Import plugin recommended rules
   ...compat.extends('plugin:import/recommended', 'plugin:import/typescript'),
-    // Prettier recommended rules
+  // Prettier recommended rules
   ...compat.extends('prettier'),
 ]);

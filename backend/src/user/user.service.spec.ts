@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { UserCreatDto } from './dto/userCreate.dto';
-import { LowdbService } from '../lowdb/lowdb.service';
-import { DB_FILENAME } from '../lowdb/lowdb.constants';
+import { LowdbService } from '@/lowdb/lowdb.service';
+import { DB_FILENAME } from '@/lowdb/lowdb.constants';
 import { testDiscordID1 } from './user.constants';
 
 describe('UserService', () => {

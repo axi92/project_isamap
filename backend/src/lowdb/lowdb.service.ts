@@ -8,7 +8,7 @@ import { Interval } from '@nestjs/schedule';
 
 import { DataBaseStructure } from './lowdb.interface';
 import { LowWithLodash } from './lowWithLodash';
-// eslint-disable-next-line import/no-unresolved
+
 import { JSONFile } from 'lowdb/node';
 import {
   defaultData,

@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ServerService } from './server.service';
-import { LowdbService } from '../lowdb/lowdb.service';
-import { UserService } from '../user/user.service';
+import { LowdbService } from '@/lowdb/lowdb.service';
+import { UserService } from '@/user/user.service';
 import { exampleServerData, serverCreateTestData } from './server.test.data';
-import { DB_FILENAME } from '../lowdb/lowdb.constants';
-import { userTestTemplate } from '../user/user.constants';
+import { DB_FILENAME } from '@/lowdb/lowdb.constants';
+import { userTestTemplate } from '@/user/user.constants';
 import { ServerEntry } from './server.interface';
 
 describe('ServerService', () => {

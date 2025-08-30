@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigurationService } from './configuration.service';
+import { ConfigurationService } from '@/configuration/configuration.service';
 import { ConfigService } from '@nestjs/config';
 import {
   ENV_VARS,
   ERROR_CONFIG_NOT_LOADED,
   WARN_CONFIG_EMPTY,
-} from './configuration.constants';
+} from '@/configuration/configuration.constants';
 import { Logger } from '@nestjs/common';
 
 describe('ConfigurationServiceWithMissingConfig', () => {

@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { LowdbService } from '../lowdb/lowdb.service';
+import { LowdbService } from '@/lowdb/lowdb.service';
 import { ServerEntry } from './server.interface';
-import { COLLECTION } from '../lowdb/lowdb.constants';
+import { COLLECTION } from '@/lowdb/lowdb.constants';
 import { v4 as uuidv4 } from 'uuid';
 import { ServerCreateDto } from './dto/serverCreate.dto';
-import { UserService } from '../user/user.service';
+import { UserService } from '@/user/user.service';
 import { ERROR_INVALID_OWNER } from './server.constants';
 import { LiveMapDTO } from './dto/server.dto';
 
