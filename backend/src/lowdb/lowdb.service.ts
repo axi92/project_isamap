@@ -15,6 +15,8 @@ import {
   WARN_SAVING_DB_SHUTDOWN,
   WARN_SAVING_DB_SHUTDOWN_COMPLETE,
 } from './lowdb.constants';
+import { UserCreatDto } from '@/user/dto/userCreate.dto';
+import { ServerEntry } from '@/server/server.interface';
 
 @Injectable()
 export class LowdbService implements OnModuleInit, OnModuleDestroy {
@@ -68,8 +70,9 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
     return this.db.chain;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async getAllEntries(collctionName: 'servers' | 'users'): Promise<any> {
+  async getAllEntries(
+    collctionName: 'servers' | 'users',
+  ): Promise<ServerEntry[] | UserCreatDto[]> {
     return new Promise(async (resolve) => {
       const result = this.db.chain.get(collctionName).value();
       resolve(result);

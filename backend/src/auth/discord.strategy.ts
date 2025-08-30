@@ -1,5 +1,5 @@
 // import { Strategy } from 'passport-local';
-import { Inject, Injectable } from '@nestjs/common'; // UnauthorizedException
+import { Inject, Injectable, Logger } from '@nestjs/common'; // UnauthorizedException
 import { PassportStrategy } from '@nestjs/passport';
 // import { AuthService } from './auth.service';
 import { Profile, Strategy } from 'passport-discord';
@@ -10,6 +10,9 @@ import { UserCreatDto } from '@/user/dto/userCreate.dto';
 
 @Injectable()
 export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
+  private readonly logger = new Logger(DiscordStrategy.name, {
+    timestamp: true,
+  });
   constructor(
     @Inject(ConfigurationService)
     private configurationService: ConfigurationService,
@@ -38,7 +41,7 @@ export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
       avatar,
       verified,
     };
-    console.log(user);
+    this.logger.log(`${user.username} with id ${user.userId} logged in`);
     // How do I get the expire time of the token?
     // Looks like the default expires_in is 604800s thats 7d
     done(null, user);
