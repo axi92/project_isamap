@@ -58,6 +58,7 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
     if (this.flushDataToDisk) {
       this.logger.debug('Write db...');
       await this.getDb().write();
+      this.flushDataToDisk = false;
       this.logger.debug('Writing db done!');
     }
   }
