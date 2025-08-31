@@ -1,12 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import * as CryptoJS from 'crypto-js';
+import * as crypto from 'crypto';
 
-export function encrypt(token: string): string {
-  //return CryptoJS.AES.encrypt(token, process.env.SECRET_PASSPHRASE).toString();
-  return 'TBD';
+export function hashString(string: string): string {
+  return crypto.createHash('blake2b512').update(string).digest('hex');
 }
 
-export function decrypt(token: string): string {
-  //return CryptoJS.AES.decrypt(token, process.env.SECRET_PASSPHRASE).toString();
-  return 'TBD';
+export function verifyHash(
+  stringUnhashed: string,
+  hashedString: string,
+): boolean {
+  const inputHashed = hashString(stringUnhashed);
+  try {
+    return crypto.timingSafeEqual(
+      Buffer.from(inputHashed, 'hex'),
+      Buffer.from(hashedString, 'hex'),
+    );
+  } catch {
+    return false;
+  }
 }
