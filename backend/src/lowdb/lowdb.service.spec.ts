@@ -41,6 +41,11 @@ describe('LowdbService', () => {
     expect(db).toBeDefined(); // Ensure the db is initialized
   });
 
+  it('write DB', async () => {
+    dbService.flushDataToDisk = true;
+    await dbService.writeDB();
+  });
+
   it('should create a server for an existing user', async () => {
     const ownerDiscordId = testDiscordID1;
 
