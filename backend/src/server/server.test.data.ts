@@ -33,6 +33,18 @@ export const exampleServerData: LiveMapDTO = {
       tribename: 'Tribe1',
     },
   ],
+  dinos: [
+    {
+      class: 'Dinoclass',
+      id: 1,
+      level: 1,
+      x_pos: 1,
+      y_pos: 1,
+      x_ue4: 1,
+      y_ue4: 1,
+      z_ue4: 1,
+    },
+  ],
   serverclock: '00:00',
 };
 
