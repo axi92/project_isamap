@@ -75,7 +75,7 @@
     "globals": "^16.3.0",
     "jest": "^30.0.5",
     "jest-util": "^30.0.5",
-    "npm-check-updates": "^18.0.2",
+    "npm-check-updates": "^18.0.3",
     "prettier": "^3.6.2",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.1",
