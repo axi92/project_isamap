@@ -50,7 +50,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.28.0",
+    "@eslint/js": "^9.34.0",
     "@nestjs/cli": "^11.0.10",
     "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/schematics": "^11.0.7",
