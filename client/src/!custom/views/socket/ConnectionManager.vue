@@ -1,13 +1,8 @@
-<template>
-  <button @click="connect()">Connect</button>
-  <button @click="disconnect()">Disconnect</button>
-</template>
-
-<script >
-import socket from "@/ws/socket";
+<script>
+import socket from '@/ws/socket';
 
 export default {
-  name: "ConnectionManager",
+  name: 'ConnectionManager',
 
   methods: {
     connect() {
@@ -17,5 +12,10 @@ export default {
       socket.disconnect();
     }
   }
-}
+};
 </script>
+
+<template>
+  <button @click="connect()">Connect</button>
+  <button @click="disconnect()">Disconnect</button>
+</template>

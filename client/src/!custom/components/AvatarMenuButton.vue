@@ -1,33 +1,24 @@
-<template>
-  <Button type="button" variant="outlined" class="!border-1" @click="toggle" aria-haspopup="true"
-    aria-controls="overlay_menu">
-    <Avatar :image="avatarUrl" class="mr-2" size="large" shape="circle" />
-    {{ props.username }}
-  </Button>
-  <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
-</template>
-
 <script setup lang="js">
-import { ref } from "vue";
-import { useUserStore } from '@/!custom/stores/auth.store'
+import { ref } from 'vue';
+import { useUserStore } from '@/!custom/stores/auth.store';
 
 const userStore = useUserStore();
 const props = defineProps({
   userId: {
     type: String,
     default: null,
-    required: true,
+    required: true
   },
   avatar: {
     type: String,
     default: null,
-    required: true,
+    required: true
   },
   username: {
     type: String,
     default: null,
-    required: true,
-  },
+    required: true
+  }
 });
 
 const menu = ref();
@@ -46,15 +37,22 @@ const items = ref([
           // window.location.href = '/api/v1/auth/logout';
           userStore.logout();
           window.location.assign('http://localhost:3000/api/v1/auth/logout');
-
         }
       }
     ]
   }
 ]);
-const avatarUrl = ref(`https://cdn.discordapp.com/avatars/${props.userId}/${props.avatar}.webp?size=64`)
+const avatarUrl = ref(`https://cdn.discordapp.com/avatars/${props.userId}/${props.avatar}.webp?size=64`);
 
 const toggle = (event) => {
   menu.value.toggle(event);
 };
 </script>
+
+<template>
+  <Button type="button" variant="outlined" class="!border-1" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
+    <Avatar :image="avatarUrl" class="mr-2" size="large" shape="circle" />
+    {{ props.username }}
+  </Button>
+  <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
+</template>
