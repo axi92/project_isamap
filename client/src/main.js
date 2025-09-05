@@ -96,7 +96,8 @@ import TreeTable from 'primevue/treetable';
 import VirtualScroller from 'primevue/virtualscroller';
 import Aura from '@primeuix/themes/aura';
 import BlockViewer from '@/components/BlockViewer.vue';
-import AvatarMenuButton from '@/components/AvatarMenuButton.vue'
+import AvatarMenuButton from '@/!custom/components/AvatarMenuButton.vue'
+import 'primeflex/primeflex.css'
 
 import '@/assets/styles.scss';
 import { Drawer, Popover, Select, Tabs, ToggleSwitch } from 'primevue';
@@ -104,14 +105,18 @@ import { Drawer, Popover, Select, Tabs, ToggleSwitch } from 'primevue';
 const app = createApp(App);
 
 app.use(PrimeVue, {
-    // Default theme configuration
-    theme: {
-        preset: Aura,
-        options: {
-            darkModeSelector: '.my-app-dark'
-        }
+  // Default theme configuration
+  theme: {
+    preset: Aura,
+    options: {
+      darkModeSelector: '.my-app-dark',
+      cssLayer: {
+        name: 'primevue',
+        order: 'theme, base, primevue'
+      }
     }
- });
+  }
+});
 app.use(createPinia())
 app.use({
   install: (app) => {

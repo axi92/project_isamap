@@ -12,3 +12,5 @@
 // @import '../../node_modules/bootstrap/scss/bootstrap.scss';
 /* Demos */
 // @include meta.load-css('demo/demo.scss');
+@import "tailwindcss";
+@import 'tailwindcss-primeui';
