@@ -1,16 +1,17 @@
-import { EventEmitter2 } from 'eventemitter2'
 import socket from '@/!custom/ws/socket'
 import { EventType } from './event.interface'
+import type { Events } from './event.interface'
+import type { Emitter } from 'mitt';
 
 export class EventService {
-  private readonly em2: EventEmitter2
+  private readonly em2: Emitter<Events>;
 
-  constructor(em2: EventEmitter2){
-    this.em2 = em2
-    this.registerEvents()
+  constructor(em2: Emitter<Events>) {
+    this.em2 = em2;
+    this.registerEvents();
   }
 
-  public em(): EventEmitter2 {
+  public em(): Emitter<Events> {
     return this.em2
   }
 

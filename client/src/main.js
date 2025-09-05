@@ -1,8 +1,8 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+import mitt from 'mitt';
 import App from './App.vue';
 import router from './router';
-import { EventEmitter2 } from 'eventemitter2';
 import { EventService } from './!custom/event/event.service';
 
 import Aura from '@primeuix/themes/aura';
@@ -11,6 +11,7 @@ import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
 
 import '@/assets/styles.scss';
+
 
 const app = createApp(App);
 
@@ -26,8 +27,8 @@ app.use(PrimeVue, {
 app.use(createPinia());
 app.use({
   install: (app) => {
-    const em = new EventEmitter2();
-    const es = new EventService(em);
+    const emitter = mitt();
+    const es = new EventService(emitter);
     app.provide('es', es);
   }
 });

@@ -12,3 +12,12 @@ export enum EventType {
   DATA = 'data',
   MAPDATA = 'mapdata',
 }
+
+export type Events = {
+  [EventType.CONNECT]: boolean
+  [EventType.STATE]: EventResponse
+  [EventType.LOGIN]: EventResponse
+  [EventType.LOGOUT]: EventResponse
+  [EventType.DATA]: unknown // or a more specific type if you know it
+  [EventType.MAPDATA]: string
+}
