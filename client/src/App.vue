@@ -3,7 +3,7 @@ import { inject, onMounted } from 'vue';
 import { EventService } from './event/event.service';
 import socket from '@/ws/socket'
 import { EventType, type EventResponse } from './event/event.interface';
-import { useUserStore } from '@/stores/auth.store'
+import { useUserStore } from '@/!custom/stores/auth.store'
 
 const userStore = useUserStore();
 onMounted(async () => {

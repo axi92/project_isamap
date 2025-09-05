@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
-import { useUserStore } from '@/stores/auth.store'
-import AvatarMenuButton from '@/components/AvatarMenuButton.vue';
+import { useUserStore } from '@/!custom/stores/auth.store'
+import AvatarMenuButton from '@/!custom/components/AvatarMenuButton.vue';
 
 const { layoutConfig, onMenuToggle } = useLayout();
 

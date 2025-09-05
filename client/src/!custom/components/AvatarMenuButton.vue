@@ -9,7 +9,7 @@
 
 <script setup lang="js">
 import { ref } from "vue";
-import { useUserStore } from '@/stores/auth.store'
+import { useUserStore } from '@/!custom/stores/auth.store'
 
 const userStore = useUserStore();
 const props = defineProps({

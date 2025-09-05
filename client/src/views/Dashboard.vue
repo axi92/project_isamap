@@ -2,8 +2,8 @@
 import { onMounted, reactive, ref, watch } from 'vue';
 import ProductService from '@/service/ProductService';
 import { useLayout } from '@/layout/composables/layout';
-import ConnectionManager from '@/views/socket/ConnectionManager.vue';
-import ConnectionState from '@/views/socket/ConnectionState.vue';
+import ConnectionManager from '@/!custom/views/socket/ConnectionManager.vue';
+import ConnectionState from '@/!custom/views/socket/ConnectionState.vue';
 
 const { isDarkTheme } = useLayout();
 

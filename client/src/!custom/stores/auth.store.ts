@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { fetchCurrentUser } from '@/service/authService'
+import { fetchCurrentUser } from '@/!custom/service/authService'
 
 const CACHE_KEY = 'userCache';
 const CACHE_TTL_MS = 10 * 60 * 1000; // 30 minutes
