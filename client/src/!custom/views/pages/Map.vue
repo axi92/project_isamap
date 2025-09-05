@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { EventService } from '@/!custom/event/event.service';
-import L from 'leaflet';
+// import L, { map, CRS, imageOverlay, ImageOverlay } from 'leaflet';
+// import type { LatLngBoundsExpression, Map } from 'leaflet'
+// TODO: imports from leaflet are not working in browser
+import L from 'leaflet'
 import 'leaflet/dist/leaflet.css';
 import { inject, nextTick, onMounted, ref } from 'vue';
 
