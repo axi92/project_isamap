@@ -1,8 +1,11 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
 import AppConfigurator from './AppConfigurator.vue';
+import { useUserStore } from '@/!custom/stores/auth.store'
+import AvatarMenuButton from '@/!custom/components/AvatarMenuButton.vue';
 
 const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
+const userStore = useUserStore();
 </script>
 
 <template>
@@ -30,12 +33,13 @@ const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
                     </g>
                 </svg>
 
-                <span>SAKAI</span>
+                <span>LiveMap</span>
             </router-link>
         </div>
 
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">
+                <!-- Dark Mode Button -->
                 <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
                     <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
                 </button>

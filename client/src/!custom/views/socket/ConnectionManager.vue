@@ -4,7 +4,7 @@
 </template>
 
 <script >
-import socket from "@/!custom/ws/socket";
+import socket from "@/ws/socket";
 
 export default {
   name: "ConnectionManager",

@@ -4,7 +4,7 @@ import App from './App.vue';
 import router from './router';
 import { EventEmitter2 } from 'eventemitter2'
 
-import { EventService } from './event/event.service';
+import { EventService } from './!custom/event/event.service';
 
 import PrimeVue from 'primevue/config';
 import AutoComplete from 'primevue/autocomplete';

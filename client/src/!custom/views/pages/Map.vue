@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { EventService } from '@/event/event.service';
+import type { EventService } from '@/!custom/event/event.service';
 import * as L from 'leaflet'
 import { inject, onMounted } from 'vue';
 

@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { state } from "@/!custom/ws/socket";
+import { state } from "@/ws/socket";
 
 export default {
   name: "ConnectionState",

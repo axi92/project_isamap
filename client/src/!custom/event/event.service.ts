@@ -1,5 +1,5 @@
 import { EventEmitter2 } from 'eventemitter2'
-import socket from '@/ws/socket'
+import socket from '@/!custom/ws/socket'
 import { EventType } from './event.interface'
 
 export class EventService {
