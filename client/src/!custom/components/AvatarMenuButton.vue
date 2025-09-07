@@ -51,7 +51,7 @@ const toggle = (event) => {
 
 <template>
   <Button type="button" variant="outlined" class="!border-1" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
-    <Avatar :image="avatarUrl" class="mr-2" size="large" shape="circle" />
+    <Avatar :image="avatarUrl" class="mr-2" size="normal" shape="circle" />
     {{ props.username }}
   </Button>
   <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
