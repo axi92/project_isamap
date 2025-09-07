@@ -12,6 +12,10 @@ import ToastService from 'primevue/toastservice';
 
 import '@/assets/styles.scss';
 
+// Set dark mode before the vue app even renders
+if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.documentElement.classList.add('app-dark');
+}
 
 const app = createApp(App);
 
@@ -20,7 +24,7 @@ app.use(PrimeVue, {
   theme: {
     preset: Aura,
     options: {
-      darkModeSelector: '.app-dark'
+      darkModeSelector: '.app-dark',
     }
   }
 });
