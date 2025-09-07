@@ -6,6 +6,7 @@ export interface EventResponse {
 
 export enum EventType {
   CONNECT = 'connect',
+  DISCONNECT = 'disconnect',
   STATE = 'state',
   LOGIN = 'login',
   LOGOUT = 'logout',
@@ -15,6 +16,7 @@ export enum EventType {
 
 export type Events = {
   [EventType.CONNECT]: boolean
+  [EventType.DISCONNECT]: boolean
   [EventType.STATE]: EventResponse
   [EventType.LOGIN]: EventResponse
   [EventType.LOGOUT]: EventResponse

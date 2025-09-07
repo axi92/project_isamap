@@ -20,15 +20,15 @@ export class EventService {
   }
 
   private registerEvents(){
-    socket.on('connect', () => {
+    socket.on(EventType.CONNECT, () => {
       this.em2.emit(EventType.CONNECT, true)
     })
 
-    socket.on('disconnect', () => {
-      this.em2.emit(EventType.CONNECT, false)
+    socket.on(EventType.DISCONNECT, () => {
+      this.em2.emit(EventType.DISCONNECT, false)
     })
 
-    socket.on('data', (data) => {
+    socket.on(EventType.DATA, (data) => {
       this.em2.emit(EventType.DATA, data)
     })
   }
