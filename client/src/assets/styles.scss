@@ -1,13 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-
- //for primeflex grid system
-@use "sass:meta";
-@use 'layout/layout.scss';
-
-@use '../../node_modules/leaflet/dist/leaflet.css';
-/* PrimeVue */
-// @import 'primevue/resources/primevue.min.css'; // version deplicated. You must open the command line if you are using < 3.29.00
-@use '../../node_modules/primeflex/primeflex.scss' with ($gutter: 1rem);
-@import '../../node_modules/primeicons/primeicons.css';
-/* Demos */
-@include meta.load-css('demo/demo.scss');
+@use 'primeicons/primeicons.css';
+@use '@/assets/tailwind.css';
+@use '@/assets/layout/layout.scss';
+@use '@/assets/demo/demo.scss';

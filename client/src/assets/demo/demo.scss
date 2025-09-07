@@ -1,3 +1,2 @@
-@use "sass:meta";
-@import 'flags/flags.css';
-@include meta.load-css('code.scss');
+@use './code.scss';
+@use './flags/flags.css';
