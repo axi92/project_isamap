@@ -6,6 +6,8 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM"]
   }
 }
