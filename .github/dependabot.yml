@@ -4,8 +4,12 @@ updates:
     directory: "/client"
     schedule:
       interval: "weekly"
+    # Enables only security updates:
+    open-pull-requests-limit: 0
 
   - package-ecosystem: "npm"
     directory: "/backend"
     schedule:
       interval: "weekly"
+    # Enables only security updates:
+    open-pull-requests-limit: 0
