@@ -10,4 +10,4 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Run Tests
-        run: cd backend && npm i && npm run test
+        run: cd backend && npm ci && npm run test
