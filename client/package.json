@@ -14,7 +14,7 @@
         "mitt": "^3.0.1",
         "pinia": "^3.0.3",
         "primeicons": "^7.0.0",
-        "primevue": "^4.3.8",
+        "primevue": "^4.3.9",
         "socket.io-client": "^4.8.1",
         "tailwindcss-primeui": "^0.6.1",
         "vue": "^3.4.34",
