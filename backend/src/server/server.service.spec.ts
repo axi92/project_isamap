@@ -6,6 +6,9 @@ import { exampleServerData, serverCreateTestData } from './server.test.data';
 import { DB_FILENAME } from '@/lowdb/lowdb.constants';
 import { userTestTemplate } from '@/user/user.constants';
 import { ServerEntry } from './server.interface';
+import { BadRequestException } from '@nestjs/common';
+import { ERROR_INVALID_OWNER } from './server.constants';
+import { ServerCreateDto } from './dto/serverCreate.dto';
 
 describe('ServerService', () => {
   let serverService: ServerService;
@@ -58,5 +61,44 @@ describe('ServerService', () => {
       publicId: expect.any(String),
       description: expect.any(String),
     });
+  });
+
+  it('should throw BadRequestException if owner does not exist', async () => {
+    const invalidOwnerDto = {
+      owner: 'nonexistent-user',
+      description: 'Invalid server',
+    } as ServerEntry;
+
+    await expect(serverService.create(invalidOwnerDto)).rejects.toThrow(
+      new BadRequestException(ERROR_INVALID_OWNER),
+    );
+  });
+
+  it('should return false when deleting non-existing server', async () => {
+    const result = await serverService.delete('nonexistent-private-id');
+    expect(result).toBe(false);
+  });
+
+  it('should delete an existing server and return true', async () => {
+    // Create owner
+    const user = await userService.create(userTestTemplate);
+
+    // Create a server for created owner
+    const entry = await serverService.create({
+      owner: user.userId,
+      description: 'Test server for delete',
+    } as ServerCreateDto);
+
+    expect((entry as ServerEntry).owner).toBe(user.userId);
+
+    const privateId = (entry as ServerEntry).privateId;
+
+    // Delete it
+    const result = await serverService.delete(privateId);
+    expect(result).toBe(true);
+
+    // Verify it’s gone
+    const findResult = await serverService.findServerByPrivateId(privateId);
+    expect(findResult).toBeNull();
   });
 });
