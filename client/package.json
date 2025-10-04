@@ -2,6 +2,7 @@
     "name": "sakai-vue",
     "version": "4.3.0",
     "scripts": {
+        "postinstall": "patch-package",
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
@@ -35,6 +36,7 @@
         "eslint": "^9.34.0",
         "eslint-plugin-vue": "^10.4.0",
         "jiti": "^2.5.1",
+        "patch-package": "8.0.1",
         "postcss": "^8.4.40",
         "prettier": "^3.2.5",
         "sass": "^1.55.0",
