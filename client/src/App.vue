@@ -11,7 +11,6 @@ onMounted(async () => {
 });
 
 const es = inject<EventService>('es')!
-// TODO: make ws work
 
 onMounted(() => {
   es.em().on(EventType.DATA, async (data) => {
