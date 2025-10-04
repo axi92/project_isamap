@@ -6,7 +6,8 @@ import type { Emitter } from 'mitt';
 export class EventService {
   private readonly em2: Emitter<Events>;
 
-  constructor(em2: Emitter<Events>) {
+  constructor(
+    em2: Emitter<Events>) {
     this.em2 = em2;
     this.registerEvents();
   }
@@ -29,6 +30,10 @@ export class EventService {
     })
 
     socket.on(EventType.DATA, (data) => {
+      this.em2.emit(EventType.DATA, data)
+    })
+
+    socket.on(EventType.MAPDATA, (data) => {
       this.em2.emit(EventType.DATA, data)
     })
   }
