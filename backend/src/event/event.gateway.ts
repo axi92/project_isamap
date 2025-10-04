@@ -11,17 +11,18 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ServerService } from '@/server/server.service';
-import { exampleServerData } from '@/server/server.test.data';
+import { calibrationServerData } from '@/server/server.test.data';
 
 @Injectable()
 @WebSocketGateway({
   cors: true,
 })
 export class EventGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   private readonly logger = new Logger(EventGateway.name);
 
-  constructor(@Inject(ServerService) private serverService: ServerService) { }
+  constructor(@Inject(ServerService) private serverService: ServerService) {}
 
   @WebSocketServer()
   io: Server;
@@ -47,9 +48,9 @@ export class EventGateway
     if (publicId == 'fixtures') {
       this.logger.verbose(
         'sending fixtures mapdata:',
-        JSON.stringify(exampleServerData),
+        JSON.stringify(calibrationServerData),
       );
-      socket.emit('mapdata', exampleServerData);
+      socket.emit('mapdata', calibrationServerData);
       return;
     }
     socket.emit(
