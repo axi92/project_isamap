@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { Map, ImageOverlay, LatLngBoundsExpression } from 'leaflet'
+import type { Map, ImageOverlay } from 'leaflet'
 import * as L from 'leaflet'; // for CRS (and other constants)
 import 'leaflet/dist/leaflet.css';
 import { inject, nextTick, onMounted, ref } from 'vue';
-import type { EventService } from '@/!custom/event/event.service';
-import { EventType } from '@/!custom/event/event.interface';
+import type { EventService } from '@/_custom/event/event.service';
+import { EventType } from '@/_custom/event/event.interface';
 // import { MapService } from '@/!custom/service/map/mapService';
 
 const es = inject<EventService>('es')!
