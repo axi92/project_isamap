@@ -33,6 +33,7 @@ export default [
         document: "readonly",
         Image: "readonly",
         console: "readonly",
+        localStorage: 'readonly',
       },
     },
     plugins: {
