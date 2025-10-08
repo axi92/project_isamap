@@ -7,7 +7,8 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
-        "lint": "eslint --fix . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+        "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs",
+        "lint:fix": "eslint --fix . --ext .vue,.js,.jsx,.cjs,.mjs"
     },
     "dependencies": {
         "@primeuix/themes": "^1.2.3",
