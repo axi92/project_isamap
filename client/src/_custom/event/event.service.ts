@@ -1,4 +1,4 @@
-import socket from '@/!custom/ws/socket'
+import socket from '@/_custom/ws/socket'
 import { EventType } from './event.interface'
 import type { Events } from './event.interface'
 import type { Emitter } from 'mitt';

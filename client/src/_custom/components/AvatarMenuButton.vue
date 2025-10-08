@@ -1,22 +1,19 @@
 <script setup lang="js">
 import { ref } from 'vue';
-import { useUserStore } from '@/!custom/stores/auth.store';
+import { useUserStore } from '@/_custom/stores/auth.store';
 
 const userStore = useUserStore();
 const props = defineProps({
   userId: {
     type: String,
-    default: null,
     required: true
   },
   avatar: {
     type: String,
-    default: null,
     required: true
   },
   username: {
     type: String,
-    default: null,
     required: true
   }
 });

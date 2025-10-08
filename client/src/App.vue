@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { inject, onMounted } from 'vue';
-import { EventService } from './!custom/event/event.service';
-import socket from '@/!custom/ws/socket'
-import { EventType, type EventResponse } from './!custom/event/event.interface';
-import { useUserStore } from '@/!custom/stores/auth.store'
+import { EventService } from './_custom/event/event.service';
+import socket from '@/_custom/ws/socket'
+import { EventType } from './_custom/event/event.interface';
+import { useUserStore } from '@/_custom/stores/auth.store'
 
 const userStore = useUserStore();
 onMounted(async () => {

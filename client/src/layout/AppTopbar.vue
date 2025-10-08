@@ -1,8 +1,8 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
 import AppConfigurator from './AppConfigurator.vue';
-import { useUserStore } from '@/!custom/stores/auth.store';
-import AvatarMenuButton from '@/!custom/components/AvatarMenuButton.vue';
+import { useUserStore } from '@/_custom/stores/auth.store';
+import AvatarMenuButton from '@/_custom/components/AvatarMenuButton.vue';
 
 const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
 const userStore = useUserStore();

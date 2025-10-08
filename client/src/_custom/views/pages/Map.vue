@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { inject, nextTick, onMounted, ref } from 'vue';
 import type { EventService } from '@/_custom/event/event.service';
 import { EventType } from '@/_custom/event/event.interface';
-// import { MapService } from '@/!custom/service/map/mapService';
+// import { MapService } from '@/_custom/service/map/mapService';
 
 const es = inject<EventService>('es')!
 const leafletMap = ref<Map>();

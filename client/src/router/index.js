@@ -16,7 +16,7 @@ const router = createRouter({
         {
           path: '/map',
           name: 'map',
-          component: () => import('@/!custom/views/pages/Map.vue')
+          component: () => import('@/_custom/views/pages/Map.vue')
         },
         {
           path: '/uikit/formlayout',
