@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { inject, nextTick, onMounted, ref } from 'vue';
 import type { EventService } from '@/_custom/event/event.service';
 import { EventType } from '@/_custom/event/event.interface';
-// import { MapService } from '@/_custom/service/map/mapService';
+// import { MapService } from '@/_custom/service/map/mapService'; // Maybe implement later when code works and we can refactor
 
 const es = inject<EventService>('es')!
 const leafletMap = ref<Map>();
@@ -85,10 +85,6 @@ function createMarker(): null {
       className: '',
       iconSize: [ICONSIZE, ICONSIZE * 1.5],
       iconAnchor: [ICONSIZE / 2, ICONSIZE * 1.5],
-      // html: `<svg xmlns="http://www.w3.org/2000/svg" width="${ICONSIZE}" height="${ICONSIZE}" fill="var(--primary-color)" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-      //         <path d="M8 16s6-5.686 6-10A6 6 0 002 6c0 4.314 6 10 6 10"/>
-      //       </svg>`,
-      // html: `<i class="pi ${m.icon}" style="color:${m.color}; font-size: 24px;"></i>`,
     });
     console.log('create marker', m.icon, 'to map:', leafletMap.value)
     L.marker([m.lat, m.lng], { icon: icon }).addTo(leafletMap.value!);
