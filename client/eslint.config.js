@@ -18,7 +18,7 @@ export default [
 
   // ✅ TypeScript + Vue SFC support
   {
-    files: ["**/*.ts", "**/*.vue"],
+    files: ["**/*.ts", "**/*.vue", "**/*.js"],
     languageOptions: {
       parser: vueParser,
       parserOptions: {
@@ -59,6 +59,7 @@ export default [
         { order: ["DEFINITION", "LIST_RENDERING", "CONDITIONALS", "RENDER_MODIFIERS", "GLOBAL", "UNIQUE", "TWO_WAY_BINDING", "OTHER_ATTR", "EVENTS", "CONTENT"] }
       ],
       "vue/no-multiple-template-root": "off",      // Vue 3 allows multiple root nodes
+      "vue/attribute-hyphenation": "off",
 
       // ---- TypeScript rules ----
       "@typescript-eslint/no-unused-vars": ["warn"],
