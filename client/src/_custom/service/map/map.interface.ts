@@ -1,4 +1,4 @@
-export interface MapProperties {
+export interface MapProperty {
   name: string;
   displayName: string;
   mapSrc: string;
@@ -12,3 +12,7 @@ interface Obelisk {
   x: number;
   y: number;
 }
+
+export type MarkerColor = 'orange' | 'red' | 'green';
+
+export type MarkerIcon = 'user' | 'home';

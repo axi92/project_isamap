@@ -16,7 +16,7 @@ export class ServerService {
   constructor(
     private readonly dbService: LowdbService,
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
   async getAll() {
     return this.dbService.getAllEntries('servers');

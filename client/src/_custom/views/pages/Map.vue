@@ -1,26 +1,25 @@
 <script setup lang="ts">
-import type { Map, ImageOverlay } from 'leaflet'
+import type { Map, ImageOverlay } from 'leaflet';
 import * as L from 'leaflet'; // for CRS (and other constants)
 import 'leaflet/dist/leaflet.css';
 import { inject, nextTick, onMounted, ref } from 'vue';
 import type { EventService } from '@/_custom/event/event.service';
 import { EventType } from '@/_custom/event/event.interface';
-// import { MapService } from '@/_custom/service/map/mapService'; // Maybe implement later when code works and we can refactor
+import { MapService } from '@/_custom/service/map/mapService'; // Maybe implement later when code works and we can refactor
 
-const es = inject<EventService>('es')!
+const es = inject<EventService>('es')!;
 const leafletMap = ref<Map>();
-// const mapService = new MapService();
+const mapService = new MapService();
 const ICONSIZE: number = 28;
 
-const img = new Image()
-img.src = '/images/maps/TheIsland_WP.jpg'
-
+const img = new Image();
+img.src = '/images/maps/TheIsland_WP.jpg';
 
 onMounted(() => {
   es.em().on(EventType.MAPDATA, async (data) => {
     // console.log('on event data onMounted Map.vue mapdata:', data)
     // handle incomming mapdata here
-  })
+  });
   nextTick(() => {
     leafletMap.value = L.map('map', {
       crs: L.CRS.Simple,
@@ -28,30 +27,33 @@ onMounted(() => {
       minZoom: -3,
       maxZoom: 10,
     }) as Map;
-    console.log('map initialized')
+    console.log('map initialized');
 
     img.onload = async () => {
       // Define bounds: from [0,0] (bottom-left) to [width, height] (top-right)
       // const imageBounds: LatLngBoundsExpression = [[-5, -5], [105, 105]]
-      const bounds: L.LatLngBoundsExpression = [[0, 0], [img.height, img.width]]
+      const bounds: L.LatLngBoundsExpression = [
+        [0, 0],
+        [img.height, img.width],
+      ];
       // Then continue with map init
       const overlay = ref<ImageOverlay>();
       overlay.value = L.imageOverlay(img.src, bounds).addTo(leafletMap.value!);
       leafletMap.value!.fitBounds(bounds);
       leafletMap.value!.setView([2000, 2000], -2);
-    }
+    };
     es.requestMapData('fixtures');
     createMarker();
-  })
-})
+  });
+});
 
 const ObeliskIcon = L.Icon.extend({
   options: {
     iconSize: [20],
     iconAnchor: [10, 90],
-    popupAnchor: [0, -88]
-  }
-})
+    popupAnchor: [0, -88],
+  },
+});
 
 // const marker = mapService.createMarker();
 // marker.addTo(leafletMap.value as Map)
@@ -61,7 +63,7 @@ function createMarker(): null {
     { lat: 0, lng: 0, icon: 'pi-map-marker', color: 'pink' },
   ];
 
-  markers.forEach(m => {
+  markers.forEach((m) => {
     const icon = L.divIcon({
       html: `
         <svg xmlns="http://www.w3.org/2000/svg"
@@ -86,14 +88,11 @@ function createMarker(): null {
       iconSize: [ICONSIZE, ICONSIZE * 1.5],
       iconAnchor: [ICONSIZE / 2, ICONSIZE * 1.5],
     });
-    console.log('create marker', m.icon, 'to map:', leafletMap.value)
+    console.log('create marker', m.icon, 'to map:', leafletMap.value);
     L.marker([m.lat, m.lng], { icon: icon }).addTo(leafletMap.value!);
   });
   return null;
 }
-
-
-
 </script>
 
 <template>

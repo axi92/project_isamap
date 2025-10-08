@@ -1,6 +1,8 @@
-import type { MapProperties } from "./map.interface";
-import { TheIsland_WP } from "./data/theIslandWp";
+import type { MapProperty } from './map.interface';
+import { TheIsland_WP } from './properties/theIslandWp';
 
-export const mapData: MapProperties[] = [
-  TheIsland_WP
-];
+export const mapProperties = {
+  TheIsland_WP: TheIsland_WP,
+} as const satisfies Record<string, MapProperty>;
+
+export type MapKey = keyof typeof mapProperties;
