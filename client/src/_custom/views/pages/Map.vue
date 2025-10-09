@@ -6,10 +6,16 @@ import { inject, nextTick, onMounted, ref } from 'vue';
 import type { EventService } from '@/_custom/event/event.service';
 import { EventType } from '@/_custom/event/event.interface';
 import { MapService } from '@/_custom/service/map/mapService'; // Maybe implement later when code works and we can refactor
+import { useRoute } from 'vue-router';
+import type { LiveMapDTO } from '@/_custom/service/map/dto/map.dto';
 
+const route = useRoute();
+const mapId = route.params.id as string;
 const es = inject<EventService>('es')!;
 const leafletMap = ref<Map>();
-const mapService = new MapService();
+// const mapData = await fetchMapData(mapId);
+const mapData = await fetchMapData('fixtures');
+const mapService = new MapService(mapData); // refaktor to MapService
 const ICONSIZE: number = 28;
 
 const img = new Image();
@@ -17,6 +23,7 @@ img.src = '/images/maps/TheIsland_WP.jpg';
 
 onMounted(() => {
   es.em().on(EventType.MAPDATA, async (data) => {
+    // TODO: maybe send mapdata from the backend when the client connects?
     // console.log('on event data onMounted Map.vue mapdata:', data)
     // handle incomming mapdata here
   });
@@ -54,6 +61,12 @@ const ObeliskIcon = L.Icon.extend({
     popupAnchor: [0, -88],
   },
 });
+
+async function fetchMapData(publicID: string): Promise<LiveMapDTO> {
+  const res = await fetch(`http://localhost:3000/api/v1/servers/data/${publicID}`);
+  const data = await res.json();
+  return data as LiveMapDTO;
+}
 
 // const marker = mapService.createMarker();
 // marker.addTo(leafletMap.value as Map)

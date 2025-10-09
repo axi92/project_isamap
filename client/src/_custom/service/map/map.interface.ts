@@ -16,3 +16,8 @@ interface Obelisk {
 export type MarkerColor = 'orange' | 'red' | 'green';
 
 export type MarkerIcon = 'user' | 'home';
+
+export interface PositionDTO {
+  x_pos: number;
+  y_pos: number;
+}

@@ -3,7 +3,7 @@ import * as L from 'leaflet'; // for CRS (and other constants)
 import { Marker } from 'leaflet'; // for CRS (and other constants)
 import type { Map as LeafletMap } from 'leaflet';
 import 'leaflet.awesome-markers';
-import type { MarkerColor, MarkerIcon } from './map.interface';
+import type { MarkerColor, MarkerIcon, PositionDTO } from './map.interface';
 import type { LiveMapDTO, PlayerDTO, TribeDTO } from './dto/map.dto';
 
 export class MapService {
@@ -28,29 +28,53 @@ export class MapService {
   }
 
   updateMarkers(tribes: TribeDTO[], players: PlayerDTO[]) {
-    const updatedTribeIds = new Set<number>();
-    for (const tribe of tribes) {
-      updatedTribeIds.add(tribe.tribeid);
+    this.updateMarkersGeneric<TribeDTO>(
+      tribes,
+      (t) => t.tribeid,
+      (t) => `Tribe: ${t.tribename}`,
+      this.tribeMarkers
+    );
 
-      // Does this player already have a marker?
-      const marker = this.tribeMarkers.get(tribe.tribeid);
+    this.updateMarkersGeneric<PlayerDTO>(
+      players,
+      (p) => p.steamid,
+      (p) => `Player: ${p.playername}`,
+      this.playerMarkers
+    );
+  }
+
+  updateMarkersGeneric<T extends PositionDTO>(
+    data: T[],
+    // eslint-disable-next-line no-unused-vars
+    getId: (_item: T) => string | number,
+    // eslint-disable-next-line no-unused-vars
+    getPopupText: (_item: T) => string,
+    markerMap: Map<string | number, L.Marker>
+  ) {
+    const updatedIds = new Set<string | number>();
+
+    for (const item of data) {
+      const id = getId(item);
+      updatedIds.add(id);
+
+      const marker = markerMap.get(id);
 
       if (marker) {
         // Move existing marker
-        marker.setLatLng([tribe.x_pos, tribe.y_pos]);
+        marker.setLatLng([item.x_pos, item.y_pos]);
       } else {
-        // Create a new marker
-        const newMarker = L.marker([tribe.x_pos, tribe.y_pos]).bindPopup(`Player ${tribe.tribeid}`).addTo(this.mapInstance);
+        // Create new marker
+        const newMarker = this.createMarker(item.x_pos, item.y_pos).bindPopup(getPopupText(item)).addTo(this.mapInstance);
 
-        this.tribeMarkers.set(tribe.tribeid, newMarker);
+        markerMap.set(id, newMarker);
       }
     }
 
-    // Remove markers for players that disappeared
-    for (const [id, marker] of this.tribeMarkers) {
-      if (!updatedTribeIds.has(id)) {
+    // Remove old markers
+    for (const [id, marker] of markerMap) {
+      if (!updatedIds.has(id)) {
         this.mapInstance.removeLayer(marker);
-        this.tribeMarkers.delete(id);
+        markerMap.delete(id);
       }
     }
   }
@@ -64,14 +88,12 @@ export class MapService {
   }
 
   private convertColorToSCSSVariable(color: MarkerColor): string {
-    switch (color) {
-      case 'orange':
-        return '--p-button-warn-background';
-      case 'red':
-        return '--p-button-outlined-danger-border-color';
-      default:
-        return '--p-button-text-primary-color';
-    }
+    const colorMap: Record<MarkerColor, string> = {
+      orange: '--p-button-warn-background',
+      red: '--p-button-outlined-danger-border-color',
+      green: '--p-button-text-primary-color',
+    };
+    return colorMap[color] ?? '--p-button-text-primary-color';
   }
 
   private createDivIcon(icon: MarkerIcon, color: MarkerColor, size: number): L.DivIcon {

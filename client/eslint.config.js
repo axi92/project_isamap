@@ -32,6 +32,7 @@ export default [
         Image: 'readonly',
         console: 'readonly',
         localStorage: 'readonly',
+        fetch: 'readonly',
       },
     },
     plugins: {
