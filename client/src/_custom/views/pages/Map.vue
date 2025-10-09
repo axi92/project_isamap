@@ -9,6 +9,11 @@ import { MapService } from '@/_custom/service/map/mapService'; // Maybe implemen
 import { useRoute } from 'vue-router';
 import type { LiveMapDTO } from '@/_custom/service/map/dto/map.dto';
 
+//TODO: tweak coord system:
+// Some sources:
+// https://ark.wiki.gg/mw-1.43/extensions/DataMaps/modules/core/CoordinateSystem.js
+// https://ark.wiki.gg/mw-1.43/extensions/DataMaps/modules/core/enums.js
+
 const route = useRoute();
 const mapId = route.params.id as string;
 const es = inject<EventService>('es')!;
