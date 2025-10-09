@@ -18,11 +18,10 @@ import { calibrationServerData } from '@/server/server.test.data';
   cors: true,
 })
 export class EventGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(EventGateway.name);
 
-  constructor(@Inject(ServerService) private serverService: ServerService) {}
+  constructor(@Inject(ServerService) private serverService: ServerService) { }
 
   @WebSocketServer()
   io: Server;
@@ -44,15 +43,6 @@ export class EventGateway
     @ConnectedSocket() socket: Socket,
   ) {
     this.logger.verbose('mapdata publicId:', publicId);
-    // Fixtures mock data
-    if (publicId == 'fixtures') {
-      this.logger.verbose(
-        'sending fixtures mapdata:',
-        JSON.stringify(calibrationServerData),
-      );
-      socket.emit('mapdata', calibrationServerData);
-      return;
-    }
     socket.emit(
       'mapdata',
       JSON.stringify(this.serverService.getServerDataByPublicId(publicId)),

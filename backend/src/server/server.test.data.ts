@@ -49,7 +49,7 @@ export const exampleServerData: LiveMapDTO = {
 };
 
 const calibrationServerData: LiveMapDTO = {
-  map: 'TheIsland',
+  map: 'TheIsland_WP',
   servername: 'Calibration Server',
   privateid: v4(),
   players: [

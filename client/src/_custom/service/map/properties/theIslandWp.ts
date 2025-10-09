@@ -1,6 +1,6 @@
-import type { MapProperties } from '../map.interface';
+import type { MapProperty } from '../map.interface';
 
-export const TheIsland_WP: MapProperties = {
+export const TheIsland_WP: MapProperty = {
   name: 'TheIsland_WP',
   displayName: 'The Island',
   bounds: [

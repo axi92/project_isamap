@@ -14,7 +14,7 @@ const es = inject<EventService>('es')!;
 
 onMounted(() => {
   es.em().on(EventType.DATA, async (data) => {
-    console.log('on event data onmounted App.vue data:', data);
+    // console.log('on event data onmounted App.vue data:', data);
   });
 });
 

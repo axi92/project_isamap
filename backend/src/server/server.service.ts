@@ -7,6 +7,7 @@ import { ServerCreateDto } from './dto/serverCreate.dto';
 import { UserService } from '@/user/user.service';
 import { ERROR_INVALID_OWNER } from './server.constants';
 import { LiveMapDTO } from './dto/server.dto';
+import { calibrationServerData } from './server.test.data';
 
 @Injectable()
 export class ServerService {
@@ -102,6 +103,10 @@ export class ServerService {
   }
 
   getServerDataByPublicId(publicId: string): LiveMapDTO | null {
-    return this.serverData.get(publicId) || null;
+    if (publicId == 'fixtures') {
+      return calibrationServerData;
+    } else {
+      return this.serverData.get(publicId) || null;
+    }
   }
 }

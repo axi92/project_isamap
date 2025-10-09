@@ -40,7 +40,7 @@ export interface LiveMapDTO {
   map: string;
   servername: string;
   serverclock: string;
-  tribes?: TribeDTO[];
+  tribes: TribeDTO[];
   dinos?: DinoDTO[];
-  players?: PlayerDTO[];
+  players: PlayerDTO[];
 }

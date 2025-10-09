@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Map, ImageOverlay } from 'leaflet';
+import type { Map } from 'leaflet';
 import * as L from 'leaflet'; // for CRS (and other constants)
 import 'leaflet/dist/leaflet.css';
 import { inject, nextTick, onMounted, ref } from 'vue';
@@ -13,44 +13,21 @@ const route = useRoute();
 const mapId = route.params.id as string;
 const es = inject<EventService>('es')!;
 const leafletMap = ref<Map>();
-// const mapData = await fetchMapData(mapId);
-const mapData = await fetchMapData('fixtures');
-const mapService = new MapService(mapData); // refaktor to MapService
-const ICONSIZE: number = 28;
-
-const img = new Image();
-img.src = '/images/maps/TheIsland_WP.jpg';
+let mapService: MapService;
 
 onMounted(() => {
-  es.em().on(EventType.MAPDATA, async (data) => {
+  es.em().on(EventType.MAPDATA, async (data: LiveMapDTO) => {
     // TODO: maybe send mapdata from the backend when the client connects?
     // console.log('on event data onMounted Map.vue mapdata:', data)
     // handle incomming mapdata here
+    mapService.updateMarkers(data.tribes, data.players);
   });
-  nextTick(() => {
-    leafletMap.value = L.map('map', {
-      crs: L.CRS.Simple,
-      zoomControl: true,
-      minZoom: -3,
-      maxZoom: 10,
-    }) as Map;
-    console.log('map initialized');
-
-    img.onload = async () => {
-      // Define bounds: from [0,0] (bottom-left) to [width, height] (top-right)
-      // const imageBounds: LatLngBoundsExpression = [[-5, -5], [105, 105]]
-      const bounds: L.LatLngBoundsExpression = [
-        [0, 0],
-        [img.height, img.width],
-      ];
-      // Then continue with map init
-      const overlay = ref<ImageOverlay>();
-      overlay.value = L.imageOverlay(img.src, bounds).addTo(leafletMap.value!);
-      leafletMap.value!.fitBounds(bounds);
-      leafletMap.value!.setView([2000, 2000], -2);
-    };
-    es.requestMapData('fixtures');
-    createMarker();
+  nextTick(async () => {
+    const mapData = await fetchMapData(mapId);
+    mapService = new MapService(mapData); // refaktor to MapService
+    leafletMap.value = mapService.mapInstance;
+    mapService.updateMarkers(mapData.tribes, mapData.players);
+    es.requestMapData(mapId);
   });
 });
 
@@ -66,45 +43,6 @@ async function fetchMapData(publicID: string): Promise<LiveMapDTO> {
   const res = await fetch(`http://localhost:3000/api/v1/servers/data/${publicID}`);
   const data = await res.json();
   return data as LiveMapDTO;
-}
-
-// const marker = mapService.createMarker();
-// marker.addTo(leafletMap.value as Map)
-function createMarker(): null {
-  const markers = [
-    { lat: 1200, lng: 1200, icon: 'pi-map-marker', color: 'red' },
-    { lat: 0, lng: 0, icon: 'pi-map-marker', color: 'pink' },
-  ];
-
-  markers.forEach((m) => {
-    const icon = L.divIcon({
-      html: `
-        <svg xmlns="http://www.w3.org/2000/svg"
-            width="${ICONSIZE}" height="${ICONSIZE * 1.6}"
-            viewBox="0 0 16 26"
-            style="display:block;overflow:visible;">
-          <!-- Marker pin shape -->
-          <path d="M8 25s8-8.5 8-15A8 8 0 0 0 0 10c0 6.5 8 15 8 15z"
-                fill="var(--p-button-text-primary-color)" />
-
-          <!-- Centered PrimeIcons icon -->
-          <foreignObject x="0" y="3" width="16" height="12">
-            <div xmlns="http://www.w3.org/1999/xhtml"
-                style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">
-              <i class="pi pi-star"
-                style="color:var(--p-button-primary-color);font-size:${ICONSIZE * 0.49}px;line-height:1;"></i>
-            </div>
-          </foreignObject>
-        </svg>
-      `,
-      className: '',
-      iconSize: [ICONSIZE, ICONSIZE * 1.5],
-      iconAnchor: [ICONSIZE / 2, ICONSIZE * 1.5],
-    });
-    console.log('create marker', m.icon, 'to map:', leafletMap.value);
-    L.marker([m.lat, m.lng], { icon: icon }).addTo(leafletMap.value!);
-  });
-  return null;
 }
 </script>
 

@@ -2,25 +2,34 @@ import { mapProperties, type MapKey } from './mapService.constants';
 import * as L from 'leaflet'; // for CRS (and other constants)
 import { Marker } from 'leaflet'; // for CRS (and other constants)
 import type { Map as LeafletMap } from 'leaflet';
-import 'leaflet.awesome-markers';
-import type { MarkerColor, MarkerIcon, PositionDTO } from './map.interface';
+import type { MapProperty, MarkerColor, MarkerIcon, PositionDTO } from './map.interface';
 import type { LiveMapDTO, PlayerDTO, TribeDTO } from './dto/map.dto';
 
 export class MapService {
+  ICONSIZE: number = 24;
   tribeMarkers = new Map<number, Marker>();
   playerMarkers = new Map<number, Marker>();
   mapInstance = L.map('map', {
     crs: L.CRS.Simple,
     zoomControl: true,
-    minZoom: -3,
-    maxZoom: 10,
+    minZoom: 2,
+    maxZoom: 8,
   }) as LeafletMap;
   mapImage = new Image();
-  currentMapProperties: typeof mapProperties;
+  currentMapProperties: MapProperty;
 
   constructor(liveMapDTO: LiveMapDTO) {
-    this.currentMapProperties = this.getMapProperties()[liveMapDTO.map as MapKey];
-    this.mapImage.src = '/images/maps/TheIsland_WP.jpg';
+    this.currentMapProperties = this.getMapProperties()[liveMapDTO.map as MapKey] as MapProperty;
+    this.mapImage.src = this.currentMapProperties.mapSrc;
+
+    this.mapImage.onload = async () => {
+      // Define bounds: from [0,0] (bottom-left) to [width, height] (top-right)
+      const bounds: L.LatLngBoundsExpression = this.currentMapProperties.bounds;
+      // Then continue with map init
+      L.imageOverlay(this.mapImage.src, bounds).addTo(this.mapInstance);
+      this.mapInstance.fitBounds(bounds);
+      this.mapInstance.setView([50, 50], 3);
+    };
   }
 
   getMapProperties(): typeof mapProperties {
@@ -80,7 +89,7 @@ export class MapService {
   }
 
   private createMarker(x: number, y: number): Marker {
-    const icon = this.createDivIcon('home', 'green', 20);
+    const icon = this.createDivIcon('home', 'green', this.ICONSIZE);
     const marker = new Marker([x, y], {
       icon: icon,
     });
