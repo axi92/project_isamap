@@ -18,6 +18,14 @@ export class MapService {
   mapImage = new Image();
   currentMapProperties: MapProperty;
 
+  CustomCRS = L.extend({}, L.CRS.Simple, {
+    transformation: new L.Transformation(1, 0, 1, 0), // normal x, normal y
+    // override the project/unproject to flip Y if needed
+    unproject: function (point: L.Point) {
+      return new L.LatLng(point.y, point.x);
+    },
+  });
+
   constructor(liveMapDTO: LiveMapDTO) {
     this.currentMapProperties = this.getMapProperties()[liveMapDTO.map as MapKey] as MapProperty;
     this.mapImage.src = this.currentMapProperties.mapSrc;
