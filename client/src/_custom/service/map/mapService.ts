@@ -2,7 +2,7 @@ import { mapProperties, type MapKey } from './mapService.constants';
 import * as L from 'leaflet'; // for CRS (and other constants)
 import { Marker } from 'leaflet'; // for CRS (and other constants)
 import type { Map as LeafletMap } from 'leaflet';
-import type { MapProperty, MarkerColor, MarkerIcon, PositionDTO } from './map.interface';
+import type { MapProperty, MarkerColor, MarkerIcon, Obelisk, PositionDTO } from './map.interface';
 import type { LiveMapDTO, PlayerDTO, TribeDTO } from './dto/map.dto';
 
 export class MapService {
@@ -10,9 +10,10 @@ export class MapService {
   tribeMarkers = new Map<number, Marker>();
   playerMarkers = new Map<number, Marker>();
   CustomCRS = L.extend({}, L.CRS.Simple, {
-    transformation: new L.Transformation(1, 0, 1, 0), // normal x, normal y
+    transformation: new L.Transformation(1, 0, 1, 0),
     // override the project/unproject to flip Y if needed
     unproject: function (point: L.Point) {
+      // flip X and Y
       return new L.LatLng(point.y, point.x);
     },
   });
@@ -36,6 +37,9 @@ export class MapService {
       L.imageOverlay(this.mapImage.src, bounds).addTo(this.mapInstance);
       this.mapInstance.fitBounds(bounds);
       this.mapInstance.setView([50, 50], 3);
+      if (this.currentMapProperties.obelisks) {
+        this.createObelisks(this.currentMapProperties.obelisks);
+      }
     };
   }
 
@@ -137,5 +141,19 @@ export class MapService {
       iconSize: [size, size * 1.5],
       iconAnchor: [size / 2, size * 1.5],
     });
+  }
+
+  createObelisks(obelisks: Obelisk[]) {
+    for (const obelisk of obelisks) {
+      const icon = L.icon({
+        iconUrl: obelisk.src,
+        iconSize: [30, 128],
+        iconAnchor: [10, 90],
+        popupAnchor: [0, -88],
+      });
+      new Marker([obelisk.x, obelisk.y], {
+        icon: icon,
+      }).addTo(this.mapInstance);
+    }
   }
 }

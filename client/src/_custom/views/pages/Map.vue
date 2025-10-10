@@ -36,14 +36,6 @@ onMounted(() => {
   });
 });
 
-const ObeliskIcon = L.Icon.extend({
-  options: {
-    iconSize: [20],
-    iconAnchor: [10, 90],
-    popupAnchor: [0, -88],
-  },
-});
-
 async function fetchMapData(publicID: string): Promise<LiveMapDTO> {
   const res = await fetch(`http://localhost:3000/api/v1/servers/data/${publicID}`);
   const data = await res.json();

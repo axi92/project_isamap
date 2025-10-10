@@ -6,9 +6,10 @@ export interface MapProperty {
   bounds: [[number, number], [number, number]];
 }
 
-interface Obelisk {
+export interface Obelisk {
   description: string;
   color: 'red' | 'green' | 'blue';
+  src: string;
   x: number;
   y: number;
 }
