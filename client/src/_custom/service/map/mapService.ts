@@ -9,15 +9,6 @@ export class MapService {
   ICONSIZE: number = 24;
   tribeMarkers = new Map<number, Marker>();
   playerMarkers = new Map<number, Marker>();
-  mapInstance = L.map('map', {
-    crs: L.CRS.Simple,
-    zoomControl: true,
-    minZoom: 2,
-    maxZoom: 8,
-  }) as LeafletMap;
-  mapImage = new Image();
-  currentMapProperties: MapProperty;
-
   CustomCRS = L.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0), // normal x, normal y
     // override the project/unproject to flip Y if needed
@@ -25,6 +16,14 @@ export class MapService {
       return new L.LatLng(point.y, point.x);
     },
   });
+  mapInstance = L.map('map', {
+    crs: this.CustomCRS,
+    zoomControl: true,
+    minZoom: 2,
+    maxZoom: 8,
+  }) as LeafletMap;
+  mapImage = new Image();
+  currentMapProperties: MapProperty;
 
   constructor(liveMapDTO: LiveMapDTO) {
     this.currentMapProperties = this.getMapProperties()[liveMapDTO.map as MapKey] as MapProperty;
