@@ -96,19 +96,17 @@ const calibrationServerData: LiveMapDTO = {
 // Fill calibrationServerData
 
 // X direction
-for (let indexX = 0; indexX <= 150; indexX = indexX + 10) {
+for (let indexX = 0; indexX <= 100; indexX = indexX + 10) {
   // Y direction
-  for (let indexY = 0; indexY <= 150; indexY = indexY + 10) {
-    // const element = array[index];
+  for (let indexY = 0; indexY <= 100; indexY = indexY + 10) {
     const copy = structuredClone(calibrationServerData.tribes[0]);
-    copy.tribeid = Number(`${indexX}${indexY}`);
-    copy.tribename = `Tribe ${indexX}x${indexY}`;
+    copy.tribeid = Number(`1${indexX}${indexY}`);
+    copy.tribename = `Tribe X:${indexX} Y:${indexY}`;
     copy.x_pos = indexX;
     copy.y_pos = indexY;
     calibrationServerData.tribes.push(copy);
   }
 }
-
 export { calibrationServerData };
 
 export const serverCreateTestData: ServerCreateDto = {
