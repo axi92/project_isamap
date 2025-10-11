@@ -1,6 +1,6 @@
 <script setup lang="ts">
+defineOptions({ inheritAttrs: false });
 import type { Map } from 'leaflet';
-import * as L from 'leaflet'; // for CRS (and other constants)
 import 'leaflet/dist/leaflet.css';
 import { inject, nextTick, onMounted, ref } from 'vue';
 import type { EventService } from '@/_custom/event/event.service';
@@ -19,6 +19,7 @@ const mapId = route.params.id as string;
 const es = inject<EventService>('es')!;
 const leafletMap = ref<Map>();
 let mapService: MapService;
+const errorMessage = ref<Boolean>(false);
 
 onMounted(() => {
   es.em().on(EventType.MAPDATA, async (data: LiveMapDTO) => {
@@ -29,10 +30,14 @@ onMounted(() => {
   });
   nextTick(async () => {
     const mapData = await fetchMapData(mapId);
-    mapService = new MapService(mapData); // refaktor to MapService
-    leafletMap.value = mapService.mapInstance;
-    mapService.updateMarkers(mapData.tribes, mapData.players);
-    es.requestMapData(mapId);
+    if (mapData.map) {
+      mapService = new MapService(mapData); // refaktor to MapService
+      leafletMap.value = mapService.mapInstance;
+      mapService.updateMarkers(mapData.tribes, mapData.players);
+      es.requestMapData(mapId);
+    } else {
+      errorMessage.value = true;
+    }
   });
 });
 
@@ -44,7 +49,10 @@ async function fetchMapData(publicID: string): Promise<LiveMapDTO> {
 </script>
 
 <template>
-  <div class="map-wrapper relative w-full">
+  <div class="flex flex-col gap-4">
+    <Message v-if="errorMessage" severity="error" icon="pi pi-times-circle" class="mb-2">Server not found!</Message>
+  </div>
+  <div v-if="!errorMessage" class="map-wrapper relative w-full">
     <div id="map" class="w-full h-full"></div>
   </div>
 </template>
