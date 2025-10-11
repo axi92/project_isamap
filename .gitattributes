@@ -1,2 +1,10 @@
 # Enforce LF for all text files
 * text eol=lf
+
+# Binary files: no line-ending conversion
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.gif -text
+*.ico -text
+*.svg -text

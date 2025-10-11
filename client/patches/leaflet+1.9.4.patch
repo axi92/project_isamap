@@ -1,0 +1,12 @@
+diff --git a/node_modules/leaflet/package.json b/node_modules/leaflet/package.json
+index 33349e3..a84718e 100644
+--- a/node_modules/leaflet/package.json
++++ b/node_modules/leaflet/package.json
+@@ -33,6 +33,7 @@
+     "uglify-js": "^3.17.0"
+   },
+   "main": "dist/leaflet-src.js",
++  "module": "dist/leaflet-src.esm.js",
+   "style": "dist/leaflet.css",
+   "files": [
+     "dist",

@@ -3,7 +3,7 @@ import { createPinia } from 'pinia';
 import mitt from 'mitt';
 import App from './App.vue';
 import router from './router';
-import { EventService } from './!custom/event/event.service';
+import { EventService } from './_custom/event/event.service';
 
 import Aura from '@primeuix/themes/aura';
 import PrimeVue from 'primevue/config';

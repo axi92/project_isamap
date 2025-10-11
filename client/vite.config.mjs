@@ -9,26 +9,25 @@ import vueDevTools from 'vite-plugin-vue-devtools';
 // https://vitejs.dev/config/
 export default defineConfig({
   optimizeDeps: {
-    noDiscovery: true
+    noDiscovery: true,
   },
   plugins: [
     vue(),
     vueDevTools(),
     Components({
-      resolvers: [PrimeVueResolver()]
-    })
+      resolvers: [PrimeVueResolver()],
+    }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
   },
   css: {
     preprocessorOptions: {
       scss: {
         api: 'modern-compiler',
-        silenceDeprecations: ['import', 'global-builtin'],
-      }
+      },
     },
   },
 });

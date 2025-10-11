@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -10,7 +10,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-// import { EventType } from '../../../client/src/event/event.interface';
+import { ServerService } from '@/server/server.service';
 
 @Injectable()
 @WebSocketGateway({
@@ -20,6 +20,8 @@ export class EventGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   private readonly logger = new Logger(EventGateway.name);
+
+  constructor(@Inject(ServerService) private serverService: ServerService) {}
 
   @WebSocketServer()
   io: Server;
@@ -37,9 +39,13 @@ export class EventGateway
 
   @SubscribeMessage('mapdata')
   async onNewMessage(
-    @MessageBody() body: string,
+    @MessageBody() publicId: string,
     @ConnectedSocket() socket: Socket,
   ) {
-    this.logger.log(body, socket);
+    this.logger.verbose('mapdata publicId:', publicId);
+    socket.emit(
+      'mapdata',
+      JSON.stringify(this.serverService.getServerDataByPublicId(publicId)),
+    );
   }
 }
