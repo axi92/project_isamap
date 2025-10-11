@@ -17,7 +17,7 @@ import { ServerEntry } from './server.interface';
 @Controller('servers')
 export class ServerController {
   private readonly logger = new Logger('ServerController');
-  constructor(private readonly servers: ServerService) { }
+  constructor(private readonly servers: ServerService) {}
   /*
   GET /servers
   - Get one user:
