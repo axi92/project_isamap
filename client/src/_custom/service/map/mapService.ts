@@ -52,14 +52,16 @@ export class MapService {
       tribes,
       (t) => t.tribeid,
       (t) => `Tribe: ${t.tribename}`,
-      this.tribeMarkers
+      this.tribeMarkers,
+      'home'
     );
 
     this.updateMarkersGeneric<PlayerDTO>(
       players,
       (p) => p.steamid,
       (p) => `Player: ${p.playername}`,
-      this.playerMarkers
+      this.playerMarkers,
+      'user'
     );
   }
 
@@ -69,10 +71,10 @@ export class MapService {
     getId: (_item: T) => string | number,
     // eslint-disable-next-line no-unused-vars
     getPopupText: (_item: T) => string,
-    markerMap: Map<string | number, L.Marker>
+    markerMap: Map<string | number, L.Marker>,
+    icontype: MarkerIcon
   ) {
     const updatedIds = new Set<string | number>();
-
     for (const item of data) {
       const id = getId(item);
       updatedIds.add(id);
@@ -84,7 +86,7 @@ export class MapService {
         marker.setLatLng([item.x_pos, item.y_pos]);
       } else {
         // Create new marker
-        const newMarker = this.createMarker(item.x_pos, item.y_pos).bindPopup(getPopupText(item)).addTo(this.mapInstance);
+        const newMarker = this.createMarker(item.x_pos, item.y_pos, icontype).bindPopup(getPopupText(item)).addTo(this.mapInstance);
 
         markerMap.set(id, newMarker);
       }
@@ -99,8 +101,8 @@ export class MapService {
     }
   }
 
-  private createMarker(x: number, y: number): Marker {
-    const icon = this.createDivIcon('home', 'green', this.ICONSIZE);
+  private createMarker(x: number, y: number, icontype: MarkerIcon): Marker {
+    const icon = this.createDivIcon(icontype, 'green', this.ICONSIZE);
     const marker = new Marker([x, y], {
       icon: icon,
     });
@@ -131,7 +133,7 @@ export class MapService {
           <foreignObject x="0" y="3" width="16" height="12">
             <div xmlns="http://www.w3.org/1999/xhtml"
                 style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">
-              <i class="pi pi-user"
+              <i class="pi pi-${icon}"
                 style="color:var(--p-button-primary-color);font-size:${size * 0.49}px;line-height:1;"></i>
             </div>
           </foreignObject>
