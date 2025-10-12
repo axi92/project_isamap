@@ -8,8 +8,9 @@ import { exampleServerData } from './server.test.data';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { ServerEntry } from './server.interface';
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { ServerCreateDto } from './dto/serverCreate.dto';
+import { Request } from 'express';
 
 describe('ServerController', () => {
   let controller: ServerController;
@@ -93,10 +94,24 @@ describe('ServerController', () => {
       privateId: 'priv',
       description: serverCreateDto.description,
     } as ServerEntry;
+    const mockReq = {
+      user: 'owner',
+    } as unknown as Request;
     jest.spyOn(serverService, 'create').mockResolvedValueOnce(mockResult);
-    const result = await controller.createServer(serverCreateDto);
+    const result = await controller.createServer(serverCreateDto, mockReq);
     expect(result).toEqual(mockResult);
     expect(serverService.create).toHaveBeenCalledWith(serverCreateDto);
+  });
+
+  it('should throw ForbiddenException if user mismatch on createServer', async () => {
+    const serverCreateDto = {
+      description: 'desc',
+      owner: 'owner',
+    } as ServerCreateDto;
+    const mockReq = { user: 'anotherUser' } as unknown as Request;
+    await expect(
+      controller.createServer(serverCreateDto, mockReq),
+    ).rejects.toThrow(ForbiddenException);
   });
 
   it('should delete a server and return undefined if successful', async () => {

@@ -8,11 +8,14 @@ import {
   Delete,
   Logger,
   Param,
+  Req,
+  ForbiddenException,
 } from '@nestjs/common';
 import { ServerService } from './server.service';
 import { LiveMapDTO, privateIdDTO } from './dto/server.dto';
 import { ServerCreateDto } from './dto/serverCreate.dto';
 import { ServerEntry } from './server.interface';
+import { Request } from 'express';
 
 @Controller('servers')
 export class ServerController {
@@ -58,10 +61,17 @@ export class ServerController {
   }
 
   @Post('create') // Create a new server
-  async createServer(@Body(ValidationPipe) serverCreateDto: ServerCreateDto) {
-    return await this.servers.create(serverCreateDto);
-    // create server
-    // return publicID, privateID, description
+  async createServer(
+    @Body(ValidationPipe) serverCreateDto: ServerCreateDto,
+    @Req() req: Request,
+  ) {
+    if (req.user === serverCreateDto.owner) {
+      // create server
+      // return publicID, privateID, description
+      return await this.servers.create(serverCreateDto);
+    } else {
+      throw new ForbiddenException();
+    }
   }
 
   @Delete('delete') // Delete a server
