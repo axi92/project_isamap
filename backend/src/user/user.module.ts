@@ -7,5 +7,6 @@ import { LowdbModule } from '@/lowdb/lowdb.module';
   providers: [UserService],
   controllers: [UserController],
   imports: [LowdbModule],
+  exports: [UserService],
 })
 export class UsersModule {}

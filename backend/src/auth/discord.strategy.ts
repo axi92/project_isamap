@@ -1,27 +1,22 @@
-// import { Strategy } from 'passport-local';
-import { Inject, Injectable, Logger } from '@nestjs/common'; // UnauthorizedException
+import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-// import { AuthService } from './auth.service';
 import { Profile, Strategy } from 'passport-discord';
 import { Done } from '@/utils/types';
 // import { encrypt } from '../utils/encrypt';
 import { ConfigurationService } from '@/configuration/configuration.service';
 import { UserCreatDto } from '@/user/dto/userCreate.dto';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
-  private readonly logger = new Logger(DiscordStrategy.name, {
-    timestamp: true,
-  });
   constructor(
-    @Inject(ConfigurationService)
     private configurationService: ConfigurationService,
+    @Inject(AuthService) private authService: AuthService,
   ) {
     super({
       clientID: configurationService.getDiscordClientId(),
       clientSecret: configurationService.getDiscordClientSecret(),
       callbackURL: configurationService.getDiscordRedirectUri(),
-      // TODO: implement state and save state value for a little, state is used like a nonce
       scope: ['identify', 'email', 'guilds'],
     });
   }
@@ -41,23 +36,10 @@ export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
       avatar,
       verified,
     };
-    this.logger.log(`${user.username} with id ${user.userId} logged in`);
-    // How do I get the expire time of the token?
     // Looks like the default expires_in is 604800s thats 7d
-    done(null, user);
+    done(null, user, accessToken, refreshToken);
 
     // const encryptedAccessToken = encrypt(accessToken).toString();
     // const encryptedRefreshToken = encrypt(refreshToken).toString();
-
-    // TODO: implement validateUser
-    // const user = await this.authService.validateUser()
   }
-
-  // async validate(username: string, password: string): Promise<any> {
-  //   const user = await this.authService.validateUser(username, password);
-  //   if (!user) {
-  //     throw new UnauthorizedException();
-  //   }
-  //   return user;
-  // }
 }
