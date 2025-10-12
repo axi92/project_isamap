@@ -1,4 +1,4 @@
-export async function fetchCurrentUser(): Promise<any> {
+export async function fetchCurrentUser(): Promise<UserAuthJson | null> {
   const res = await fetch('http://localhost:3000/api/v1/auth/me', {
     credentials: 'include',
   });
@@ -9,3 +9,10 @@ export async function fetchCurrentUser(): Promise<any> {
     return null; // not logged in
   }
 }
+
+export type UserAuthJson = {
+  userId: string;
+  username: string;
+  avatar?: string;
+  verified: boolean;
+};

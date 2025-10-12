@@ -1,11 +1,11 @@
-import { defineStore } from 'pinia'
-import { fetchCurrentUser } from '@/_custom/service/authService'
+import { defineStore } from 'pinia';
+import { fetchCurrentUser, type UserAuthJson } from '@/_custom/service/authService';
 
 const CACHE_KEY = 'userCache';
 const CACHE_TTL_MS = 10 * 60 * 1000; // 30 minutes
 
 export const useUserStore = defineStore('user', {
-  state: () => ({
+  state: (): { user: UserAuthJson | null } => ({
     user: null,
   }),
   actions: {
@@ -16,7 +16,7 @@ export const useUserStore = defineStore('user', {
         const { user, timestamp } = JSON.parse(cached);
         const now = Date.now();
         if (now - timestamp < CACHE_TTL_MS) {
-          if(user != null) {
+          if (user != null) {
             this.user = user;
             return;
           }
@@ -27,11 +27,8 @@ export const useUserStore = defineStore('user', {
       try {
         const fetchedUser = await fetchCurrentUser();
         this.user = fetchedUser;
-        localStorage.setItem(
-          CACHE_KEY,
-          JSON.stringify({ user: fetchedUser, timestamp: Date.now() })
-        );
-      } catch (e) {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ user: fetchedUser, timestamp: Date.now() }));
+      } catch {
         this.user = null;
         localStorage.removeItem(CACHE_KEY);
       }
