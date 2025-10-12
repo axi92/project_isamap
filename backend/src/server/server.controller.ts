@@ -10,12 +10,14 @@ import {
   Param,
   Req,
   ForbiddenException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ServerService } from './server.service';
 import { LiveMapDTO, privateIdDTO } from './dto/server.dto';
 import { ServerCreateDto } from './dto/serverCreate.dto';
 import { ServerEntry } from './server.interface';
 import { Request } from 'express';
+import { UserCreatDto } from '@/user/dto/userCreate.dto';
 
 @Controller('servers')
 export class ServerController {
@@ -65,12 +67,18 @@ export class ServerController {
     @Body(ValidationPipe) serverCreateDto: ServerCreateDto,
     @Req() req: Request,
   ) {
-    if (req.user === serverCreateDto.owner) {
-      // create server
-      // return publicID, privateID, description
-      return await this.servers.create(serverCreateDto);
+    const userSession: UserCreatDto = req.user as UserCreatDto;
+    this.logger.log(userSession.userId, serverCreateDto.owner);
+    if (req.isAuthenticated()) {
+      if (userSession.userId == serverCreateDto.owner) {
+        // create server
+        // return publicID, privateID, description
+        return await this.servers.create(serverCreateDto);
+      } else {
+        throw new ForbiddenException();
+      }
     } else {
-      throw new ForbiddenException();
+      throw new UnauthorizedException();
     }
   }
 
