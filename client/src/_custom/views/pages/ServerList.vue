@@ -8,16 +8,42 @@
  - show logo depending on map
 -->
 <script setup lang="ts">
-import { inject, nextTick, onMounted, ref } from 'vue';
+import { inject, onMounted, ref } from 'vue';
 import type { EventService } from '@/_custom/event/event.service';
 import { EventType } from '@/_custom/event/event.interface';
+import { useUserStore } from '@/_custom/stores/auth.store';
+import CodeBlock from '@/_custom/components/CodeBlock.vue';
+import { createServer } from '@/_custom/service/serverService';
 
 const es = inject<EventService>('es')!;
+const userStore = useUserStore();
+
+const visibleModal = ref(false);
+const visibleConfig = ref(false);
+const modalServerDescription = ref();
+const privateId = ref();
+const exampleCode = ref(`[HTTPLocation]
+privateid="${privateId.value}"
+URL="https://arkmap.axi92.at/rest/v1"`);
+
+onMounted(() => {
+  es.em().on(EventType.DATA, async (data) => {
+    // console.log('on event data onmounted App.vue data:', data);
+  });
+});
 </script>
 
 <!-- https://primevue.org/dataview/ -->
 <template>
-  <div class="card">
+  <div v-if="userStore.user">
+    <Button type="button" label="Create server..." icon="pi pi-plus" @click="visibleModal = true" />
+  </div>
+  <div v-else>
+    <div class="flex flex-col gap-4">
+      <Message severity="error" icon="pi pi-times-circle" class="mb-2">Nothing to show.</Message>
+    </div>
+  </div>
+  <!-- <div class="card">
     <DataView :value="products">
       <template #list="slotProps">
         <div class="flex flex-col">
@@ -63,5 +89,35 @@ const es = inject<EventService>('es')!;
         </div>
       </template>
     </DataView>
-  </div>
+  </div> -->
+  <Dialog v-model:visible="visibleModal" modal header="Add Server" :style="{ width: '32rem' }">
+    <div class="flex items-center gap-4 mb-4">
+      <label for="description" class="font-semibold w-24">Description</label>
+      <InputText id="description" v-model="modalServerDescription" class="flex-auto" autocomplete="off" maxlength="64" autofocus />
+    </div>
+    <CodeBlock v-if="visibleConfig" :code="exampleCode" />
+    <Toast />
+    <div class="flex justify-end gap-2">
+      <Button
+        type="button"
+        label="Cancel"
+        severity="secondary"
+        @click="
+          modalServerDescription = '';
+          visibleConfig = false;
+          visibleModal = false;
+        "
+      ></Button>
+      <Button
+        type="button"
+        label="Save"
+        @click="
+          createServer(modalServerDescription, userStore.user!.userId, privateId);
+          visibleConfig = true;
+        "
+      ></Button>
+    </div>
+  </Dialog>
 </template>
+
+<style scoped></style>

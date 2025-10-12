@@ -20,6 +20,11 @@ const router = createRouter({
           props: true, // optional: passes route params as props to the component
         },
         {
+          path: '/servers',
+          name: 'servers',
+          component: () => import('@/_custom/views/pages/ServerList.vue'),
+        },
+        {
           path: '/uikit/formlayout',
           name: 'formlayout',
           component: () => import('@/views/uikit/FormLayout.vue'),
@@ -140,5 +145,27 @@ const router = createRouter({
     },
   ],
 });
+
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some((record) => record.meta.requiresAuth)) {
+//     if (localStorage.getItem('userToken') == null) {
+//       next({
+//         path: '/login',
+//         params: { nextUrl: to.fullPath },
+//       });
+//     } else {
+//       if (!store.state.isAuthenticated) {
+//         next({
+//           path: '/login',
+//           params: { nextUrl: to.fullPath },
+//         });
+//       } else {
+//         next();
+//       }
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;
