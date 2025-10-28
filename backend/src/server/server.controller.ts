@@ -15,7 +15,6 @@ import {
 import { ServerService } from './server.service';
 import { LiveMapDTO, privateIdDTO } from './dto/server.dto';
 import { ServerCreateDto } from './dto/serverCreate.dto';
-import { ServerEntry } from './server.interface';
 import { Request } from 'express';
 import { UserCreatDto } from '@/user/dto/userCreate.dto';
 
@@ -24,21 +23,26 @@ export class ServerController {
   private readonly logger = new Logger('ServerController');
   constructor(private readonly servers: ServerService) {}
   /*
-  GET /servers
-  - Get one user:
-  GET /servers/:id
+  - Get server list for session owner
+    GET /servers/list
+  - Get server data for publicId:
+    GET /servers/:id
   - Create server:
-  POST /servers/create
+    POST /servers/create
   - Change server description
-  PATCH /servers/:id
+    PATCH /servers/:id
   - Delete Server
-  DELETE /servers/:id
+    DELETE /servers/:id
   */
 
-  @Get() // GET /servers
-  async allServers() {
-    const servers = (await this.servers.getAll()) as ServerEntry[];
-    return servers;
+  @Get('list') // GET /servers/list
+  async myServers(@Req() req: Request) {
+    const userSession: UserCreatDto = req.user as UserCreatDto;
+    if (req.isAuthenticated()) {
+      return await this.servers.findServersByOwner(userSession.userId);
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 
   @Post('data') // Gameserver sending data to webserver

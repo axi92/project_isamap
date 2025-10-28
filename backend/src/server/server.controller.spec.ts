@@ -31,18 +31,6 @@ describe('ServerController', () => {
     expect(serverService).toBeDefined();
   });
 
-  it('should return all servers from service', async () => {
-    const mockServers = [
-      { privateId: '1', publicId: '1', owner: 'Player1' },
-      { privateId: '2', publicId: '2', owner: 'Player2' },
-    ] as ServerEntry[];
-    jest.spyOn(serverService, 'getAll').mockResolvedValueOnce(mockServers);
-
-    const result = await controller.allServers();
-    expect(result).toEqual(mockServers);
-    expect(serverService.getAll).toHaveBeenCalledTimes(1);
-  });
-
   it('should pass the validation on the LiveMapDTO', async () => {
     const dto = plainToInstance(LiveMapDTO, exampleServerData);
     const errors = await validate(dto);
@@ -95,7 +83,8 @@ describe('ServerController', () => {
       description: serverCreateDto.description,
     } as ServerEntry;
     const mockReq = {
-      user: 'owner',
+      user: { userId: 'owner' },
+      isAuthenticated: jest.fn().mockReturnValue(true),
     } as unknown as Request;
     jest.spyOn(serverService, 'create').mockResolvedValueOnce(mockResult);
     const result = await controller.createServer(serverCreateDto, mockReq);
@@ -108,7 +97,10 @@ describe('ServerController', () => {
       description: 'desc',
       owner: 'owner',
     } as ServerCreateDto;
-    const mockReq = { user: 'anotherUser' } as unknown as Request;
+    const mockReq = {
+      user: { userId: 'anotherUser' },
+      isAuthenticated: jest.fn().mockReturnValue(true),
+    } as unknown as Request;
     await expect(
       controller.createServer(serverCreateDto, mockReq),
     ).rejects.toThrow(ForbiddenException);
