@@ -8,7 +8,7 @@
  - show logo depending on map
 -->
 <script setup lang="ts">
-import { inject, onMounted, ref } from 'vue';
+import { computed, inject, onMounted, ref } from 'vue';
 import type { EventService } from '@/_custom/event/event.service';
 import { EventType } from '@/_custom/event/event.interface';
 import { useUserStore } from '@/_custom/stores/auth.store';
@@ -22,15 +22,28 @@ const visibleModal = ref(false);
 const visibleConfig = ref(false);
 const modalServerDescription = ref();
 const privateId = ref();
-const exampleCode = ref(`[HTTPLocation]
+const exampleCode = computed(() => {
+  return `[HTTPLocation]
 privateid="${privateId.value}"
-URL="https://arkmap.axi92.at/rest/v1"`);
+URL="https://arkmap.axi92.at/rest/v1"`;
+});
 
 onMounted(() => {
   es.em().on(EventType.DATA, async (data) => {
     // console.log('on event data onmounted App.vue data:', data);
   });
 });
+
+async function handleCreateServer() {
+  const result = await createServer(modalServerDescription, userStore.user!.userId);
+  if (result != null) {
+    // Only show config if the backend responded successfully
+    privateId.value = result.privateId;
+    visibleConfig.value = true;
+  } else {
+    console.error('Server creation failed');
+  }
+}
 </script>
 
 <!-- https://primevue.org/dataview/ -->
@@ -91,7 +104,7 @@ onMounted(() => {
     </DataView>
   </div> -->
   <Dialog v-model:visible="visibleModal" modal header="Add Server" :style="{ width: '32rem' }">
-    <div class="flex items-center gap-4 mb-4">
+    <div v-if="!visibleConfig" class="flex items-center gap-4 mb-4">
       <label for="description" class="font-semibold w-24">Description</label>
       <InputText id="description" v-model="modalServerDescription" class="flex-auto" autocomplete="off" maxlength="64" autofocus />
     </div>
@@ -108,14 +121,7 @@ onMounted(() => {
           visibleModal = false;
         "
       ></Button>
-      <Button
-        type="button"
-        label="Save"
-        @click="
-          createServer(modalServerDescription, userStore.user!.userId, privateId);
-          visibleConfig = true;
-        "
-      ></Button>
+      <Button v-if="!visibleConfig" type="button" label="Create" @click="handleCreateServer"></Button>
     </div>
   </Dialog>
 </template>

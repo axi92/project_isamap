@@ -1,6 +1,6 @@
 import type { Ref } from 'vue';
 
-export async function createServer(modalServerDescription: Ref, owner: string, privateId: Ref): Promise<ServerEntry | null> {
+export async function createServer(modalServerDescription: Ref, owner: string): Promise<ServerEntry | null> {
   modalServerDescription.value;
   const serverCreatePayload: ServerCreateDto = {
     description: modalServerDescription.value,
@@ -13,11 +13,11 @@ export async function createServer(modalServerDescription: Ref, owner: string, p
     headers: { 'Content-Type': 'application/json' },
   });
 
-  if (res.status === 200) {
+  if (res.status === 201) {
     const response = (await res.json()) as ServerEntry;
-    privateId.value = response.privateId;
     return response; // server info
   } else {
+    console.error('res.status:', res.status);
     return null; // not logged in
   }
 }
