@@ -14,7 +14,7 @@ for DATA_FILE in $FILES; do
   curl -X POST "$URL" \
     -H "Content-Type: application/json" \
     -d @"$DATA_FILE" \
-    -w "\nHTTP Status: %{http_code}\n" \
+    -w "HTTP Status: %{http_code}\n" \
     -s -o >(jq '.')
 
 done
