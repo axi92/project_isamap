@@ -7,7 +7,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigurationService } from './configuration/configuration.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['fatal', 'error', 'warn', 'log', 'debug'],
+  });
 
   // Get ConfigurationService from Nest application context
   const configService = app.get(ConfigurationService);
