@@ -38,6 +38,46 @@ export async function getServerList(): Promise<ServerInfo[] | null> {
   }
 }
 
+export async function deleteServerEntry(publicId: string): Promise<Boolean> {
+  const res = await fetch('http://localhost:3000/api/v1/servers/delete', {
+    credentials: 'include',
+    method: 'DELETE',
+    body: JSON.stringify({ publicId: publicId }),
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (res.status === 200) {
+    return true;
+  } else {
+    console.error('res.status:', res.status);
+    return false;
+  }
+}
+
+export function resolveMapImage(mapName: string): string {
+  switch (mapName) {
+    case 'TheCenter_WP':
+      return 'center.png';
+    case 'ScorchedEarth_WP':
+      return 'scorched.png';
+    case 'Ragnarok_WP':
+      return 'ragna.png';
+    case 'Aberration_WP':
+      return 'aberration.png';
+    case 'Extinction_WP':
+      return 'extinction.png';
+    case 'Valguero_WP':
+      return 'valguero.png';
+    case 'Astraeos_WP':
+      return 'astraeos.png';
+    case 'LostColony_WP': // Just a lucky guess, we have to wait for the release
+      return 'lost_colony.png';
+    case 'BobsMissions_WP':
+      return 'bobstalltales.png';
+    default:
+      return 'ASA_Logo_transparent.png';
+  }
+}
+
 export interface ServerCreateDto {
   owner: string;
   description: string;

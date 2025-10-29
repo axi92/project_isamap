@@ -10,7 +10,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useUserStore } from '@/_custom/stores/auth.store';
 import CodeBlock from '@/_custom/components/CodeBlock.vue';
-import { createServer, getServerList } from '@/_custom/service/serverService';
+import { createServer, getServerList, deleteServerEntry, resolveMapImage } from '@/_custom/service/serverService';
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 import ConfirmPopup from 'primevue/confirmpopup';
@@ -24,7 +24,7 @@ const modalServerDescription = ref();
 const privateId = ref();
 const exampleCode = computed(() => {
   return `[HTTPLocation]
-  privateid="${privateId.value}"
+privateid="${privateId.value}"
 URL="https://arkmap.axi92.at/rest/v1"`;
 });
 
@@ -44,6 +44,7 @@ async function handleCreateServer() {
     // Only show config if the backend responded successfully
     privateId.value = result.privateId;
     visibleConfig.value = true;
+    await getServerList().then((data) => (serverList.value = data));
   } else {
     console.error('Server creation failed');
   }
@@ -55,8 +56,7 @@ function convertDate(input: string) {
   return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(date);
 }
 
-const confirmDelete = (event: Event) => {
-  console.log(event);
+const confirmDelete = (event: Event, publicId: string) => {
   confirm.require({
     target: event.currentTarget as HTMLElement,
     message: 'Do you want to delete this record?',
@@ -72,7 +72,11 @@ const confirmDelete = (event: Event) => {
     },
     accept: async () => {
       // TODO: Delete Server
-      toast.add({ severity: 'error', summary: 'Confirmed', detail: 'Record deleted', life: 3000 });
+      const deleteStatus = await deleteServerEntry(publicId);
+      if (deleteStatus == true) {
+        toast.add({ severity: 'success', summary: 'Confirmed', detail: 'Record deleted', life: 5000 });
+        await getServerList().then((data) => (serverList.value = data));
+      }
     },
     reject: () => {},
   });
@@ -83,7 +87,7 @@ const confirmDelete = (event: Event) => {
 <template>
   <Toast />
   <div v-if="userStore.user">
-    <Button type="button" label="Create server..." icon="pi pi-plus" @click="visibleModal = true" />
+    <Button type="button" label="Create config..." icon="pi pi-plus" @click="visibleModal = true" />
   </div>
   <div v-else>
     <div class="flex flex-col gap-4">
@@ -97,7 +101,7 @@ const confirmDelete = (event: Event) => {
           <div v-for="(item, index) in slotProps.items" :key="index">
             <div class="flex flex-col sm:flex-row sm:items-center p-6 gap-4" :class="{ 'border-t border-surface-200 dark:border-surface-700': index !== 0 }">
               <div class="md:w-40 relative">
-                <img class="block xl:block mx-auto rounded w-full" :src="`/images/logo/ASA_Logo_transparent.png`" :alt="item.name" />
+                <img class="block xl:block mx-auto rounded w-full" :src="`/images/logo/${resolveMapImage(item.map)}`" :alt="item.name" />
                 <div class="absolute bg-black/70 rounded-border" style="left: 4px; top: 4px">
                   <!-- <Tag :value="item.inventoryStatus" :severity="warn"></Tag> -->
                 </div>
@@ -105,8 +109,8 @@ const confirmDelete = (event: Event) => {
               <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
                 <div class="flex flex-row md:flex-col justify-between items-start gap-2">
                   <div>
-                    <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">last Update {{ convertDate(item.lastUpdate) }}</span>
                     <div class="text-lg font-medium mt-2">{{ item.serverName }}</div>
+                    <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ item.description }}</span>
                   </div>
                   <div class="bg-surface-100 p-1" style="border-radius: 30px">
                     <div
@@ -124,13 +128,14 @@ const confirmDelete = (event: Event) => {
                   </div>
                 </div>
                 <div class="flex flex-col md:items-end gap-8">
+                  <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">last Update {{ convertDate(item.lastUpdate) }}</span>
                   <span class="text-xl font-semibold">{{ item.map }}</span>
                   <div class="flex flex-row-reverse md:flex-row gap-2">
                     <Button as="a" label="Map" :href="publicLinkPrefix + item.publicId" icon="pi pi-link" variant="outlined"></Button>
                     <Button icon="pi pi-eye" label="Raw data" variant="outlined"></Button>
                     <!-- <Button as="a" label="External" href="https://vuejs.org/" target="_blank" rel="noopener" /> -->
                     <ConfirmPopup></ConfirmPopup>
-                    <Button icon="pi pi-trash" label="Delete" severity="danger" class="flex-auto md:flex-initial whitespace-nowrap" @click="confirmDelete($event)"></Button>
+                    <Button icon="pi pi-trash" label="Delete" severity="danger" class="flex-auto md:flex-initial whitespace-nowrap" @click="confirmDelete($event, item.publicId)"></Button>
                   </div>
                 </div>
               </div>
