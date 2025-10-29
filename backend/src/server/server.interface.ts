@@ -1,6 +1,8 @@
 import { ServerCreateDto } from './dto/serverCreate.dto';
 
-export class ServerEntry extends ServerCreateDto {
-  privateId: string;
+export class ServerEntryNoPrivateId extends ServerCreateDto {
   publicId: string;
+}
+export class ServerEntry extends ServerEntryNoPrivateId {
+  privateId: string;
 }

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { LowdbService } from '@/lowdb/lowdb.service';
-import { ServerEntry } from './server.interface';
+import { ServerEntry, ServerEntryNoPrivateId } from './server.interface';
 import { COLLECTION } from '@/lowdb/lowdb.constants';
 import { v4 as uuidv4 } from 'uuid';
 import { ServerCreateDto } from './dto/serverCreate.dto';
@@ -8,11 +8,12 @@ import { UserService } from '@/user/user.service';
 import { ERROR_INVALID_OWNER } from './server.constants';
 import { LiveMapDTO } from './dto/server.dto';
 import { calibrationServerData } from './server.test.data';
+import { ServerData } from './dto/serverData.dto';
 
 @Injectable()
 export class ServerService {
   private readonly logger = new Logger('ServerService');
-  private serverData = new Map<string, LiveMapDTO>();
+  private serverData = new Map<string, ServerData>();
 
   constructor(
     private readonly dbService: LowdbService,
@@ -82,22 +83,24 @@ export class ServerService {
         .getDBChain()
         .get('servers')
         .filter({ owner: owner })
-        .value();
-      resolve(result);
+        .value() as ServerEntry[];
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      resolve(result.map(({ privateId, ...rest }) => rest)); // remove privateId from data
     });
   }
 
-  async processData(liveMapDto: LiveMapDTO): Promise<ServerEntry | null> {
+  async processData(liveMapDto: LiveMapDTO): Promise<boolean> {
     return new Promise(async (resolve) => {
       this.logger.debug(`Processing data for server: ${liveMapDto.servername}`);
       // Store the data in the serverData map
       const result = await this.findServerByPrivateId(liveMapDto.privateid);
       if (result === null) {
-        return resolve(result);
+        return resolve(false);
       } else {
-        this.serverData.set(result.publicId, liveMapDto);
-        this.logger.verbose(this.serverData);
-        return resolve(result);
+        const serverData = liveMapDto as ServerData;
+        serverData.lastUpdate = new Date().toISOString();
+        this.serverData.set(result.publicId, serverData);
+        return resolve(true);
       }
     });
   }

@@ -44,7 +44,7 @@ describe('ServerService', () => {
 
   it('handle incomming livemap data with no matching server entry', async () => {
     const data = await serverService.processData(exampleServerData);
-    expect(data).toBeNull();
+    expect(data).toBeFalsy();
   });
 
   it('handle livemap data with success', async () => {
@@ -55,12 +55,7 @@ describe('ServerService', () => {
     exampleServerData.privateid = serverEntry.privateId;
 
     const response = await serverService.processData(exampleServerData);
-    expect(response).toMatchObject({
-      owner: expect.any(String),
-      privateId: expect.any(String),
-      publicId: expect.any(String),
-      description: expect.any(String),
-    });
+    expect(response).toBeTruthy();
   });
 
   it('should throw BadRequestException if owner does not exist', async () => {

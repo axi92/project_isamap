@@ -165,13 +165,11 @@ describe('LowdbService', () => {
         expect.objectContaining({
           owner: ownerDiscordId,
           description: serverDescription1,
-          privateId: createdServer1.privateId,
           publicId: createdServer1.publicId,
         } as ServerEntry),
         expect.objectContaining({
           owner: ownerDiscordId,
           description: serverDescription2,
-          privateId: createdServer2.privateId,
           publicId: createdServer2.publicId,
         } as ServerEntry),
       ]),
