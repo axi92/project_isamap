@@ -155,7 +155,7 @@ describe('LowdbService', () => {
     expect(createdServer2.owner).toBe(ownerDiscordId);
 
     // Step 3: Find all servers by their owner
-    const foundServers = await serverService.findServersByOwner(ownerDiscordId);
+    const foundServers = await serverService.getByOwner(ownerDiscordId);
 
     // Verify the servers retrieval
     expect(foundServers).toBeDefined();

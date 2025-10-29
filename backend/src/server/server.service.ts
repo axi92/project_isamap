@@ -76,7 +76,7 @@ export class ServerService {
     });
   }
 
-  async findServersByOwner(owner: string): Promise<ServerEntry[]> {
+  async getByOwner(owner: string): Promise<ServerEntryNoPrivateId[]> {
     return new Promise(async (resolve) => {
       const result = this.dbService
         .getDBChain()

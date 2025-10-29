@@ -39,7 +39,7 @@ export class ServerController {
   async myServers(@Req() req: Request) {
     const userSession: UserCreatDto = req.user as UserCreatDto;
     if (req.isAuthenticated()) {
-      return await this.servers.findServersByOwner(userSession.userId);
+      return await this.servers.getByOwner(userSession.userId);
     } else {
       throw new UnauthorizedException();
     }
