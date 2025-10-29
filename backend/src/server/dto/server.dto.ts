@@ -120,10 +120,10 @@ class PlayerDTO {
   tribename: string;
 }
 
-export class privateIdDTO {
+export class publicIdDTO {
   @IsNotEmpty()
   @IsString()
-  privateid: string;
+  publicId: string;
 }
 
 export class LiveMapDTO {

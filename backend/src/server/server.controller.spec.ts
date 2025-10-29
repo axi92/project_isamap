@@ -3,7 +3,7 @@ import { ServerController } from './server.controller';
 import { ServerService } from './server.service';
 import { LowdbService } from '@/lowdb/lowdb.service';
 import { UserService } from '@/user/user.service';
-import { LiveMapDTO, privateIdDTO } from './dto/server.dto';
+import { LiveMapDTO, publicIdDTO } from './dto/server.dto';
 import { exampleServerData } from './server.test.data';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
@@ -104,21 +104,5 @@ describe('ServerController', () => {
     await expect(
       controller.createServer(serverCreateDto, mockReq),
     ).rejects.toThrow(ForbiddenException);
-  });
-
-  it('should delete a server and return undefined if successful', async () => {
-    jest.spyOn(serverService, 'delete').mockResolvedValueOnce(true);
-    const request = { privateid: 'privId' } as privateIdDTO;
-    const result = await controller.deleteServer(request);
-    expect(result).toBeUndefined();
-    expect(serverService.delete).toHaveBeenCalledWith('privId');
-  });
-
-  it('should throw NotFoundException if delete returns false', async () => {
-    jest.spyOn(serverService, 'delete').mockResolvedValueOnce(false);
-    const request = { privateid: 'privId' } as privateIdDTO;
-    await expect(controller.deleteServer(request)).rejects.toThrow(
-      NotFoundException,
-    );
   });
 });

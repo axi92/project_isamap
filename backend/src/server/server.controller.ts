@@ -13,7 +13,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ServerService } from './server.service';
-import { LiveMapDTO, privateIdDTO } from './dto/server.dto';
+import { LiveMapDTO, publicIdDTO } from './dto/server.dto';
 import { ServerCreateDto } from './dto/serverCreate.dto';
 import { Request } from 'express';
 import { UserCreatDto } from '@/user/dto/userCreate.dto';
@@ -72,7 +72,7 @@ export class ServerController {
     @Req() req: Request,
   ) {
     const userSession: UserCreatDto = req.user as UserCreatDto;
-    this.logger.log(userSession.userId, serverCreateDto.owner);
+    this.logger.log('create', userSession.userId, serverCreateDto.owner);
     if (req.isAuthenticated()) {
       if (userSession.userId == serverCreateDto.owner) {
         // create server
@@ -87,9 +87,24 @@ export class ServerController {
   }
 
   @Delete('delete') // Delete a server
-  async deleteServer(@Body() request: privateIdDTO) {
-    const response = await this.servers.delete(request.privateid);
-    if (response != true) throw new NotFoundException();
-    else return;
+  async deleteServer(
+    @Body(ValidationPipe) payload: publicIdDTO,
+    @Req() req: Request,
+  ) {
+    const userSession: UserCreatDto = req.user as UserCreatDto;
+    this.logger.log('delete', userSession.userId, payload.publicId);
+    if (req.isAuthenticated()) {
+      const server = await this.servers.findServerByPublicId(payload.publicId);
+      if (userSession.userId == server.owner) {
+        // delete server
+        // return publicID, privateID, description
+        await this.servers.delete(payload.publicId);
+        return;
+      } else {
+        throw new ForbiddenException();
+      }
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 }
