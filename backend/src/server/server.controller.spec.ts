@@ -3,7 +3,7 @@ import { ServerController } from './server.controller';
 import { ServerService } from './server.service';
 import { LowdbService } from '@/lowdb/lowdb.service';
 import { UserService } from '@/user/user.service';
-import { LiveMapDTO, publicIdDTO } from './dto/server.dto';
+import { LiveMapDTO } from './dto/server.dto';
 import { exampleServerData } from './server.test.data';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
