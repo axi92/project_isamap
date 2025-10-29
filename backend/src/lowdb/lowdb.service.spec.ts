@@ -163,12 +163,10 @@ describe('LowdbService', () => {
     expect(foundServers).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          owner: ownerDiscordId,
           description: serverDescription1,
           publicId: createdServer1.publicId,
         } as ServerEntry),
         expect.objectContaining({
-          owner: ownerDiscordId,
           description: serverDescription2,
           publicId: createdServer2.publicId,
         } as ServerEntry),

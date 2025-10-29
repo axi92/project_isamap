@@ -70,7 +70,7 @@ describe('ServerService', () => {
   });
 
   it('should return false when deleting non-existing server', async () => {
-    const result = await serverService.delete('nonexistent-private-id');
+    const result = await serverService.delete('nonexistent-public-id');
     expect(result).toBe(false);
   });
 
@@ -86,14 +86,14 @@ describe('ServerService', () => {
 
     expect((entry as ServerEntry).owner).toBe(user.userId);
 
-    const privateId = (entry as ServerEntry).privateId;
+    const publicId = (entry as ServerEntry).publicId;
 
     // Delete it
-    const result = await serverService.delete(privateId);
+    const result = await serverService.delete(publicId);
     expect(result).toBe(true);
 
     // Verify it’s gone
-    const findResult = await serverService.findServerByPrivateId(privateId);
+    const findResult = await serverService.findServerByPublicId(publicId);
     expect(findResult).toBeNull();
   });
 });
