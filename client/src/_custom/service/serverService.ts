@@ -1,4 +1,5 @@
 import type { Ref } from 'vue';
+import type { LiveMapDTO } from './map/dto/map.dto';
 
 export async function createServer(modalServerDescription: Ref, owner: string): Promise<ServerEntry | null> {
   modalServerDescription.value;
@@ -22,14 +23,14 @@ export async function createServer(modalServerDescription: Ref, owner: string): 
   }
 }
 
-export async function getServerList(): Promise<ServerEntry[] | null> {
+export async function getServerList(): Promise<ServerInfo[] | null> {
   const res = await fetch('http://localhost:3000/api/v1/servers/list', {
     credentials: 'include',
     method: 'GEt',
     headers: { 'Content-Type': 'application/json' },
   });
   if (res.status === 200) {
-    const response = (await res.json()) as ServerEntry[];
+    const response = (await res.json()) as ServerInfo[];
     return response; // server info
   } else {
     console.error('res.status:', res.status);
@@ -43,6 +44,21 @@ export interface ServerCreateDto {
 }
 
 export interface ServerEntry extends ServerCreateDto {
-  privateId: string;
   publicId: string;
+  privateId: string;
+  lastUpdate?: string;
+  playerCount?: number;
+}
+
+export interface ServerInfo {
+  publicId: string;
+  description: string;
+  lastUpdate?: string;
+  playerCount?: number;
+  serverName?: string;
+  map?: string;
+}
+
+export interface ServerData extends LiveMapDTO {
+  lastUpdate: string;
 }
