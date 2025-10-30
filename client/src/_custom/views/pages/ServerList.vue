@@ -1,9 +1,8 @@
 <!--
- TODO:
  Feature:
- - DataView in grid style
+ - DataView
  - add new server with custom description (limit characters so that its json save)
- - delet a server
+ - delete a server
  - show logo depending on map
 -->
 <script setup lang="ts">
