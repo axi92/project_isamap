@@ -1,11 +1,20 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { LowdbService } from '@/lowdb/lowdb.service';
 import { ServerEntry, ServerInfo } from './server.interface';
 import { COLLECTION } from '@/lowdb/lowdb.constants';
 import { v4 as uuidv4 } from 'uuid';
 import { ServerCreateDto } from './dto/serverCreate.dto';
 import { UserService } from '@/user/user.service';
-import { ERROR_INVALID_OWNER } from './server.constants';
+import {
+  ERROR_INVALID_OWNER,
+  ERROR_SERVER_LIMIT_REACHED,
+  MAX_SERVERS_PER_USER,
+} from './server.constants';
 import { LiveMapDTO } from './dto/server.dto';
 import { calibrationServerData } from './server.test.data';
 import { ServerData } from './dto/serverData.dto';
@@ -31,6 +40,11 @@ export class ServerService {
       // check if owner exists
       if (!(await this.userService.doesUserExist(serverCreateDto.owner))) {
         return reject(new BadRequestException(ERROR_INVALID_OWNER));
+      }
+      // Check server limit
+      const serverCount = (await this.getByOwner(serverCreateDto.owner)).length;
+      if (serverCount >= MAX_SERVERS_PER_USER) {
+        return reject(new ForbiddenException(ERROR_SERVER_LIMIT_REACHED));
       }
       const chain = this.dbService.getDBChain();
       const dbData = chain.get(COLLECTION.SERVERS).value() as ServerEntry[];

@@ -71,9 +71,10 @@ export class ServerController {
     @Body(ValidationPipe) serverCreateDto: ServerCreateDto,
     @Req() req: Request,
   ) {
-    const userSession: UserCreatDto = req.user as UserCreatDto;
-    this.logger.log('create', userSession.userId, serverCreateDto.owner);
     if (req.isAuthenticated()) {
+      const userSession: UserCreatDto = req.user as UserCreatDto;
+      this.logger.debug(userSession);
+      this.logger.log('create', userSession.userId, serverCreateDto.owner);
       if (userSession.userId == serverCreateDto.owner) {
         // create server
         // return publicID, privateID, description
