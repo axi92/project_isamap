@@ -73,11 +73,12 @@ export class ServerController {
   ) {
     if (req.isAuthenticated()) {
       const userSession: UserCreatDto = req.user as UserCreatDto;
-      this.logger.debug(userSession);
-      this.logger.log('create', userSession.userId, serverCreateDto.owner);
       if (userSession.userId == serverCreateDto.owner) {
         // create server
         // return publicID, privateID, description
+        this.logger.log(
+          `create for user: ${userSession.username} id: ${userSession.userId}`,
+        );
         return await this.servers.create(serverCreateDto);
       } else {
         throw new ForbiddenException();
@@ -99,6 +100,9 @@ export class ServerController {
       if (userSession.userId == server.owner) {
         // delete server
         // return publicID, privateID, description
+        this.logger.log(
+          `delete for user: ${userSession.username} id: ${userSession.userId}, publicId: ${payload.publicId}`,
+        );
         await this.servers.delete(payload.publicId);
         return;
       } else {

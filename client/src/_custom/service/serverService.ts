@@ -78,6 +78,12 @@ export function resolveMapImage(mapName: string): string {
   }
 }
 
+export function calculateProgress(current: number, max: number): number {
+  if (max <= 0) return 0; // avoid division by zero
+  const value = (current / max) * 100;
+  return Math.min(Math.max(value, 0), 100); // clamp between 0-100
+}
+
 export interface ServerCreateDto {
   owner: string;
   description: string;

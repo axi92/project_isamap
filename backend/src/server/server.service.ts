@@ -107,7 +107,6 @@ export class ServerService {
   }
 
   async getByOwner(owner: string): Promise<ServerInfo[]> {
-    // TODO add data from this.serverData like lastUpdate and player count
     return new Promise(async (resolve) => {
       const result = this.dbService
         .getDBChain()
