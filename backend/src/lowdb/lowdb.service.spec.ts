@@ -155,7 +155,7 @@ describe('LowdbService', () => {
     expect(createdServer2.owner).toBe(ownerDiscordId);
 
     // Step 3: Find all servers by their owner
-    const foundServers = await serverService.findServersByOwner(ownerDiscordId);
+    const foundServers = await serverService.getByOwner(ownerDiscordId);
 
     // Verify the servers retrieval
     expect(foundServers).toBeDefined();
@@ -163,15 +163,11 @@ describe('LowdbService', () => {
     expect(foundServers).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          owner: ownerDiscordId,
           description: serverDescription1,
-          privateId: createdServer1.privateId,
           publicId: createdServer1.publicId,
         } as ServerEntry),
         expect.objectContaining({
-          owner: ownerDiscordId,
           description: serverDescription2,
-          privateId: createdServer2.privateId,
           publicId: createdServer2.publicId,
         } as ServerEntry),
       ]),

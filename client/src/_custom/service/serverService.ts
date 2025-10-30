@@ -1,0 +1,110 @@
+import type { Ref } from 'vue';
+import type { LiveMapDTO } from './map/dto/map.dto';
+
+export async function createServer(modalServerDescription: Ref, owner: string): Promise<ServerEntry | null> {
+  modalServerDescription.value;
+  const serverCreatePayload: ServerCreateDto = {
+    description: modalServerDescription.value,
+    owner: owner,
+  };
+  const res = await fetch('http://localhost:3000/api/v1/servers/create', {
+    credentials: 'include',
+    method: 'POST',
+    body: JSON.stringify(serverCreatePayload),
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  if (res.status === 201) {
+    const response = (await res.json()) as ServerEntry;
+    return response; // server info
+  } else {
+    console.error('res.status:', res.status);
+    return null; // not logged in
+  }
+}
+
+export async function getServerList(): Promise<ServerInfo[] | null> {
+  const res = await fetch('http://localhost:3000/api/v1/servers/list', {
+    credentials: 'include',
+    method: 'GEt',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (res.status === 200) {
+    const response = (await res.json()) as ServerInfo[];
+    return response; // server info
+  } else {
+    console.error('res.status:', res.status);
+    return null; // not logged in
+  }
+}
+
+export async function deleteServerEntry(publicId: string): Promise<Boolean> {
+  const res = await fetch('http://localhost:3000/api/v1/servers/delete', {
+    credentials: 'include',
+    method: 'DELETE',
+    body: JSON.stringify({ publicId: publicId }),
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (res.status === 200) {
+    return true;
+  } else {
+    console.error('res.status:', res.status);
+    return false;
+  }
+}
+
+export function resolveMapImage(mapName: string): string {
+  switch (mapName) {
+    case 'TheCenter_WP':
+      return 'center.png';
+    case 'ScorchedEarth_WP':
+      return 'scorched.png';
+    case 'Ragnarok_WP':
+      return 'ragna.png';
+    case 'Aberration_WP':
+      return 'aberration.png';
+    case 'Extinction_WP':
+      return 'extinction.png';
+    case 'Valguero_WP':
+      return 'valguero.png';
+    case 'Astraeos_WP':
+      return 'astraeos.png';
+    case 'LostColony_WP': // Just a lucky guess, we have to wait for the release
+      return 'lost_colony.png';
+    case 'BobsMissions_WP':
+      return 'bobstalltales.png';
+    default:
+      return 'ASA_Logo_transparent.png';
+  }
+}
+
+export function calculateProgress(current: number, max: number): number {
+  if (max <= 0) return 0; // avoid division by zero
+  const value = (current / max) * 100;
+  return Math.min(Math.max(value, 0), 100); // clamp between 0-100
+}
+
+export interface ServerCreateDto {
+  owner: string;
+  description: string;
+}
+
+export interface ServerEntry extends ServerCreateDto {
+  publicId: string;
+  privateId: string;
+  lastUpdate?: string;
+  playerCount?: number;
+}
+
+export interface ServerInfo {
+  publicId: string;
+  description: string;
+  lastUpdate?: string;
+  playerCount?: number;
+  serverName?: string;
+  map?: string;
+}
+
+export interface ServerData extends LiveMapDTO {
+  lastUpdate: string;
+}

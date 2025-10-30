@@ -3,13 +3,14 @@ import { ServerController } from './server.controller';
 import { ServerService } from './server.service';
 import { LowdbService } from '@/lowdb/lowdb.service';
 import { UserService } from '@/user/user.service';
-import { LiveMapDTO, privateIdDTO } from './dto/server.dto';
+import { LiveMapDTO } from './dto/server.dto';
 import { exampleServerData } from './server.test.data';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { ServerEntry } from './server.interface';
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { ServerCreateDto } from './dto/serverCreate.dto';
+import { Request } from 'express';
 
 describe('ServerController', () => {
   let controller: ServerController;
@@ -28,18 +29,6 @@ describe('ServerController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
     expect(serverService).toBeDefined();
-  });
-
-  it('should return all servers from service', async () => {
-    const mockServers = [
-      { privateId: '1', publicId: '1', owner: 'Player1' },
-      { privateId: '2', publicId: '2', owner: 'Player2' },
-    ] as ServerEntry[];
-    jest.spyOn(serverService, 'getAll').mockResolvedValueOnce(mockServers);
-
-    const result = await controller.allServers();
-    expect(result).toEqual(mockServers);
-    expect(serverService.getAll).toHaveBeenCalledTimes(1);
   });
 
   it('should pass the validation on the LiveMapDTO', async () => {
@@ -93,25 +82,27 @@ describe('ServerController', () => {
       privateId: 'priv',
       description: serverCreateDto.description,
     } as ServerEntry;
+    const mockReq = {
+      user: { userId: 'owner' },
+      isAuthenticated: jest.fn().mockReturnValue(true),
+    } as unknown as Request;
     jest.spyOn(serverService, 'create').mockResolvedValueOnce(mockResult);
-    const result = await controller.createServer(serverCreateDto);
+    const result = await controller.createServer(serverCreateDto, mockReq);
     expect(result).toEqual(mockResult);
     expect(serverService.create).toHaveBeenCalledWith(serverCreateDto);
   });
 
-  it('should delete a server and return undefined if successful', async () => {
-    jest.spyOn(serverService, 'delete').mockResolvedValueOnce(true);
-    const request = { privateid: 'privId' } as privateIdDTO;
-    const result = await controller.deleteServer(request);
-    expect(result).toBeUndefined();
-    expect(serverService.delete).toHaveBeenCalledWith('privId');
-  });
-
-  it('should throw NotFoundException if delete returns false', async () => {
-    jest.spyOn(serverService, 'delete').mockResolvedValueOnce(false);
-    const request = { privateid: 'privId' } as privateIdDTO;
-    await expect(controller.deleteServer(request)).rejects.toThrow(
-      NotFoundException,
-    );
+  it('should throw ForbiddenException if user mismatch on createServer', async () => {
+    const serverCreateDto = {
+      description: 'desc',
+      owner: 'owner',
+    } as ServerCreateDto;
+    const mockReq = {
+      user: { userId: 'anotherUser' },
+      isAuthenticated: jest.fn().mockReturnValue(true),
+    } as unknown as Request;
+    await expect(
+      controller.createServer(serverCreateDto, mockReq),
+    ).rejects.toThrow(ForbiddenException);
   });
 });

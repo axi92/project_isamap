@@ -8,5 +8,6 @@ export class ServerCreateDto {
 
   @IsOptional()
   @IsString()
+  @Length(0, 64)
   description?: string;
 }

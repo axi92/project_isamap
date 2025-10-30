@@ -8,32 +8,41 @@ import {
   Delete,
   Logger,
   Param,
+  Req,
+  ForbiddenException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ServerService } from './server.service';
-import { LiveMapDTO, privateIdDTO } from './dto/server.dto';
+import { LiveMapDTO, publicIdDTO } from './dto/server.dto';
 import { ServerCreateDto } from './dto/serverCreate.dto';
-import { ServerEntry } from './server.interface';
+import { Request } from 'express';
+import { UserCreatDto } from '@/user/dto/userCreate.dto';
 
 @Controller('servers')
 export class ServerController {
   private readonly logger = new Logger('ServerController');
   constructor(private readonly servers: ServerService) {}
   /*
-  GET /servers
-  - Get one user:
-  GET /servers/:id
+  - Get server list for session owner
+    GET /servers/list
+  - Get server data for publicId:
+    GET /servers/:id
   - Create server:
-  POST /servers/create
+    POST /servers/create
   - Change server description
-  PATCH /servers/:id
+    PATCH /servers/:id
   - Delete Server
-  DELETE /servers/:id
+    DELETE /servers/:id
   */
 
-  @Get() // GET /servers
-  async allServers() {
-    const servers = (await this.servers.getAll()) as ServerEntry[];
-    return servers;
+  @Get('list') // GET /servers/list
+  async myServers(@Req() req: Request) {
+    const userSession: UserCreatDto = req.user as UserCreatDto;
+    if (req.isAuthenticated()) {
+      return await this.servers.getByOwner(userSession.userId);
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 
   @Post('data') // Gameserver sending data to webserver
@@ -58,16 +67,49 @@ export class ServerController {
   }
 
   @Post('create') // Create a new server
-  async createServer(@Body(ValidationPipe) serverCreateDto: ServerCreateDto) {
-    return await this.servers.create(serverCreateDto);
-    // create server
-    // return publicID, privateID, description
+  async createServer(
+    @Body(ValidationPipe) serverCreateDto: ServerCreateDto,
+    @Req() req: Request,
+  ) {
+    if (req.isAuthenticated()) {
+      const userSession: UserCreatDto = req.user as UserCreatDto;
+      if (userSession.userId == serverCreateDto.owner) {
+        // create server
+        // return publicID, privateID, description
+        this.logger.log(
+          `create for user: ${userSession.username} id: ${userSession.userId}`,
+        );
+        return await this.servers.create(serverCreateDto);
+      } else {
+        throw new ForbiddenException();
+      }
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 
   @Delete('delete') // Delete a server
-  async deleteServer(@Body() request: privateIdDTO) {
-    const response = await this.servers.delete(request.privateid);
-    if (response != true) throw new NotFoundException();
-    else return;
+  async deleteServer(
+    @Body(ValidationPipe) payload: publicIdDTO,
+    @Req() req: Request,
+  ) {
+    const userSession: UserCreatDto = req.user as UserCreatDto;
+    this.logger.log('delete', userSession.userId, payload.publicId);
+    if (req.isAuthenticated()) {
+      const server = await this.servers.findServerByPublicId(payload.publicId);
+      if (userSession.userId == server.owner) {
+        // delete server
+        // return publicID, privateID, description
+        this.logger.log(
+          `delete for user: ${userSession.username} id: ${userSession.userId}, publicId: ${payload.publicId}`,
+        );
+        await this.servers.delete(payload.publicId);
+        return;
+      } else {
+        throw new ForbiddenException();
+      }
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 }
