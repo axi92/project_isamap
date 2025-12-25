@@ -101,6 +101,8 @@ export function resolveMapLogo(mapName: string): string {
       return 'althemia.png';
     case 'Amissa_WP':
       return 'Amissa.png';
+    case 'insaluna_WP':
+      return 'insaluna.png';
     default:
       return 'ASA_Logo_transparent.png';
   }
