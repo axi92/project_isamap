@@ -9,6 +9,7 @@ import { TheIsland_WP } from './properties/TheIsland_WP';
 import { Valguero_WP } from './properties/Valguero_WP';
 import { LostCity_WP } from './properties/LostCity_WP';
 import { Althemia } from './properties/Althemia';
+import { Amissa_WP } from './properties/Amissa_WP';
 
 export const mapProperties = {
   TheIsland_WP: TheIsland_WP,
@@ -21,6 +22,7 @@ export const mapProperties = {
   Valguero_WP: Valguero_WP,
   LostCity_WP: LostCity_WP,
   Althemia: Althemia,
+  Amissa_WP: Amissa_WP,
 } as const satisfies Record<string, MapProperty>;
 
 export type MapKey = keyof typeof mapProperties;

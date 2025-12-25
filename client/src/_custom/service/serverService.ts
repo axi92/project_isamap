@@ -99,6 +99,8 @@ export function resolveMapLogo(mapName: string): string {
       return 'LostCity_WP.png';
     case 'Althemia':
       return 'althemia.png';
+    case 'Amissa_WP':
+      return 'Amissa.png';
     default:
       return 'ASA_Logo_transparent.png';
   }
