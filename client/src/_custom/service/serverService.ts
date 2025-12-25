@@ -1,5 +1,7 @@
 import type { Ref } from 'vue';
 import type { LiveMapDTO } from './map/dto/map.dto';
+import { mapProperties, type MapKey } from './map/mapService.constants';
+import type { MapProperty } from './map/map.interface';
 
 export async function createServer(modalServerDescription: Ref, owner: string): Promise<ServerEntry | null> {
   modalServerDescription.value;
@@ -23,19 +25,39 @@ export async function createServer(modalServerDescription: Ref, owner: string): 
   }
 }
 
-export async function getServerList(): Promise<ServerInfo[] | null> {
+export async function getServerList(debug: boolean = false): Promise<ServerInfo[] | null> {
   const res = await fetch('http://localhost:3000/api/v1/servers/list', {
     credentials: 'include',
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
   if (res.status === 200) {
-    const response = (await res.json()) as ServerInfo[];
+    let response = (await res.json()) as ServerInfo[];
+    if (true === debug) {
+      const serverListFixtures = getServerListFixtures();
+      response = [...serverListFixtures, ...response];
+    }
     return response; // server info
   } else {
     console.error('res.status:', res.status);
     return null; // not logged in
   }
+}
+
+function getServerListFixtures(): ServerInfo[] {
+  const serverListFixtures = [] as ServerInfo[];
+  for (const [key, value] of Object.entries(mapProperties) as [MapKey, MapProperty][]) {
+    const serverEntry = {
+      description: `description of fixture: ${key}`,
+      publicId: `fixtures_${value.name}`,
+      map: value.name,
+      serverName: `Fixture: ${value.displayName}`,
+      lastUpdate: new Date().toISOString(),
+      playerCount: 0,
+    } as ServerInfo;
+    serverListFixtures.push(serverEntry);
+  }
+  return serverListFixtures;
 }
 
 export async function deleteServerEntry(publicId: string): Promise<Boolean> {

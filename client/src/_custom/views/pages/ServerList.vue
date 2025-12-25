@@ -14,8 +14,10 @@ import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 import ConfirmPopup from 'primevue/confirmpopup';
 import { Dialog } from 'primevue';
+import { useDebugStore } from '@/_custom/stores/debug.store';
 
 const userStore = useUserStore();
+const debugStore = useDebugStore();
 
 // Create Server Feature
 const visibleModal = ref(false);
@@ -62,7 +64,7 @@ function convertDate(input: string) {
 }
 
 async function loadData() {
-  await getServerList().then((data) => {
+  await getServerList(debugStore.enabled).then((data) => {
     serverList.value = data;
     countServers.value = data?.length;
   });
@@ -83,7 +85,6 @@ const confirmDelete = (event: Event, publicId: string) => {
       severity: 'danger',
     },
     accept: async () => {
-      // TODO: Delete Server
       const deleteStatus = await deleteServerEntry(publicId);
       if (deleteStatus == true) {
         toast.add({ severity: 'success', summary: 'Confirmed', detail: 'Record deleted', life: 5000 });
