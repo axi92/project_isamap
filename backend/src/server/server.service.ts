@@ -154,8 +154,11 @@ export class ServerService {
   }
 
   getServerDataByPublicId(publicId: string): LiveMapDTO | null {
-    if (publicId == 'fixtures') {
-      return calibrationServerData;
+    if (publicId.startsWith('fixtures_')) {
+      const serverData = structuredClone(calibrationServerData);
+      const fixtureName = publicId.slice('fixtures_'.length);
+      serverData.map = fixtureName;
+      return serverData;
     } else {
       return this.serverData.get(publicId) || null;
     }

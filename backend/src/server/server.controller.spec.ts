@@ -3,7 +3,7 @@ import { ServerController } from './server.controller';
 import { ServerService } from './server.service';
 import { LowdbService } from '@/lowdb/lowdb.service';
 import { UserService } from '@/user/user.service';
-import { LiveMapDTO } from './dto/server.dto';
+import { LiveMapDTO, publicIdDTO } from './dto/server.dto';
 import { exampleServerData } from './server.test.data';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
@@ -54,21 +54,23 @@ describe('ServerController', () => {
   });
 
   it('should get data by public id and return response', () => {
+    const id = { publicId: 'fixture_publicId123' } as publicIdDTO;
     jest
       .spyOn(serverService, 'getServerDataByPublicId')
       .mockReturnValueOnce(exampleServerData);
-    const result = controller.getData('publicId123');
+    const result = controller.getData(id);
     expect(result).toEqual(exampleServerData);
     expect(serverService.getServerDataByPublicId).toHaveBeenCalledWith(
-      'publicId123',
+      id.publicId,
     );
   });
 
   it('should throw NotFoundException if getServerDataByPublicId returns null', () => {
+    const id = { publicId: 'fixture_publicId123' } as publicIdDTO;
     jest
       .spyOn(serverService, 'getServerDataByPublicId')
       .mockReturnValueOnce(null);
-    expect(() => controller.getData('publicId123')).toThrow(NotFoundException);
+    expect(() => controller.getData(id)).toThrow(NotFoundException);
   });
 
   it('should create a server and return result', async () => {

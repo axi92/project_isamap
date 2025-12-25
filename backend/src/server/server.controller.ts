@@ -55,10 +55,13 @@ export class ServerController {
     }
   }
 
-  @Get('data/:id') // Getting map data for livemap view
-  getData(@Param('id') id: string) {
-    this.logger.log(id);
-    const response = this.servers.getServerDataByPublicId(id);
+  @Get('data/:publicId') // Getting map data for livemap view
+  getData(
+    @Param(new ValidationPipe({ transform: true }))
+    { publicId }: publicIdDTO,
+  ) {
+    this.logger.log(publicId);
+    const response = this.servers.getServerDataByPublicId(publicId);
     if (response === null) {
       throw new NotFoundException();
     } else {
