@@ -26,7 +26,7 @@ export async function createServer(modalServerDescription: Ref, owner: string): 
 export async function getServerList(): Promise<ServerInfo[] | null> {
   const res = await fetch('http://localhost:3000/api/v1/servers/list', {
     credentials: 'include',
-    method: 'GEt',
+    method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
   if (res.status === 200) {
