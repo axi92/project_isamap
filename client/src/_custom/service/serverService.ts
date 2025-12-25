@@ -53,7 +53,7 @@ export async function deleteServerEntry(publicId: string): Promise<Boolean> {
   }
 }
 
-export function resolveMapImage(mapName: string): string {
+export function resolveMapLogo(mapName: string): string {
   switch (mapName) {
     case 'TheCenter_WP':
       return 'center.png';
@@ -73,6 +73,8 @@ export function resolveMapImage(mapName: string): string {
       return 'lost_colony.png';
     case 'BobsMissions_WP':
       return 'bobstalltales.png';
+    case 'LostCity_WP':
+      return 'logo_LostCity_WP.png';
     default:
       return 'ASA_Logo_transparent.png';
   }
