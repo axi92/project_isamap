@@ -38,6 +38,7 @@ const toast = useToast();
 const MAX_SERVERS_PER_USER = 20;
 const countServers = ref();
 const progressBarValue = computed(() => {
+  if (0 == countServers.value) return 0;
   return calculateProgress(countServers.value, MAX_SERVERS_PER_USER);
 });
 
@@ -65,8 +66,12 @@ function convertDate(input: string) {
 
 async function loadData() {
   await getServerList(debugStore.enabled).then((data) => {
+    if (0 == data?.length) {
+      countServers.value = data?.length;
+    } else {
+      countServers.value = 0;
+    }
     serverList.value = data;
-    countServers.value = data?.length;
   });
 }
 
@@ -100,15 +105,15 @@ const confirmDelete = (event: Event, publicId: string) => {
 <template>
   <Toast />
   <div class="card">
+    <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+      <!-- <Tag class="flex flex-col md:items-end gap-8" severity="info" value="Info" rounded>4/20</Tag> -->
+      <ProgressBar v-if="userStore.user" class="flex flex-col md:items-start w-full md:w-64" :value="progressBarValue">{{ countServers }}/{{ MAX_SERVERS_PER_USER }}</ProgressBar>
+      <div v-if="userStore.user && countServers < MAX_SERVERS_PER_USER" class="flex flex-col md:items-end gap-8">
+        <Button type="button" label="Create config" icon="pi pi-plus" @click="visibleModal = true" />
+      </div>
+    </div>
     <DataView :value="serverList">
       <template #list="slotProps">
-        <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
-          <!-- <Tag class="flex flex-col md:items-end gap-8" severity="info" value="Info" rounded>4/20</Tag> -->
-          <ProgressBar class="flex flex-col md:items-start w-full md:w-64" :value="progressBarValue">{{ countServers }}/{{ MAX_SERVERS_PER_USER }}</ProgressBar>
-          <div v-if="userStore.user && countServers < MAX_SERVERS_PER_USER" class="flex flex-col md:items-end gap-8">
-            <Button type="button" label="Create config" icon="pi pi-plus" @click="visibleModal = true" />
-          </div>
-        </div>
         <div class="flex flex-col">
           <div v-for="(item, index) in slotProps.items" :key="index">
             <div class="flex flex-col sm:flex-row sm:items-center p-6 gap-4" :class="{ 'border-t border-surface-200 dark:border-surface-700': index !== 0 }">
