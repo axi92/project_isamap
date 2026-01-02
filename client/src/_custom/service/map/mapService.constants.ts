@@ -11,6 +11,7 @@ import { LostCity_WP } from './properties/LostCity_WP';
 import { Althemia } from './properties/Althemia';
 import { Amissa_WP } from './properties/Amissa_WP';
 import { insaluna_WP } from './properties/insaluna_WP';
+import { generic } from './properties/generic';
 
 export const mapProperties = {
   TheIsland_WP: TheIsland_WP,
@@ -25,6 +26,7 @@ export const mapProperties = {
   Althemia: Althemia,
   Amissa_WP: Amissa_WP,
   insaluna_WP: insaluna_WP,
+  generic: generic,
 } as const satisfies Record<string, MapProperty>;
 
 export type MapKey = keyof typeof mapProperties;
