@@ -1,5 +1,7 @@
 import type { Ref } from 'vue';
 import type { LiveMapDTO } from './map/dto/map.dto';
+import { mapProperties, type MapKey } from './map/mapService.constants';
+import type { MapProperty } from './map/map.interface';
 
 export async function createServer(modalServerDescription: Ref, owner: string): Promise<ServerEntry | null> {
   modalServerDescription.value;
@@ -23,19 +25,39 @@ export async function createServer(modalServerDescription: Ref, owner: string): 
   }
 }
 
-export async function getServerList(): Promise<ServerInfo[] | null> {
+export async function getServerList(debug: boolean = false): Promise<ServerInfo[] | null> {
   const res = await fetch('http://localhost:3000/api/v1/servers/list', {
     credentials: 'include',
-    method: 'GEt',
+    method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
   if (res.status === 200) {
-    const response = (await res.json()) as ServerInfo[];
+    let response = (await res.json()) as ServerInfo[];
+    if (true === debug) {
+      const serverListFixtures = getServerListFixtures();
+      response = [...serverListFixtures, ...response];
+    }
     return response; // server info
   } else {
     console.error('res.status:', res.status);
     return null; // not logged in
   }
+}
+
+function getServerListFixtures(): ServerInfo[] {
+  const serverListFixtures = [] as ServerInfo[];
+  for (const [key, value] of Object.entries(mapProperties) as [MapKey, MapProperty][]) {
+    const serverEntry = {
+      description: `description of fixture: ${key}`,
+      publicId: `fixtures_${value.name}`,
+      map: value.name,
+      serverName: `Fixture: ${value.displayName}`,
+      lastUpdate: new Date().toISOString(),
+      playerCount: 0,
+    } as ServerInfo;
+    serverListFixtures.push(serverEntry);
+  }
+  return serverListFixtures;
 }
 
 export async function deleteServerEntry(publicId: string): Promise<Boolean> {
@@ -53,7 +75,7 @@ export async function deleteServerEntry(publicId: string): Promise<Boolean> {
   }
 }
 
-export function resolveMapImage(mapName: string): string {
+export function resolveMapLogo(mapName: string): string {
   switch (mapName) {
     case 'TheCenter_WP':
       return 'center.png';
@@ -69,10 +91,18 @@ export function resolveMapImage(mapName: string): string {
       return 'valguero.png';
     case 'Astraeos_WP':
       return 'astraeos.png';
-    case 'LostColony_WP': // Just a lucky guess, we have to wait for the release
+    case 'LostColony_WP':
       return 'lost_colony.png';
     case 'BobsMissions_WP':
       return 'bobstalltales.png';
+    case 'LostCity_WP':
+      return 'LostCity_WP.png';
+    case 'Althemia':
+      return 'althemia.png';
+    case 'Amissa_WP':
+      return 'Amissa.png';
+    case 'insaluna_WP':
+      return 'insaluna.png';
     default:
       return 'ASA_Logo_transparent.png';
   }

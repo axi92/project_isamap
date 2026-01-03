@@ -9,13 +9,15 @@
 import { computed, onMounted, ref } from 'vue';
 import { useUserStore } from '@/_custom/stores/auth.store';
 import CodeBlock from '@/_custom/components/CodeBlock.vue';
-import { createServer, getServerList, deleteServerEntry, resolveMapImage, calculateProgress } from '@/_custom/service/serverService';
+import { createServer, getServerList, deleteServerEntry, resolveMapLogo, calculateProgress } from '@/_custom/service/serverService';
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 import ConfirmPopup from 'primevue/confirmpopup';
 import { Dialog } from 'primevue';
+import { useDebugStore } from '@/_custom/stores/debug.store';
 
 const userStore = useUserStore();
+const debugStore = useDebugStore();
 
 // Create Server Feature
 const visibleModal = ref(false);
@@ -36,6 +38,7 @@ const toast = useToast();
 const MAX_SERVERS_PER_USER = 20;
 const countServers = ref();
 const progressBarValue = computed(() => {
+  if (0 == countServers.value) return 0;
   return calculateProgress(countServers.value, MAX_SERVERS_PER_USER);
 });
 
@@ -62,9 +65,9 @@ function convertDate(input: string) {
 }
 
 async function loadData() {
-  await getServerList().then((data) => {
-    serverList.value = data;
+  await getServerList(debugStore.enabled).then((data) => {
     countServers.value = data?.length;
+    serverList.value = data;
   });
 }
 
@@ -83,7 +86,6 @@ const confirmDelete = (event: Event, publicId: string) => {
       severity: 'danger',
     },
     accept: async () => {
-      // TODO: Delete Server
       const deleteStatus = await deleteServerEntry(publicId);
       if (deleteStatus == true) {
         toast.add({ severity: 'success', summary: 'Confirmed', detail: 'Record deleted', life: 5000 });
@@ -99,20 +101,24 @@ const confirmDelete = (event: Event, publicId: string) => {
 <template>
   <Toast />
   <div class="card">
+    <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+      <div class="mt-2 md:mt-0 flex items-center">
+        <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-40" style="height: 8px">
+          <div class="p-progressbar-value h-full" :style="{ width: progressBarValue + '%', backgroundColor: 'var(--p-primary-color)' }"></div>
+        </div>
+        <span class="text-surface-500 dark:text-surface-400 text-sm ml-4 font-medium">{{ countServers }}/{{ MAX_SERVERS_PER_USER }}</span>
+      </div>
+      <div v-if="userStore.user && countServers < MAX_SERVERS_PER_USER" class="flex flex-col md:items-end gap-8">
+        <Button type="button" label="Create config" icon="pi pi-plus" @click="visibleModal = true" />
+      </div>
+    </div>
     <DataView :value="serverList">
       <template #list="slotProps">
-        <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
-          <!-- <Tag class="flex flex-col md:items-end gap-8" severity="info" value="Info" rounded>4/20</Tag> -->
-          <ProgressBar class="flex flex-col md:items-start w-full md:w-64" :value="progressBarValue">{{ countServers }}/{{ MAX_SERVERS_PER_USER }}</ProgressBar>
-          <div v-if="userStore.user && countServers < MAX_SERVERS_PER_USER" class="flex flex-col md:items-end gap-8">
-            <Button type="button" label="Create config" icon="pi pi-plus" @click="visibleModal = true" />
-          </div>
-        </div>
         <div class="flex flex-col">
           <div v-for="(item, index) in slotProps.items" :key="index">
             <div class="flex flex-col sm:flex-row sm:items-center p-6 gap-4" :class="{ 'border-t border-surface-200 dark:border-surface-700': index !== 0 }">
-              <div class="md:w-40 relative">
-                <img class="block xl:block mx-auto rounded w-full" :src="`/images/logo/${resolveMapImage(item.map)}`" :alt="item.name" />
+              <div class="w-24 sm:w-40 relative">
+                <img class="block xl:block mx-auto rounded w-full" :src="`/images/logo/${resolveMapLogo(item.map)}`" :alt="item.name" />
               </div>
               <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
                 <div class="flex flex-row md:flex-col justify-between items-start gap-2">

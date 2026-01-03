@@ -6,6 +6,7 @@ import {
   IsNotEmpty,
   IsArray,
   IsOptional,
+  Matches,
 } from 'class-validator';
 
 class TribeDTO {
@@ -123,6 +124,9 @@ class PlayerDTO {
 export class publicIdDTO {
   @IsNotEmpty()
   @IsString()
+  @Matches(/^(fixtures_.+|[0-9a-fA-F-]{36})$/, {
+    message: 'id must start with "fixtures_" or be a valid UUID',
+  })
   publicId: string;
 }
 

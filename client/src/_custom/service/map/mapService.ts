@@ -28,6 +28,9 @@ export class MapService {
 
   constructor(liveMapDTO: LiveMapDTO) {
     this.currentMapProperties = this.getMapProperties()[liveMapDTO.map as MapKey] as MapProperty;
+    if (undefined === this.currentMapProperties) {
+      this.currentMapProperties = this.getMapProperties()['generic'] as MapProperty;
+    }
     this.mapImage.src = this.currentMapProperties.mapSrc;
 
     this.mapImage.onload = async () => {

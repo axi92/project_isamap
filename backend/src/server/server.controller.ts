@@ -55,10 +55,13 @@ export class ServerController {
     }
   }
 
-  @Get('data/:id') // Getting map data for livemap view
-  getData(@Param('id') id: string) {
-    this.logger.log(id);
-    const response = this.servers.getServerDataByPublicId(id);
+  @Get('data/:publicId') // Getting map data for livemap view
+  getData(
+    @Param(new ValidationPipe({ transform: true }))
+    { publicId }: publicIdDTO,
+  ) {
+    this.logger.log(publicId);
+    const response = this.servers.getServerDataByPublicId(publicId);
     if (response === null) {
       throw new NotFoundException();
     } else {
@@ -94,9 +97,10 @@ export class ServerController {
     @Req() req: Request,
   ) {
     const userSession: UserCreatDto = req.user as UserCreatDto;
-    this.logger.log('delete', userSession.userId, payload.publicId);
+    this.logger.log(`delete:, ${userSession.userId}, ${payload.publicId}`);
     if (req.isAuthenticated()) {
       const server = await this.servers.findServerByPublicId(payload.publicId);
+      if (null === server) throw new ForbiddenException();
       if (userSession.userId == server.owner) {
         // delete server
         // return publicID, privateID, description
