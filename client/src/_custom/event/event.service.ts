@@ -33,7 +33,7 @@ export class EventService {
     });
 
     socket.on(EventType.MAPDATA, (data) => {
-      this.em2.emit(EventType.DATA, data);
+      this.em2.emit(EventType.MAPDATA, data);
     });
   }
 }
