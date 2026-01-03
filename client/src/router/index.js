@@ -5,6 +5,12 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
+      path: '/map/:id',
+      name: 'map',
+      component: () => import('@/_custom/views/pages/Map.vue'),
+      props: true, // optional: passes route params as props to the component
+    },
+    {
       path: '/',
       component: AppLayout,
       children: [
@@ -12,12 +18,6 @@ const router = createRouter({
           path: '/',
           name: 'dashboard',
           component: () => import('@/views/Dashboard.vue'),
-        },
-        {
-          path: '/map/:id',
-          name: 'map',
-          component: () => import('@/_custom/views/pages/Map.vue'),
-          props: true, // optional: passes route params as props to the component
         },
         {
           path: '/servers',
