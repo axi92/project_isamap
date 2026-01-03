@@ -52,14 +52,14 @@ async function fetchMapData(publicID: string): Promise<LiveMapDTO> {
   <div class="flex flex-col gap-4">
     <Message v-if="errorMessage" severity="error" icon="pi pi-times-circle" class="mb-2">Server not found!</Message>
   </div>
-  <div v-if="!errorMessage" class="map-wrapper relative w-full">
+  <div v-if="!errorMessage" class="map-wrapper w-full">
     <div id="map" class="w-full h-full"></div>
   </div>
 </template>
 
 <style>
 .map-wrapper {
-  height: calc(100vh - 12rem);
+  height: calc(100vh);
 }
 
 #map {

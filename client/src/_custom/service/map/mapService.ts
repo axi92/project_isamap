@@ -116,9 +116,9 @@ export class MapService {
     const colorMap: Record<MarkerColor, string> = {
       orange: '--p-button-warn-background',
       red: '--p-button-outlined-danger-border-color',
-      green: '--p-button-text-primary-color',
+      green: '--p-primary-color',
     };
-    return colorMap[color] ?? '--p-button-text-primary-color';
+    return colorMap[color] ?? '--p-text-primary-color';
   }
 
   private createDivIcon(icon: MarkerIcon, color: MarkerColor, size: number): L.DivIcon {
@@ -137,7 +137,7 @@ export class MapService {
             <div xmlns="http://www.w3.org/1999/xhtml"
                 style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">
               <i class="pi pi-${icon}"
-                style="color:var(--p-button-primary-color);font-size:${size * 0.49}px;line-height:1;"></i>
+                style="color:var(--p-primary-contrast-color);font-size:${size * 0.49}px;line-height:1;"></i>
             </div>
           </foreignObject>
         </svg>
