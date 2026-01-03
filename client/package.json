@@ -2,6 +2,7 @@
     "name": "sakai-vue",
     "version": "4.3.0",
     "type": "module",
+    "private":true,
     "scripts": {
         "postinstall": "patch-package",
         "dev": "vite",
