@@ -5,6 +5,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigurationService } from './configuration/configuration.service';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -15,10 +16,28 @@ async function bootstrap() {
   const configService = app.get(ConfigurationService);
   const sessionSecret = configService.getSessionSecret();
 
-  app.enableCors({
-    origin: 'http://localhost:5173', // frontend url
-    credentials: true, // Needed for cookies
-  });
+  const corsOptions: CorsOptions = {
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
+      const allowedOrigins = [
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+        'https://asamap.axi92.at',
+      ];
+
+      if (!origin) {
+        return callback(null, true);
+      }
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+  };
+  app.enableCors(corsOptions);
 
   app.use(
     session({
