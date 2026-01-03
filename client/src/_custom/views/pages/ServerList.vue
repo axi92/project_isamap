@@ -66,11 +66,7 @@ function convertDate(input: string) {
 
 async function loadData() {
   await getServerList(debugStore.enabled).then((data) => {
-    if (0 == data?.length) {
-      countServers.value = data?.length;
-    } else {
-      countServers.value = 0;
-    }
+    countServers.value = data?.length;
     serverList.value = data;
   });
 }
@@ -106,8 +102,12 @@ const confirmDelete = (event: Event, publicId: string) => {
   <Toast />
   <div class="card">
     <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
-      <!-- <Tag class="flex flex-col md:items-end gap-8" severity="info" value="Info" rounded>4/20</Tag> -->
-      <ProgressBar v-if="userStore.user" class="flex flex-col md:items-start w-full md:w-64" :value="progressBarValue">{{ countServers }}/{{ MAX_SERVERS_PER_USER }}</ProgressBar>
+      <div class="mt-2 md:mt-0 flex items-center">
+        <div class="bg-surface-300 dark:bg-surface-500 rounded-border overflow-hidden w-40 lg:w-40" style="height: 8px">
+          <div class="p-progressbar-value h-full" :style="{ width: progressBarValue + '%', backgroundColor: 'var(--p-primary-color)' }"></div>
+        </div>
+        <span class="text-surface-500 dark:text-surface-400 text-sm ml-4 font-medium">{{ countServers }}/{{ MAX_SERVERS_PER_USER }}</span>
+      </div>
       <div v-if="userStore.user && countServers < MAX_SERVERS_PER_USER" class="flex flex-col md:items-end gap-8">
         <Button type="button" label="Create config" icon="pi pi-plus" @click="visibleModal = true" />
       </div>
