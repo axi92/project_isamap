@@ -91,7 +91,7 @@ export function resolveMapLogo(mapName: string): string {
       return 'valguero.png';
     case 'Astraeos_WP':
       return 'astraeos.png';
-    case 'LostColony_WP': // Just a lucky guess, we have to wait for the release
+    case 'LostColony_WP':
       return 'lost_colony.png';
     case 'BobsMissions_WP':
       return 'bobstalltales.png';
