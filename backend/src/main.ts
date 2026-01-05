@@ -3,7 +3,7 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigurationService } from './configuration/configuration.service';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
@@ -11,12 +11,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['fatal', 'error', 'warn', 'log', 'debug'],
   });
+  const logger = new Logger('Bootstrap'); // 'Bootstrap' is the context
 
   // Get ConfigurationService from Nest application context
   const configService = app.get(ConfigurationService);
   const sessionSecret = configService.getSessionSecret();
   const isProd = process.env.NODE_ENV === 'production';
-  console.log('Production?' + isProd);
+  logger.log('Production: ' + isProd);
 
   const sessionStore = app.get('SESSION_STORE');
 

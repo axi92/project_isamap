@@ -1,6 +1,6 @@
 //'redis://172.19.85.137:6379', //redis://redis:6379
 
-import { Module, Global } from '@nestjs/common';
+import { Module, Global, Logger } from '@nestjs/common';
 import { createClient, RedisClientType } from 'redis';
 import { RedisStore } from 'connect-redis';
 
@@ -8,6 +8,7 @@ import { RedisStore } from 'connect-redis';
 @Module({})
 export class RedisModule {
   static forRoot() {
+    const logger = new Logger('RedisModule');
     const isProd = process.env.NODE_ENV === 'production';
 
     const redisProvider = {
@@ -16,15 +17,15 @@ export class RedisModule {
         if (!isProd) return null;
 
         const client: RedisClientType = createClient({
-          url: process.env.REDIS_URL || 'redis://172.19.85.137:6379',
+          url: process.env.REDIS_URL || 'redis://redis:6379', // resolves to the docker container running redis
         });
 
         client.on('error', (err) => {
-          console.error('Redis client error', err);
+          logger.error('Redis client error', err);
         });
 
         await client.connect(); // connect waits for ready
-        console.log('Redis connected');
+        logger.log('Redis connected');
         return client;
       },
     };
@@ -34,7 +35,7 @@ export class RedisModule {
       inject: ['REDIS_CLIENT'],
       useFactory: (client: RedisClientType | null) => {
         if (!client) {
-          console.log('DEV mode: MemoryStore for sessions');
+          logger.log('DEV mode: MemoryStore for sessions');
           return undefined; // fallback MemoryStore in dev
         }
 
