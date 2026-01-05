@@ -16,12 +16,9 @@ async function bootstrap() {
   const configService = app.get(ConfigurationService);
   const sessionSecret = configService.getSessionSecret();
   const isProd = process.env.NODE_ENV === 'production';
+  console.log('Production?' + isProd);
 
-  let sessionStore: session.Store | undefined;
-
-  if (isProd) {
-    sessionStore = app.get('SESSION_STORE');
-  }
+  const sessionStore = app.get('SESSION_STORE');
 
   const corsOptions: CorsOptions = {
     origin: (

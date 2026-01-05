@@ -13,7 +13,6 @@ import { LowdbModule } from './lowdb/lowdb.module';
 import { UserService } from './user/user.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RedisModule } from './redis/redis.module';
-import { SessionStoreProvider } from './redis/session-store.provider';
 
 @Module({
   imports: [
@@ -30,7 +29,6 @@ import { SessionStoreProvider } from './redis/session-store.provider';
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController, ServerController],
-  providers: [AppService, SessionStoreProvider, UserService],
-  exports: ['SESSION_STORE'],
+  providers: [AppService, UserService],
 })
 export class AppModule {}
