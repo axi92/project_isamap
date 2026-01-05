@@ -12,10 +12,12 @@ import { ServerModule } from './server/server.module';
 import { LowdbModule } from './lowdb/lowdb.module';
 import { UserService } from './user/user.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    RedisModule.forRoot(),
     GatewayModule,
     AuthModule,
     UsersModule,

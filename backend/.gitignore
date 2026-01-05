@@ -36,3 +36,6 @@ db.json
 test-db.json
 .env
 coverage
+
+# Redis data
+redis-data/*

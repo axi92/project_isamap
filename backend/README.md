@@ -1,14 +1,11 @@
 ## Description
 
-A sample demonstrating serving a VueJS website from a NestJS backend.
+Backend written with nestjs.
 
 ## Installation
 
 ```bash
-$ npm install
-# Install Vue dependencies
-$ cd client && npm i && cd ..
-$ npm run build --prefix client
+npm ci
 ```
 
 ## Running the app
@@ -23,6 +20,16 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
+## Run with docker (prefered)
+
+### Build
+
+`docker buildx build . -t backend:latest`
+
+### Run
+
+`docker run -ti --rm -v .env:/app/.env backend:latest`
 
 ## Endpoints
 
