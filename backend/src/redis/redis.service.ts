@@ -5,6 +5,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import Redis from 'ioredis';
+import { RedisStore } from 'connect-redis';
 
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
@@ -12,8 +13,10 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   private client: Redis;
 
   async onModuleInit() {
+    console.log('redisService OnModuleInit before redis client created');
     this.client = new Redis({
       host: 'redis',
+      lazyConnect: false, // connect immediately
       maxRetriesPerRequest: null,
     });
 
@@ -35,8 +38,22 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     });
   }
 
-  getClient(): Redis {
+  async getClient(): Promise<Redis> {
+    if (!this.client) throw new Error('Redis client not initialized');
+    if (this.client.status === 'ready') return this.client;
+
+    await new Promise<void>((resolve, reject) => {
+      this.client.once('ready', () => resolve());
+      this.client.once('error', reject);
+    });
     return this.client;
+  }
+
+  getStore(): RedisStore {
+    return new RedisStore({
+      client: this.client,
+      prefix: 'sess:',
+    });
   }
 
   async onModuleDestroy() {
