@@ -6,9 +6,9 @@ RUN ls
 RUN npm ci
 
 # Copy source
+ARG blub=daa
 COPY tsconfig*.json /tmp
 COPY src /tmp/src
-RUN npm ci
 RUN npm run build
 # Remove dev dependencies
 RUN npm prune --omit=dev

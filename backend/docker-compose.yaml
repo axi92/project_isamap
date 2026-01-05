@@ -13,3 +13,6 @@ services:
 
   redis:
     image: redis:8.4-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - ./redis-data:/data
