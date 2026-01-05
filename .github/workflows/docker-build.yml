@@ -18,6 +18,6 @@ jobs:
         run: |
           echo "Building ${matrix.service}..."
           docker buildx build \
-            --file ${matrix.service}/Dockerfile \
-            --tag ${matrix.service}:latest \
-            ${matrix.service}
+            --file ${{ matrix.service }}/Dockerfile \
+            --tag ${{ matrix.service }}:latest \
+            ${{ matrix.service }}
