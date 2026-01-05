@@ -38,6 +38,7 @@
     "connect-redis": "9.0.0",
     "crypto-js": "^4.2.0",
     "express-session": "^1.18.2",
+    "ioredis": "5.9.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "lowdb": "^7.0.1",

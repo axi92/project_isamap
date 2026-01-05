@@ -6,8 +6,6 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigurationService } from './configuration/configuration.service';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
-import { RedisStore } from 'connect-redis';
-import { createClient } from 'redis';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -20,6 +18,10 @@ async function bootstrap() {
   const isProd = process.env.NODE_ENV === 'production';
 
   let sessionStore: session.Store | undefined;
+
+  if (isProd) {
+    sessionStore = app.get('SESSION_STORE');
+  }
 
   const corsOptions: CorsOptions = {
     origin: (
@@ -44,32 +46,15 @@ async function bootstrap() {
   };
   app.enableCors(corsOptions);
 
-  if (isProd) {
-    const redisClient = createClient({
-      url: process.env.REDIS_URL ?? 'redis://redis:6379',
-    });
-
-    redisClient.on('error', (err) => {
-      console.error('Redis error', err);
-    });
-
-    await redisClient.connect();
-
-    sessionStore = new RedisStore({
-      client: redisClient,
-      prefix: 'sess:',
-    });
-  }
-
   app.use(
     session({
-      store: sessionStore,
+      store: sessionStore, // Redis in prod, MemoryStore in dev
       secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: process.env.NODE_ENV === 'production', // true when prod
         maxAge: 1000 * 60 * 60 * 24, // 1 day
         sameSite: 'lax',
       },

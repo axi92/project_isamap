@@ -12,10 +12,13 @@ import { ServerModule } from './server/server.module';
 import { LowdbModule } from './lowdb/lowdb.module';
 import { UserService } from './user/user.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { RedisModule } from './redis/redis.module';
+import { SessionStoreProvider } from './redis/session-store.provider';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    RedisModule.forRoot(),
     GatewayModule,
     AuthModule,
     UsersModule,
@@ -27,6 +30,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController, ServerController],
-  providers: [AppService, UserService],
+  providers: [AppService, SessionStoreProvider, UserService],
+  exports: ['SESSION_STORE'],
 })
 export class AppModule {}
