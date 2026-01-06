@@ -11,7 +11,7 @@ services:
     depends_on:
       - redis
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
 
   redis:
     image: redis:8.4-alpine
@@ -26,4 +26,4 @@ services:
     depends_on:
       - api
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
