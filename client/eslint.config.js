@@ -6,6 +6,7 @@ import tsParser from '@typescript-eslint/parser';
 import prettier from 'eslint-config-prettier';
 import vueParser from 'vue-eslint-parser';
 import prettierPlugin from 'eslint-plugin-prettier';
+import globals from 'globals'; // 👈 IMPORTANT
 
 export default [
   // ✅ Base JS config
@@ -27,6 +28,7 @@ export default [
         projectService: true, // ✅ handles TS project references automatically
       },
       globals: {
+        ...globals.browser,
         window: 'readonly',
         document: 'readonly',
         Image: 'readonly',

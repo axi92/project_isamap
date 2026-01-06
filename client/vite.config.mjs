@@ -7,7 +7,7 @@ import { defineConfig } from 'vite';
 import vueDevTools from 'vite-plugin-vue-devtools';
 import { execSync } from 'node:child_process';
 
-const commitHash = execSync('git rev-parse HEAD').toString().trim();
+const commitHash = process.env.COMMIT_SHA ?? execSync('git rev-parse HEAD').toString().trim();
 
 // https://vitejs.dev/config/
 export default defineConfig({

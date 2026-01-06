@@ -20,4 +20,7 @@ jobs:
           docker buildx build \
             --file ${{ matrix.service }}/Dockerfile \
             --tag ${{ matrix.service }}:latest \
+            --build-arg COMMIT_SHA=${COMMIT_SHA}
             ${{ matrix.service }}
+        env:
+          COMMIT_SHA: ${{ github.sha }}

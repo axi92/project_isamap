@@ -1,7 +1,8 @@
 FROM node:24.12.0-slim AS builder
 WORKDIR /tmp
 
-ENV blub=aa
+ARG COMMIT_SHA
+ENV COMMIT_SHA=$COMMIT_SHA
 COPY package*.json tsconfig*.json vite.config.* postcss.config.* tailwind.config.* ./
 COPY src ./src
 COPY public ./public
