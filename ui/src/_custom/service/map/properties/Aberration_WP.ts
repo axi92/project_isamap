@@ -8,6 +8,7 @@ export const Aberration_WP: MapProperty = {
     [100, 100],
   ],
   mapSrc: '/images/maps/Aberration_WP.jpg',
+  imageLogo: '/images/logo/aberration.png',
   obelisks: [
     {
       description: 'Blue Obelisk',

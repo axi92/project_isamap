@@ -8,5 +8,6 @@ export const Amissa_WP: MapProperty = {
     [100, 100],
   ],
   mapSrc: '/images/maps/Amissa_WP.jpg',
+  imageLogo: '/images/logo/Amissa.png',
   obelisks: [],
 };

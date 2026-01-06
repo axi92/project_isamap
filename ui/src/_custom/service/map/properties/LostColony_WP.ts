@@ -8,5 +8,6 @@ export const LostColony_WP: MapProperty = {
     [100, 100],
   ],
   mapSrc: '/images/maps/LostColony_WP.jpg',
+  imageLogo: '/images/logo/lost_colony.png',
   obelisks: [],
 };

@@ -8,6 +8,7 @@ export const ScorchedEarth_WP: MapProperty = {
     [100, 100],
   ],
   mapSrc: '/images/maps/ScorchedEarth_WP.jpg',
+  imageLogo: '/images/logo/scorched.png',
   obelisks: [
     {
       description: 'Blue Obelisk',

@@ -8,5 +8,6 @@ export const Althemia: MapProperty = {
     [100, 100],
   ],
   mapSrc: '/images/maps/Althemia.jpg',
+  imageLogo: '/images/logo/althemia.png',
   obelisks: [],
 };

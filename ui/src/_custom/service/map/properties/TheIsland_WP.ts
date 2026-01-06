@@ -8,6 +8,7 @@ export const TheIsland_WP: MapProperty = {
     [100, 100],
   ],
   mapSrc: '/images/maps/TheIsland_WP.jpg',
+  imageLogo: '/images/logo/ASA_Logo_transparent.png',
   obelisks: [
     {
       description: 'Blue Obelisk',

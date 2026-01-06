@@ -8,5 +8,6 @@ export const LostCity_WP: MapProperty = {
     [100, 100],
   ],
   mapSrc: '/images/maps/LostCity_WP.jpg',
+  imageLogo: '/images/logo/LostCity_WP.png',
   obelisks: [],
 };

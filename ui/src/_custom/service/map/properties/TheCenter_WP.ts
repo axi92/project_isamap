@@ -8,6 +8,7 @@ export const TheCenter_WP: MapProperty = {
     [100, 100],
   ],
   mapSrc: '/images/maps/TheCenter_WP.jpg',
+  imageLogo: '/images/logo/center.png',
   obelisks: [
     {
       description: 'Blue Obelisk',

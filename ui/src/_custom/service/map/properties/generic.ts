@@ -8,5 +8,6 @@ export const generic: MapProperty = {
     [100, 100],
   ],
   mapSrc: '/images/maps/generic.jpg',
+  imageLogo: '/images/logo/ASA_Logo_transparent.png',
   obelisks: [],
 };

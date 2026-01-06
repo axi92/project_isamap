@@ -8,6 +8,7 @@ export const Astraeos_WP: MapProperty = {
     [100, 100],
   ],
   mapSrc: '/images/maps/Astraeos_WP.jpg',
+  imageLogo: '/images/logo/astraeos.png',
   obelisks: [
     {
       description: 'Blue Obelisk',

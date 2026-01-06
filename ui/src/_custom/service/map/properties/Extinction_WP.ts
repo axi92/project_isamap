@@ -8,6 +8,7 @@ export const Extinction_WP: MapProperty = {
     [100, 100],
   ],
   mapSrc: '/images/maps/Extinction_WP.jpg',
+  imageLogo: '/images/logo/extinction.png',
   obelisks: [
     {
       description: 'Blue Obelisk',

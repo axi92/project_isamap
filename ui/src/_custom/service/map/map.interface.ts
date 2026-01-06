@@ -2,6 +2,7 @@ export interface MapProperty {
   name: string;
   displayName: string;
   mapSrc: string;
+  imageLogo?: string;
   obelisks?: Obelisk[];
   bounds: [[number, number], [number, number]];
 }

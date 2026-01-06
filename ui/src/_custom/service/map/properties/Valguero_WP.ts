@@ -8,6 +8,7 @@ export const Valguero_WP: MapProperty = {
     [100, 100],
   ],
   mapSrc: '/images/maps/Valguero_WP.jpg',
+  imageLogo: '/images/logo/valguero.png',
   obelisks: [
     {
       description: 'Blue Obelisk',

@@ -8,6 +8,7 @@ export const Ragnarok_WP: MapProperty = {
     [100, 100],
   ],
   mapSrc: '/images/maps/Ragnarok_WP.jpg',
+  imageLogo: '/images/logo/ragna.png',
   obelisks: [
     {
       description: 'Blue Obelisk',
