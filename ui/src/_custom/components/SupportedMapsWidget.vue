@@ -43,17 +43,28 @@ const mapsArray = Object.entries(mapProperties)
 
 .map-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
   gap: 1rem;
 }
 
 .map-card {
-  position: relative;          /* Needed for absolute text */
-  height: 150px;               /* Fixed height to preserve grid */
-  background-size: cover;      /* Image covers card */
+  position: relative;
+  width: 12rem;       /* default bigger size */
+  height: 12rem;      /* square card */
+  min-width: 8rem;    /* won’t shrink below this */
+  min-height: 8rem;
+  background-size: cover;
   background-position: center;
   border-radius: 0.5rem;
   overflow: hidden;
+  flex-shrink: 0;    /* prevents shrinking in flex container */
+}
+
+/* Sm breakpoint */
+@media (min-width: 640px) {
+  .map-grid {
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
 }
 
 /* Text overlay in top-left corner */
