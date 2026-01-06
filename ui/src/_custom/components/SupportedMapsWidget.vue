@@ -1,6 +1,6 @@
 <template>
   <div class="supported-maps-widget">
-    Supported Maps:
+    <h2 class="widget-heading">Supported Maps</h2>
     <div class="map-grid">
       <Card
         v-for="([key, map]) in mapsArray"
@@ -8,24 +8,37 @@
         class="map-card"
         :style="map.imageLogo ? { backgroundImage: `url(${map.imageLogo})` } : {}"
       >
-        <div class="map-name">{{ map.displayName }}</div>
+        <template #content>
+          <div class="map-name">{{ map.displayName }}</div>
+        </template>
       </Card>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { mapProperties, type MapKey } from '@/_custom/service/map/mapService.constants';
+import { mapProperties } from '@/_custom/service/map/mapService.constants';
 import Card from 'primevue/card';
 import type { MapProperty } from '@/_custom/service/map/map.interface';
 
-// Convert mapProperties object to array for iteration
-const mapsArray = Object.entries(mapProperties) as [string, MapProperty][];
+const mapsArray = Object.entries(mapProperties)
+  .filter(([key]) => key !== 'generic') as [string, MapProperty][];
 </script>
 
 <style scoped>
 .supported-maps-widget {
   padding: 1rem;
+}
+
+/* 🎨 Nice heading */
+.widget-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--primary-color);
+  display: inline-block;           /* shrink to text width */
+  padding-bottom: 0.25rem;
 }
 
 .map-grid {
@@ -35,25 +48,25 @@ const mapsArray = Object.entries(mapProperties) as [string, MapProperty][];
 }
 
 .map-card {
-  position: relative;
-  text-align: center;
-  color: white;
-  height: 150px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  background-size: cover;
+  position: relative;          /* Needed for absolute text */
+  height: 150px;               /* Fixed height to preserve grid */
+  background-size: cover;      /* Image covers card */
   background-position: center;
   border-radius: 0.5rem;
   overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
+/* Text overlay in top-left corner */
 .map-name {
-  width: 100%;
-  padding: 0.5rem;
-  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 0.25rem;
   font-weight: bold;
-  text-align: center;
+  color: white;
+  font-size: 0.875rem;
+  pointer-events: none;
 }
 </style>

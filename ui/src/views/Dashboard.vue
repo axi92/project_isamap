@@ -5,6 +5,4 @@ import SupportedMapsWidget from '@/_custom/components/SupportedMapsWidget.vue';
 
 <template>
   <SupportedMapsWidget />
-  <div class="grid grid-cols-12 gap-8">
-  </div>
 </template>
