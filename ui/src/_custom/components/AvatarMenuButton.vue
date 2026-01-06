@@ -4,6 +4,9 @@ import { useUserStore } from '@/_custom/stores/auth.store';
 import { useDebugStore } from '@/_custom/stores/debug.store';
 import Menu from 'primevue/menu';
 
+const API_BASE_URL = __API_BASE_URL__;
+const commit = __GIT_COMMIT__;
+
 // Props
 interface Props {
   userId: string;
@@ -49,7 +52,7 @@ const items = ref([
         icon: 'pi pi-sign-out',
         command: () => {
           userStore.logout();
-          window.location.assign('http://localhost:3000/api/v1/auth/logout');
+          window.location.assign(API_BASE_URL + '/auth/logout');
         },
       },
     ],

@@ -14,6 +14,7 @@ import type { LiveMapDTO } from '@/_custom/service/map/dto/map.dto';
 // https://ark.wiki.gg/mw-1.43/extensions/DataMaps/modules/core/CoordinateSystem.js
 // https://ark.wiki.gg/mw-1.43/extensions/DataMaps/modules/core/enums.js
 
+const API_BASE_URL = __API_BASE_URL__;
 const route = useRoute();
 const mapId = route.params.id as string;
 const es = inject<EventService>('es')!;
@@ -42,7 +43,7 @@ onMounted(() => {
 });
 
 async function fetchMapData(publicID: string): Promise<LiveMapDTO> {
-  const res = await fetch(`http://localhost:3000/api/v1/servers/data/${publicID}`);
+  const res = await fetch(`${API_BASE_URL}/servers/data/${publicID}`);
   const data = await res.json();
   return data as LiveMapDTO;
 }

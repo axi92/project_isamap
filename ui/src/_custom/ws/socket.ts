@@ -1,11 +1,7 @@
 import { reactive } from 'vue';
 import { io } from 'socket.io-client';
 
-// "undefined" means the URL will be computed from the `window.location` object
-// const URL = process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
-
-// const URL = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.hostname + ':' + window.location.port;
-const URL = 'http://localhost:3000';
+const URL = __API_ORIGIN__;
 
 const socket = io(URL);
 

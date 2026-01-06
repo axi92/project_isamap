@@ -51,21 +51,25 @@ export class MapService {
   }
 
   updateMarkers(tribes: TribeDTO[], players: PlayerDTO[]) {
-    this.updateMarkersGeneric<TribeDTO>(
-      tribes,
-      (t) => t.tribeid,
-      (t) => `Tribe: ${t.tribename}`,
-      this.tribeMarkers,
-      'home'
-    );
+    if(tribes != undefined){
+      this.updateMarkersGeneric<TribeDTO>(
+        tribes,
+        (t) => t.tribeid,
+        (t) => `Tribe: ${t.tribename}`,
+        this.tribeMarkers,
+        'home'
+      );
+    }
 
-    this.updateMarkersGeneric<PlayerDTO>(
-      players,
-      (p) => p.steamid,
-      (p) => `Player: ${p.playername}`,
-      this.playerMarkers,
-      'user'
-    );
+    if(players != undefined){
+      this.updateMarkersGeneric<PlayerDTO>(
+        players,
+        (p) => p.steamid,
+        (p) => `Player: ${p.playername}`,
+        this.playerMarkers,
+        'user'
+      );
+    }
   }
 
   updateMarkersGeneric<T extends PositionDTO>(
@@ -78,6 +82,8 @@ export class MapService {
     icontype: MarkerIcon
   ) {
     const updatedIds = new Set<string | number>();
+    console.log(data);
+    console.log(icontype);
     for (const item of data) {
       const id = getId(item);
       updatedIds.add(id);

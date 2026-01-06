@@ -1,5 +1,6 @@
 export async function fetchCurrentUser(): Promise<UserAuthJson | null> {
-  const res = await fetch('http://localhost:3000/api/v1/auth/me', {
+  const API_BASE_URL = __API_BASE_URL__;
+  const res = await fetch(API_BASE_URL + '/auth/me', {
     credentials: 'include',
   });
 

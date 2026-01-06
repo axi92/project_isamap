@@ -18,8 +18,6 @@ onMounted(() => {
   });
 });
 
-// localhost:3000/api/v1/auth/redirect?code=AXTVsuI7aGSJm9gzsFETselx0RoSAp
-
 // const route = useRoute();
 // const clientAuthToken = route.query.token;
 

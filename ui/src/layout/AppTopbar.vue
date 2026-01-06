@@ -4,6 +4,7 @@ import AppConfigurator from './AppConfigurator.vue';
 import { useUserStore } from '@/_custom/stores/auth.store';
 import AvatarMenuButton from '@/_custom/components/AvatarMenuButton.vue';
 
+const API_BASE_URL = __API_BASE_URL__;
 const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
 const userStore = useUserStore();
 </script>
@@ -73,7 +74,7 @@ const userStore = useUserStore();
             <AvatarMenuButton :userId="userStore.user.userId" :avatar="userStore.user.avatar" :username="userStore.user.username" />
           </div>
           <div v-else>
-            <Button as="a" href="http://localhost:3000/api/v1/auth/redirect" label="Login" icon="pi pi-discord" />
+            <Button as="a" :href="API_BASE_URL + '/auth/redirect'" label="Login" icon="pi pi-discord" />
           </div>
         </div>
       </div>

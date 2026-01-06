@@ -3,13 +3,14 @@ import type { LiveMapDTO } from './map/dto/map.dto';
 import { mapProperties, type MapKey } from './map/mapService.constants';
 import type { MapProperty } from './map/map.interface';
 
+const API_BASE_URL = __API_BASE_URL__;
 export async function createServer(modalServerDescription: Ref, owner: string): Promise<ServerEntry | null> {
   modalServerDescription.value;
   const serverCreatePayload: ServerCreateDto = {
     description: modalServerDescription.value,
     owner: owner,
   };
-  const res = await fetch('http://localhost:3000/api/v1/servers/create', {
+  const res = await fetch(API_BASE_URL + '/servers/create', {
     credentials: 'include',
     method: 'POST',
     body: JSON.stringify(serverCreatePayload),
@@ -26,7 +27,7 @@ export async function createServer(modalServerDescription: Ref, owner: string): 
 }
 
 export async function getServerList(debug: boolean = false): Promise<ServerInfo[] | null> {
-  const res = await fetch('http://localhost:3000/api/v1/servers/list', {
+  const res = await fetch(API_BASE_URL + '/servers/list', {
     credentials: 'include',
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
@@ -61,7 +62,7 @@ function getServerListFixtures(): ServerInfo[] {
 }
 
 export async function deleteServerEntry(publicId: string): Promise<Boolean> {
-  const res = await fetch('http://localhost:3000/api/v1/servers/delete', {
+  const res = await fetch(API_BASE_URL + '/servers/delete', {
     credentials: 'include',
     method: 'DELETE',
     body: JSON.stringify({ publicId: publicId }),
