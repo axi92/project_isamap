@@ -1,13 +1,13 @@
 services:
   api:
     build:
-      context: ./backend
+      context: ./api
       dockerfile: Dockerfile
     environment:
       NODE_ENV: production
       REDIS_URL: redis://redis:6379
     volumes:
-      - ./backend/.env:/app/.env
+      - ./api/.env:/app/.env
     depends_on:
       - redis
     ports:
@@ -17,13 +17,13 @@ services:
     image: redis:8.4-alpine
     command: redis-server --appendonly yes
     volumes:
-      - ./backend/redis-data:/data
+      - ./api/redis-data:/data
 
   ui:
     build:
-      context: ./client
+      context: ./ui
       dockerfile: Dockerfile
     depends_on:
-      - backend
+      - api
     ports:
       - "8080:8080"
