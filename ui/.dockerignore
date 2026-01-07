@@ -13,10 +13,6 @@ coverage
 .git
 .gitignore
 
-# Env
-.env
-.env.*
-
 # IDE
 .vscode
 .idea
