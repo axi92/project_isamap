@@ -12,16 +12,18 @@ export const useUserStore = defineStore('user', {
     async loadUser() {
       const cached = localStorage.getItem(CACHE_KEY);
 
-      if (cached) {
-        const { user, timestamp } = JSON.parse(cached);
-        const now = Date.now();
-        if (now - timestamp < CACHE_TTL_MS) {
-          if (user != null) {
-            this.user = user;
-            return;
-          }
-        }
-      }
+      // I disabled caching of login state, now it gets checked on every refresh
+
+      // if (cached) {
+      //   const { user, timestamp } = JSON.parse(cached);
+      //   const now = Date.now();
+      //   if (now - timestamp < CACHE_TTL_MS) {
+      //     if (user != null) {
+      //       this.user = user;
+      //       return;
+      //     }
+      //   }
+      // }
 
       // If no valid cache, fetch from backend
       try {

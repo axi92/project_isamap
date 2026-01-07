@@ -27,12 +27,12 @@ const privateId = ref();
 const exampleCode = computed(() => {
   return `[HTTPLocation]
 privateid="${privateId.value}"
-URL="https://arkmap.axi92.at/rest/v1"`;
+URL="https://apiasamap.axi92.at/api/v1/servers/data"`;
 });
 
 // Serverlist Feature
 const serverList = ref();
-const publicLinkPrefix = 'http://localhost:5173/map/';
+const publicLinkPrefix = `${__API_ORIGIN__}/map/`;
 const confirm = useConfirm();
 const toast = useToast();
 const MAX_SERVERS_PER_USER = 20;
