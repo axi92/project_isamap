@@ -20,7 +20,7 @@ async function bootstrap() {
   const isProd = process.env.NODE_ENV === 'production';
   logger.log('Production: ' + isProd);
 
-  const server = app.getHttpServer() as express.Express;
+  const server = app.getHttpAdapter().getInstance();
   server.set('trust proxy', 1); // to trust reverse proxy
 
   const sessionStore = app.get('SESSION_STORE');
