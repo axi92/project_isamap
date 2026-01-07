@@ -17,6 +17,7 @@ jobs:
       - name: Build ${{ matrix.service }} Docker image
         run: |
           echo "Building ${{ matrix.service }}..."
+          cp ui/template.env ui/.env
           docker buildx build \
             --file ${{ matrix.service }}/Dockerfile \
             --tag ${{ matrix.service }}:latest \
