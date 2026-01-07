@@ -17,7 +17,7 @@ services:
     image: redis:8.4-alpine
     command: redis-server --appendonly yes
     volumes:
-      - ./api/redis-data:/data
+      - redis_data:/data
 
   ui:
     build:
@@ -28,3 +28,6 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
     env_file: ./ui/.env
+
+volumes:
+  redis_data:
