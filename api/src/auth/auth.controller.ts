@@ -11,6 +11,7 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { UserCreatDto } from '@/user/dto/userCreate.dto';
+import { ConfigurationService } from '@/configuration/configuration.service';
 // import { sign } from 'jsonwebtoken';
 
 @Controller('auth')
@@ -18,7 +19,10 @@ export class AuthController {
   private readonly logger = new Logger(AuthController.name, {
     timestamp: true,
   });
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configurationService: ConfigurationService,
+  ) {}
 
   // localhost:3000/api/v1/auth/login
   @Get('login') // auth/login
@@ -33,17 +37,21 @@ export class AuthController {
     // Discord redirects here after login
     const user = req.user as UserCreatDto;
     if (!req.user) {
-      return res.redirect('http://localhost:5173/?error=no-user');
+      return res.redirect(
+        `${this.configurationService.getUiUrl()}/?error=no-user`,
+      );
     }
 
     req.login(user, async (err) => {
       if (err) {
         console.error('req.login error:', err);
-        return res.redirect('http://localhost:5173/?error=login-failed');
+        return res.redirect(
+          `${this.configurationService.getUiUrl()}/?error=login-failed`,
+        );
       } else {
         this.logger.log(`${user.username} with id ${user.userId} logged in`);
         await this.authService.createUser(user as UserCreatDto);
-        res.redirect(`http://localhost:5173`);
+        res.redirect(`${this.configurationService.getUiUrl()}`);
       }
     });
   }
@@ -61,7 +69,9 @@ export class AuthController {
     req.logout({ keepSessionInfo: false }, (err) => {
       if (err) {
         console.error('Logout error:', err);
-        return res.redirect('http://localhost:5173/?error=logout-failed');
+        return res.redirect(
+          `${this.configurationService.getUiUrl()}/?error=logout-failed`,
+        );
       }
 
       // Destroy session completely
@@ -70,7 +80,7 @@ export class AuthController {
           console.error('Session destroy error:', err);
         }
         res.clearCookie('connect.sid'); // clear session cookie
-        res.redirect('http://localhost:5173'); // TODO: redirect back to frontend
+        res.redirect(`${this.configurationService.getUiUrl()}`); // TODO: redirect back to frontend
       });
     });
   }
