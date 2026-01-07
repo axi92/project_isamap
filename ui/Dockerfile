@@ -14,6 +14,8 @@ RUN npm run build
 
 FROM caddy:2.10
 WORKDIR /app
+ARG COMMIT_SHA
+ENV COMMIT_SHA=$COMMIT_SHA
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=builder /tmp/dist ./
 
