@@ -8,6 +8,7 @@ COPY src ./src
 COPY public ./public
 COPY patches ./patches
 COPY index.html ./index.html
+COPY .env ./
 RUN npm ci
 RUN npm run postinstall
 RUN npm run build
