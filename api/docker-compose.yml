@@ -15,4 +15,7 @@ services:
     image: redis:8.4-alpine
     command: redis-server --appendonly yes
     volumes:
-      - ./redis-data:/data
+      - redis_data:/data
+
+volumes:
+  redis_data:
