@@ -6,6 +6,7 @@ import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigurationService } from './configuration/configuration.service';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -18,6 +19,9 @@ async function bootstrap() {
   const sessionSecret = configService.getSessionSecret();
   const isProd = process.env.NODE_ENV === 'production';
   logger.log('Production: ' + isProd);
+
+  const server = app.getHttpServer() as express.Express;
+  server.set('trust proxy', 1); // to trust reverse proxy
 
   const sessionStore = app.get('SESSION_STORE');
 
