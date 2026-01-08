@@ -51,7 +51,7 @@ async function fetchMapData(publicID: string): Promise<LiveMapDTO> {
 
 <template>
   <div class="flex flex-col gap-4">
-    <Message v-if="errorMessage" severity="error" icon="pi pi-times-circle" class="mb-2">Server not found!</Message>
+    <Message v-if="errorMessage" severity="error" icon="pi pi-times-circle" class="mb-2">Server not found, or not sending data!</Message>
   </div>
   <div v-if="!errorMessage" class="map-wrapper w-full">
     <div id="map" class="w-full h-full"></div>
