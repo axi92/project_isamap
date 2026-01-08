@@ -170,7 +170,7 @@ Body:
 ## Mod breaking changes
 
 - data structure from server to web players/dinos/tribes is no longer an object it is now an array on the webserver and will be validated as such. [LINK](#updated-structure)
-- see also issue #124
+- see also issue [#124](https://github.com/axi92/project_isamap/issues/124)
 
 ### Updated Structure
 
