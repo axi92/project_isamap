@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 export COMMIT_SHA=$(git rev-parse HEAD)
-docker compose down
+# Build new images while old containers are still running
 docker compose build --no-cache
-docker compose up -d
+# Restart containers with the new images (short downtime)
+docker compose up -d --force-recreate
