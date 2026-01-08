@@ -5,7 +5,8 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
-
+import { mkdir } from 'node:fs/promises';
+import { dirname } from 'node:path';
 import { DataBaseStructure } from './lowdb.interface';
 import { LowWithLodash } from './lowWithLodash';
 
@@ -26,7 +27,7 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
 
   constructor() {}
 
-  async onModuleInit(dbName: string = 'db.json') {
+  async onModuleInit(dbName: string = 'db/db.json') {
     await this.initDatabase(dbName);
   }
 
@@ -39,6 +40,7 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
 
   private async initDatabase(dbName: string) {
     // Read or create db.json
+    await mkdir(dirname(dbName), { recursive: true });
     const adapter = new JSONFile<DataBaseStructure>(dbName);
     this.db = new LowWithLodash(adapter, defaultData);
     await this.db.read();
