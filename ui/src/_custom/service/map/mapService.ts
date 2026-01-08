@@ -14,7 +14,7 @@ export class MapService {
     // override the project/unproject to flip Y if needed
     unproject: function (point: L.Point) {
       // flip X and Y
-      return new L.LatLng(point.y, point.x);
+      return new L.LatLng(point.x, point.y);
     },
   });
   mapInstance = L.map('map', {
