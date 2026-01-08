@@ -10,13 +10,13 @@ export class UserController {
     private readonly users: UserService,
   ) {}
 
-  @Get() // get all users
-  async allUsers() {
-    return this.users.getAll();
-  }
+  // @Get() // get all users
+  // async allUsers() {
+  //   return this.users.getAll();
+  // }
 
-  @Post('create') // Create a new user
-  async createUser(@Body(ValidationPipe) createUserDto: UserCreatDto) {
-    return await this.users.create(createUserDto);
-  }
+  // @Post('create') // Create a new user
+  // async createUser(@Body(ValidationPipe) createUserDto: UserCreatDto) {
+  //   return await this.users.create(createUserDto);
+  // }
 }

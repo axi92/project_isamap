@@ -1,6 +1,6 @@
 ## Description
 
-Backend written with nestjs.
+API written with nestjs.
 
 ## Installation
 
@@ -25,31 +25,18 @@ $ npm run start:prod
 
 ### Build
 
-`docker buildx build . -t backend:latest`
+`docker compose build --no-cache`
 
 ### Run
 
-`docker run -ti --rm -v .env:/app/.env backend:latest`
+`docker compose up -d --force-recreate`
 
 ## Endpoints
-
-### /api/v1/users/create
-
-Method: POST
-Description: Creates a user. If the user exists returns 201 as well.
-Body:
-```json
-{
-  "userId": "358154856046788609",
-  "username": "username",
-  "avatar": "testAvatarString",
-  "verified": true
-}
-```
 
 ### /api/v1/servers
 
 Method: GET
+
 Description: Get a list of all servers
 
 ### /api/v1/servers/create
@@ -68,8 +55,11 @@ Body:
 
 
 Method: POST
+
 Description: Sending game data from the asa mod to the webserver
+
 Body:
+
 ```json
 {
   "privateid": "b3db2542-c566-47e8-9579-1b2216c3fb47",
@@ -162,12 +152,14 @@ Body:
 ### /api/v1/servers/data/<publicId>
 
 Method: GET
+
 Description: Get livemap data from one server
 
 
 ## Mod breaking changes
 
 - data structure from server to web players/dinos/tribes is no longer an object it is now an array on the webserver and will be validated as such. [LINK](#updated-structure)
+- see also issue #124
 
 ### Updated Structure
 
@@ -259,7 +251,3 @@ Description: Get livemap data from one server
   ]
 }
 ```
-
-## Credits
-
-- [Zak Miller](https://www.zakmiller.com/code/serve-vue-with-nest/).
