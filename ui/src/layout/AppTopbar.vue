@@ -28,7 +28,7 @@ const userStore = useUserStore();
           <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
         </button>
         <!-- AppConfigurator Button -->
-        <div class="relative">
+        <!-- <div class="relative">
           <button
             v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
             type="button"
@@ -37,7 +37,7 @@ const userStore = useUserStore();
             <i class="pi pi-palette"></i>
           </button>
           <AppConfigurator />
-        </div>
+        </div> -->
       </div>
 
       <button
