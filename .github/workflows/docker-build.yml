@@ -10,14 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [backend, client]  # build both in parallel
+        service: [api, ui]  # build both in parallel
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
       - name: Build ${{ matrix.service }} Docker image
         run: |
           echo "Building ${{ matrix.service }}..."
+          cp ui/template.env ui/.env
           docker buildx build \
             --file ${{ matrix.service }}/Dockerfile \
             --tag ${{ matrix.service }}:latest \
+            --build-arg COMMIT_SHA=${COMMIT_SHA} \
             ${{ matrix.service }}
+        env:
+          COMMIT_SHA: ${{ github.sha }}
