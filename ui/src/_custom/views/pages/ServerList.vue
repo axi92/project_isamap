@@ -24,10 +24,17 @@ const visibleModal = ref(false);
 const visibleConfig = ref(false);
 const modalServerDescription = ref();
 const privateId = ref();
+const configDebugChecked = ref(false);
+const configNumberOfFlagsPerTribe = ref(1);
+const configFlagRangeMeshFoundations = ref(70);
 const exampleCode = computed(() => {
   return `[HTTPLocation]
 privateid="${privateId.value}"
-URL="https://apiasamap.axi92.at/api/v1/servers/data"`;
+URL="https://apiasamap.axi92.at/api/v1/servers/data"
+WebApiVersion2=true
+NumberOfFlagsPerTribe=${configNumberOfFlagsPerTribe.value}
+FlagRangeMeshFoundations=${configFlagRangeMeshFoundations.value}
+debug=${configDebugChecked.value}`
 });
 
 // Serverlist Feature
@@ -157,13 +164,34 @@ const confirmDelete = (event: Event, publicId: string) => {
       </template>
     </DataView>
   </div>
-  <!-- TODO: remove close icon closable="false" should be the prop but it does nothing -->
-  <Dialog v-model:visible="visibleModal" modal header="Add Server" :style="{ width: '32rem' }" pt:mask:class="backdrop-blur-sm">
+  <Dialog v-model:visible="visibleModal" modal header="Add Server" :closable="false" :style="{ width: '32rem' }" pt:mask:class="backdrop-blur-sm">
     <form @submit.prevent="handleCreateServer">
-      <div v-if="!visibleConfig" class="flex items-center gap-4 mb-4">
-        <label for="description" class="font-semibold w-24">Description</label>
-        <InputText id="description" v-model="modalServerDescription" class="flex-auto" autocomplete="off" maxlength="64" autofocus />
-      </div>
+      <div v-if="!visibleConfig">
+        <div class="flex items-center gap-4 mb-4">
+          <label for="description" class="font-semibold w-30">Description:</label>
+          <InputText id="description" v-model="modalServerDescription" class="flex-auto" autocomplete="off" maxlength="64" autofocus />
+        </div>
+        <div class="flex items-center gap-4 mb-4">
+          <label for="configNumberOfFlagsPerTribe" class="font-semibold w-30">Flags per Tribe:</label>
+          <InputNumber v-model="configNumberOfFlagsPerTribe" class="flex-auto" inputId="minmax-buttons" mode="decimal" showButtons :min="0" :max="100" />
+        </div>
+        <div class="flex items-center gap-4 mb-4">
+          <label for="configFlagRangeMeshFoundations" class="font-semibold w-30">Visual mesh range:</label>
+          <InputNumber v-model="configFlagRangeMeshFoundations" class="flex-auto" inputId="minmax-buttons" mode="decimal" showButtons :min="0" :max="100" />
+        </div>
+        <div class="flex items-center gap-4 mb-4">
+          <label for="debug" class="font-semibold w-24">Debug:</label>
+          <ToggleSwitch v-model="configDebugChecked">
+            <template #handle="{ checked }">
+              <i :class="['!text-xs pi', { 'pi-check': checked, 'pi-times': !checked }]" />
+            </template>
+          </ToggleSwitch>
+        </div>
+
+
+
+
+       </div>
       <Message v-if="visibleConfig" class="mb-2" severity="warn">This is the only time you will see the <b>privateid</b>! Save it!</Message>
       <CodeBlock v-if="visibleConfig" :code="exampleCode" />
       <div class="flex justify-end gap-2">
