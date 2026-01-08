@@ -1,6 +1,6 @@
 ## Description
 
-Backend written with nestjs.
+API written with nestjs.
 
 ## Installation
 
@@ -25,54 +25,71 @@ $ npm run start:prod
 
 ### Build
 
-`docker buildx build . -t backend:latest`
+`docker compose build --no-cache`
 
 ### Run
 
-`docker run -ti --rm -v .env:/app/.env backend:latest`
+`docker compose up -d --force-recreate`
 
 ## Endpoints
-
-### /api/v1/users/create
-
-Method: POST
-Description: Creates a user. If the user exists returns 201 as well.
-Body:
-```json
-{
-  "userId": "358154856046788609",
-  "username": "username",
-  "avatar": "testAvatarString",
-  "verified": true
-}
-```
 
 ### /api/v1/servers
 
 Method: GET
+
 Description: Get a list of all servers
+
+Request payload: none
+
+Response payload:
+
+```json
+{
+  "publicId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+  "description": "blubserver"
+}
+```
+Interface definition: https://github.com/axi92/project_isamap/blob/main/api/src/server/server.interface.ts#L3 [Permalink](https://github.com/axi92/project_isamap/blob/32431d636d8b86fb643a8f55153205e667778ead/api/src/server/server.interface.ts#L3)
+
 
 ### /api/v1/servers/create
 
 Method: POST
+
 Description: Create a new server
-Body:
+
+Request payload:
+
 ```json
 {
   "owner": "358154856046788609",
   "description": "blubserver"
 }
 ```
+Interface definition: https://github.com/axi92/project_isamap/blob/main/api/src/server/dto/serverCreate.dto.ts#L3 [Permalink](https://github.com/axi92/project_isamap/blob/32431d636d8b86fb643a8f55153205e667778ead/api/src/server/dto/serverCreate.dto.ts#L3)
+
+Reponse payload:
+
+```json
+{
+  "publicId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+  "privateId": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+}
+```
+
+Interface definition: https://github.com/axi92/project_isamap/blob/main/api/src/server/server.interface.ts#L11 [Permalink](https://github.com/axi92/project_isamap/blob/32431d636d8b86fb643a8f55153205e667778ead/api/src/server/server.interface.ts#L11)
 
 ### /api/v1/servers/data
 
-
 Method: POST
+
 Description: Sending game data from the asa mod to the webserver
-Body:
+
+Request payload:
+
 ```json
 {
-  "privateid": "b3db2542-c566-47e8-9579-1b2216c3fb47",
+  "privateid": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
   "map": "TestMapArea",
   "servername": "Your Server Name",
   "serverclock": "Day 1, 12:00:00",
@@ -158,16 +175,46 @@ Body:
   ]
 }
 ```
+Interface definition: https://github.com/axi92/project_isamap/blob/main/api/src/server/dto/server.dto.ts#L133 [Permalink](https://github.com/axi92/project_isamap/blob/32431d636d8b86fb643a8f55153205e667778ead/api/src/server/dto/server.dto.ts#L133)
+
+Reponse payload: none; Code: 201 CREATED
 
 ### /api/v1/servers/data/<publicId>
 
 Method: GET
+
 Description: Get livemap data from one server
 
+Request payload: none
+
+Interface definition: https://github.com/axi92/project_isamap/blob/main/api/src/server/server.controller.ts#L61 [Permalink](https://github.com/axi92/project_isamap/blob/32431d636d8b86fb643a8f55153205e667778ead/api/src/server/server.controller.ts#L61)
+
+Reponse payload:
+
+Same as request from: [/api/v1/servers/data](#apiv1serversdata)
+
+Interface definition: https://github.com/axi92/project_isamap/blob/main/api/src/server/dto/server.dto.ts#L133 [Permalink](https://github.com/axi92/project_isamap/blob/32431d636d8b86fb643a8f55153205e667778ead/api/src/server/dto/server.dto.ts#L133)
+
+### /api/v1/servers/delete
+
+Method: DELETE
+
+Description: Delete a server config
+
+Request payload:
+```json
+{
+  "publicId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+}
+```
+Interface definition: https://github.com/axi92/project_isamap/blob/main/api/src/server/dto/server.dto.ts#L124 [Permalink](https://github.com/axi92/project_isamap/blob/32431d636d8b86fb643a8f55153205e667778ead/api/src/server/dto/server.dto.ts#L124)
+
+Reponse payload: none; Code: 204 NO CONTENT
 
 ## Mod breaking changes
 
 - data structure from server to web players/dinos/tribes is no longer an object it is now an array on the webserver and will be validated as such. [LINK](#updated-structure)
+- see also issue [#124](https://github.com/axi92/project_isamap/issues/124)
 
 ### Updated Structure
 
@@ -259,7 +306,3 @@ Description: Get livemap data from one server
   ]
 }
 ```
-
-## Credits
-
-- [Zak Miller](https://www.zakmiller.com/code/serve-vue-with-nest/).

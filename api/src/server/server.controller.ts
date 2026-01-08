@@ -51,7 +51,7 @@ export class ServerController {
     if (response === null) {
       throw new NotFoundException();
     } else {
-      return;
+      return; // http 201
     }
   }
 
@@ -60,7 +60,7 @@ export class ServerController {
     @Param(new ValidationPipe({ transform: true }))
     { publicId }: publicIdDTO,
   ) {
-    this.logger.log(publicId);
+    this.logger.log(`get data for ${publicId}`);
     const response = this.servers.getServerDataByPublicId(publicId);
     if (response === null) {
       throw new NotFoundException();
@@ -97,14 +97,14 @@ export class ServerController {
     @Req() req: Request,
   ) {
     const userSession: UserCreatDto = req.user as UserCreatDto;
-    this.logger.log(`delete:, ${userSession.userId}, ${payload.publicId}`);
+    this.logger.log(`delete: ${userSession.userId}, ${payload.publicId}`);
     if (req.isAuthenticated()) {
       const server = await this.servers.findServerByPublicId(payload.publicId);
       if (null === server) throw new ForbiddenException();
       if (userSession.userId == server.owner) {
         // delete server
         // return publicID, privateID, description
-        this.logger.log(
+        this.logger.warn(
           `delete for user: ${userSession.username} id: ${userSession.userId}, publicId: ${payload.publicId}`,
         );
         await this.servers.delete(payload.publicId);
