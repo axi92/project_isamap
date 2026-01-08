@@ -51,7 +51,7 @@ export class ServerController {
     if (response === null) {
       throw new NotFoundException();
     } else {
-      return;
+      return; // http 201
     }
   }
 
