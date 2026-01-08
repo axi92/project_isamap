@@ -155,6 +155,17 @@ Method: GET
 
 Description: Get livemap data from one server
 
+### /api/v1/servers/delete
+
+Method: DELETE
+Description: Delete a server config
+Body:
+```json
+{
+  "publicId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+}
+```
+
 
 ## Mod breaking changes
 
