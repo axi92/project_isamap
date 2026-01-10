@@ -12,9 +12,11 @@ export class MapService {
   CustomCRS = L.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0),
     // override the project/unproject to flip Y if needed
+    // Longitude is X and increases to the right
+    // Latitude is Y and increases down
     unproject: function (point: L.Point) {
       // flip X and Y
-      return new L.LatLng(point.x, point.y);
+      return new L.LatLng(point.y, point.x);
     },
   });
   mapInstance = L.map('map', {
@@ -92,10 +94,10 @@ export class MapService {
 
       if (marker) {
         // Move existing marker
-        marker.setLatLng([item.x_pos, item.y_pos]);
+        marker.setLatLng([item.y_pos, item.x_pos]);
       } else {
         // Create new marker
-        const newMarker = this.createMarker(item.x_pos, item.y_pos, icontype).bindPopup(getPopupText(item)).addTo(this.mapInstance);
+        const newMarker = this.createMarker(item.y_pos, item.x_pos, icontype).bindPopup(getPopupText(item)).addTo(this.mapInstance);
 
         markerMap.set(id, newMarker);
       }
