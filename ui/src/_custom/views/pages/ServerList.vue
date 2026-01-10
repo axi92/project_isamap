@@ -39,7 +39,6 @@ debug=${configDebugChecked.value}`
 
 // Serverlist Feature
 const serverList = ref();
-const publicLinkPrefix = `${__API_ORIGIN__}/map/`;
 const confirm = useConfirm();
 const toast = useToast();
 const MAX_SERVERS_PER_USER = 20;
@@ -152,7 +151,7 @@ const confirmDelete = (event: Event, publicId: string) => {
                   <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">last Update {{ convertDate(item.lastUpdate) }}</span>
                   <span class="text-xl font-semibold">{{ item.map }}</span>
                   <div class="flex flex-row-reverse md:flex-row gap-2">
-                    <Button as="a" label="Map" :href="publicLinkPrefix + item.publicId" icon="pi pi-link" variant="outlined"></Button>
+                    <Button as="a" label="Map" :href="`map/${item.publicId}`" icon="pi pi-link" variant="outlined"></Button>
                     <ConfirmPopup></ConfirmPopup>
                     <Button icon="pi pi-trash" label="Delete" severity="danger" class="flex-auto md:flex-initial whitespace-nowrap" @click="confirmDelete($event, item.publicId)"></Button>
                   </div>

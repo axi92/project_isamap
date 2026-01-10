@@ -55,9 +55,9 @@ const calibrationServerData: LiveMapDTO = {
   players: [
     {
       steamid: '12345678901234567',
-      playername: 'Player1',
+      playername: 'Player1 13x93',
       x_pos: 13,
-      y_pos: 13,
+      y_pos: 93,
       x_ue4: 0,
       y_ue4: 0,
       z_ue4: 0,
