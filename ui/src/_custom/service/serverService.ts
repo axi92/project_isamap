@@ -61,6 +61,19 @@ function getServerListFixtures(): ServerInfo[] {
   return serverListFixtures;
 }
 
+export async function getServerData(publicId: string): Promise<LiveMapDTO | {}> {
+  const res = await fetch(API_BASE_URL + `/servers/data/${publicId}`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (res.status === 200) {
+    return res.json();
+  } else {
+    console.error('res.status:', res.status);
+    return {};
+  }
+}
+
 export async function deleteServerEntry(publicId: string): Promise<Boolean> {
   const res = await fetch(API_BASE_URL + '/servers/delete', {
     credentials: 'include',

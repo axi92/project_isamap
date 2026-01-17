@@ -15,7 +15,7 @@ export interface Obelisk {
   y: number;
 }
 
-export type MarkerColor = 'orange' | 'red' | 'green';
+export type MarkerColor = 'orange' | 'red' | 'green' | 'yellow';
 
 export type MarkerIcon = 'user' | 'home';
 
