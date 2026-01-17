@@ -137,8 +137,8 @@ Last update: ${lastStructureUpdateTime} days`;
 
   private convertColorToSCSSVariable(color: MarkerColor): string {
     const colorMap: Record<MarkerColor, string> = {
-      orange: '--p-button-warn-background',
-      red: '--p-button-outlined-danger-border-color',
+      orange: '--p-orange-400',
+      red: '--p-rose-600',
       green: '--p-primary-color',
       yellow: '--p-yellow-300',
     };
