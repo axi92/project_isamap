@@ -9,7 +9,8 @@
 import { computed, onMounted, ref } from 'vue';
 import { useUserStore } from '@/_custom/stores/auth.store';
 import CodeBlock from '@/_custom/components/CodeBlock.vue';
-import { createServer, getServerList, deleteServerEntry, resolveMapLogo, calculateProgress } from '@/_custom/service/serverService';
+import JsonDataDialog from '@/_custom/components/JsonDataDialog.vue';
+import { createServer, getServerList, deleteServerEntry, resolveMapLogo, calculateProgress, getServerData } from '@/_custom/service/serverService';
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 import ConfirmPopup from 'primevue/confirmpopup';
@@ -19,7 +20,6 @@ import { useDebugStore } from '@/_custom/stores/debug.store';
 const userStore = useUserStore();
 const debugStore = useDebugStore();
 
-// Create Server Feature
 const visibleModal = ref(false);
 const visibleConfig = ref(false);
 const modalServerDescription = ref();
@@ -29,13 +29,19 @@ const configNumberOfFlagsPerTribe = ref(1);
 const configFlagRangeMeshFoundations = ref(70);
 const exampleCode = computed(() => {
   return `[HTTPLocation]
-privateid="${privateId.value}"
-URL="https://apiasamap.axi92.at/api/v1/servers/data"
-WebApiVersion2=true
-NumberOfFlagsPerTribe=${configNumberOfFlagsPerTribe.value}
-FlagRangeMeshFoundations=${configFlagRangeMeshFoundations.value}
-debug=${configDebugChecked.value}`
+  privateid="${privateId.value}"
+  URL="https://apiasamap.axi92.at/api/v1/servers/data"
+  WebApiVersion2=true
+  NumberOfFlagsPerTribe=${configNumberOfFlagsPerTribe.value}
+  FlagRangeMeshFoundations=${configFlagRangeMeshFoundations.value}
+  debug=${configDebugChecked.value}`;
 });
+
+// inspect data
+const showJson = ref(false);
+const serverData = ref<unknown>(null);
+// track loading state per publicId
+const inspecting = ref<Record<string, boolean>>({});
 
 // Serverlist Feature
 const serverList = ref();
@@ -101,6 +107,30 @@ const confirmDelete = (event: Event, publicId: string) => {
     reject: () => {},
   });
 };
+
+async function inspectServer(item: any) {
+  const id = item.publicId;
+
+  try {
+    inspecting.value[id] = true;
+
+    // fetch server data (must send cookies!)
+    const data = await getServerData(id);
+
+    serverData.value = data;
+    showJson.value = true;
+  } catch (err) {
+    console.error('Failed to inspect server', err);
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Failed to load server data',
+      life: 5000,
+    });
+  } finally {
+    inspecting.value[id] = false;
+  }
+}
 </script>
 
 <!-- https://primevue.org/dataview/ -->
@@ -152,6 +182,7 @@ const confirmDelete = (event: Event, publicId: string) => {
                   <span class="text-xl font-semibold">{{ item.map }}</span>
                   <div class="flex flex-row-reverse md:flex-row gap-2">
                     <Button as="a" label="Map" :href="`map/${item.publicId}`" icon="pi pi-link" variant="outlined"></Button>
+                    <Button label="Inspect" v-if="debugStore.enabled" variant="outlined" :icon="inspecting[item.publicId] ? 'pi pi-spin pi-spinner' : 'pi pi-search'" :disabled="inspecting[item.publicId]" @click="inspectServer(item)" />
                     <ConfirmPopup></ConfirmPopup>
                     <Button icon="pi pi-trash" label="Delete" severity="danger" class="flex-auto md:flex-initial whitespace-nowrap" @click="confirmDelete($event, item.publicId)"></Button>
                   </div>
@@ -186,11 +217,7 @@ const confirmDelete = (event: Event, publicId: string) => {
             </template>
           </ToggleSwitch>
         </div>
-
-
-
-
-       </div>
+      </div>
       <Message v-if="visibleConfig" class="mb-2" severity="warn">This is the only time you will see the <b>privateid</b>! Save it!</Message>
       <CodeBlock v-if="visibleConfig" :code="exampleCode" />
       <div class="flex justify-end gap-2">
@@ -208,6 +235,7 @@ const confirmDelete = (event: Event, publicId: string) => {
       </div>
     </form>
   </Dialog>
+  <JsonDataDialog v-model:visible="showJson" :json="serverData" header="Server Payload" @update:visible="(v) => !v && (serverData = null)" />
 </template>
 
 <style scoped></style>

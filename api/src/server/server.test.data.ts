@@ -66,9 +66,9 @@ const calibrationServerData: LiveMapDTO = {
   ],
   tribes: [
     {
-      decayDestructionTime: 6678,
-      elapsedTime: 567,
-      lastInAllyRangeTime: 56,
+      decayDestructionTime: 345600,
+      elapsedTime: 217668723.332716,
+      lastInAllyRangeTime: 217667973.702529,
       tribeid: 10,
       x_pos: 10,
       y_pos: 10,
