@@ -27,6 +27,11 @@ export class MapService {
   }) as LeafletMap;
   mapImage = new Image();
   currentMapProperties: MapProperty;
+  tribePinColor = 'green';
+  tribePinColorExpired = 'red';
+  tribePinColorExpiredCount = 17;
+  tribePinColorOrange = 'orange';
+  tribePinColorOrangeCount = 10;
 
   constructor(liveMapDTO: LiveMapDTO) {
     this.currentMapProperties = this.getMapProperties()[liveMapDTO.map as MapKey] as MapProperty;
@@ -53,23 +58,32 @@ export class MapService {
   }
 
   updateMarkers(tribes: TribeDTO[], players: PlayerDTO[]) {
-    if(tribes != undefined){
+    if (tribes != undefined) {
       this.updateMarkersGeneric<TribeDTO>(
         tribes,
         (t) => t.tribeid,
-        (t) => `Tribe: ${t.tribename}`,
+        (t) => {
+          const lastStructureUpdateTime = Math.trunc((Math.trunc(t.elapsedTime) - Math.trunc(t.lastInAllyRangeTime)) / 60 / 60 / 24); // convert seconds to days
+          return `Tribe: ${t.tribename}<br>
+Last update: ${lastStructureUpdateTime} days`;
+        },
         this.tribeMarkers,
-        'home'
+        'home',
+        (t) => {
+          const lastStructureUpdateTime = this.getLastStructureUpdateTimeInDays(t.elapsedTime, t.lastInAllyRangeTime);
+          return this.getTribePinColor(lastStructureUpdateTime) as MarkerColor;
+        }
       );
     }
 
-    if(players != undefined){
+    if (players != undefined) {
       this.updateMarkersGeneric<PlayerDTO>(
         players,
         (p) => p.steamid,
         (p) => `Player: ${p.playername}`,
         this.playerMarkers,
-        'user'
+        'user',
+        (p) => 'yellow'
       );
     }
   }
@@ -81,7 +95,8 @@ export class MapService {
     // eslint-disable-next-line no-unused-vars
     getPopupText: (_item: T) => string,
     markerMap: Map<string | number, L.Marker>,
-    icontype: MarkerIcon
+    icontype: MarkerIcon,
+    markerColor: (_item: T) => MarkerColor
   ) {
     const updatedIds = new Set<string | number>();
     console.log(data);
@@ -97,7 +112,7 @@ export class MapService {
         marker.setLatLng([item.y_pos, item.x_pos]);
       } else {
         // Create new marker
-        const newMarker = this.createMarker(item.y_pos, item.x_pos, icontype).bindPopup(getPopupText(item)).addTo(this.mapInstance);
+        const newMarker = this.createMarker(item.y_pos, item.x_pos, icontype, markerColor(item)).bindPopup(getPopupText(item)).addTo(this.mapInstance);
 
         markerMap.set(id, newMarker);
       }
@@ -112,8 +127,8 @@ export class MapService {
     }
   }
 
-  private createMarker(x: number, y: number, icontype: MarkerIcon): Marker {
-    const icon = this.createDivIcon(icontype, 'green', this.ICONSIZE);
+  private createMarker(x: number, y: number, icontype: MarkerIcon, markerColor: MarkerColor): Marker {
+    const icon = this.createDivIcon(icontype, markerColor, this.ICONSIZE);
     const marker = new Marker([x, y], {
       icon: icon,
     });
@@ -125,6 +140,7 @@ export class MapService {
       orange: '--p-button-warn-background',
       red: '--p-button-outlined-danger-border-color',
       green: '--p-primary-color',
+      yellow: '--p-yellow-300',
     };
     return colorMap[color] ?? '--p-text-primary-color';
   }
@@ -167,6 +183,22 @@ export class MapService {
       new Marker([obelisk.x, obelisk.y], {
         icon: icon,
       }).addTo(this.mapInstance);
+    }
+  }
+
+  private getLastStructureUpdateTimeInDays(elapsedTime: number, lastInAllyRangeTime: number): number {
+    return Math.trunc((Math.trunc(elapsedTime) - Math.trunc(lastInAllyRangeTime)) / 60 / 60 / 24); // convert seconds to days
+  }
+
+  private getTribePinColor(lastStructureUpdateTime: number) {
+    if (lastStructureUpdateTime < this.tribePinColorOrangeCount) {
+      // green
+      return this.tribePinColor;
+    } else if (lastStructureUpdateTime < this.tribePinColorExpiredCount) {
+      // orange
+      return this.tribePinColorOrange;
+    } else {
+      return this.tribePinColorExpired;
     }
   }
 }
