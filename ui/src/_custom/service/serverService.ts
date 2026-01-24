@@ -117,6 +117,10 @@ export function resolveMapLogo(mapName: string): string {
       return 'Amissa.png';
     case 'insaluna_WP':
       return 'insaluna.png';
+    case 'Forglar_WP':
+      return 'Forglar_WP.png';
+    case 'Svartalfheim_WP':
+      return 'Svartalfheim_WP.png';
     default:
       return 'ASA_Logo_transparent.png';
   }
