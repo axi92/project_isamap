@@ -15,6 +15,7 @@ import { generic } from './properties/generic';
 import { LostColony_WP } from './properties/LostColony_WP';
 import { Forglar_WP } from './properties/Forglar_WP';
 import { Svartalfheim_WP } from './properties/Svartalfheim_WP';
+import { Nyrandil } from './properties/Nyrandil';
 
 export const mapProperties = {
   TheIsland_WP: TheIsland_WP,
@@ -33,6 +34,7 @@ export const mapProperties = {
   LostColony_WP: LostColony_WP,
   Forglar_WP: Forglar_WP,
   Svartalfheim_WP: Svartalfheim_WP,
+  Nyrandil: Nyrandil,
 } as const satisfies Record<string, MapProperty>;
 
 export type MapKey = keyof typeof mapProperties;

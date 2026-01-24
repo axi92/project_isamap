@@ -121,6 +121,8 @@ export function resolveMapLogo(mapName: string): string {
       return 'Forglar_WP.png';
     case 'Svartalfheim_WP':
       return 'Svartalfheim_WP.png';
+    case 'Nyrandil':
+      return 'Nyrandil.png';
     default:
       return 'ASA_Logo_transparent.png';
   }
