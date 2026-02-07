@@ -65,7 +65,8 @@ export class MapService {
         (t) => {
           const lastStructureUpdateTime = Math.trunc((Math.trunc(t.elapsedTime) - Math.trunc(t.lastInAllyRangeTime)) / 60 / 60 / 24); // convert seconds to days
           return `Tribe: ${t.tribename}<br>
-Last update: ${lastStructureUpdateTime} days`;
+Last update: ${lastStructureUpdateTime} days<br>
+cheat SetPlayerPos ${t.x_ue4} ${t.y_ue4} ${t.z_ue4}`;
         },
         this.tribeMarkers,
         'home',
@@ -80,7 +81,9 @@ Last update: ${lastStructureUpdateTime} days`;
       this.updateMarkersGeneric<PlayerDTO>(
         players,
         (p) => p.steamid,
-        (p) => `Player: ${p.playername}`,
+        (p) => `Player: ${p.playername}<br>
+        Tribe: ${p.tribename}<br>
+        cheat SetPlayerPos ${p.x_ue4} ${p.y_ue4} ${p.z_ue4}`,
         this.playerMarkers,
         'user',
         (p) => 'yellow'
