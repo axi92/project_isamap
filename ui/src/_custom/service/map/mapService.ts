@@ -6,10 +6,10 @@ import type { MapProperty, MarkerColor, MarkerIcon, Obelisk, PositionDTO } from 
 import type { LiveMapDTO, PlayerDTO, TribeDTO } from './dto/map.dto';
 
 export class MapService {
-  ICONSIZE: number = 24;
+  private ICONSIZE: number = 24;
   tribeMarkers = new Map<number, Marker>();
   playerMarkers = new Map<number, Marker>();
-  CustomCRS = L.extend({}, L.CRS.Simple, {
+  private CustomCRS = L.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0),
     // override the project/unproject to flip Y if needed
     // Longitude is X and increases to the right
@@ -19,19 +19,24 @@ export class MapService {
       return new L.LatLng(point.y, point.x);
     },
   });
-  mapInstance = L.map('map', {
+  private mapInstance = L.map('map', {
     crs: this.CustomCRS,
     zoomControl: true,
     minZoom: 2,
     maxZoom: 8,
   }) as LeafletMap;
-  mapImage = new Image();
+  private mapImage = new Image();
+  private mapBounds: L.LatLngBoundsExpression = [
+    [-1, -1],
+    [101, 101],
+  ];
+  private mapOverlay?: L.ImageOverlay;
   currentMapProperties: MapProperty;
-  tribePinColor = 'green';
-  tribePinColorExpired = 'red';
-  tribePinColorExpiredCount = 17;
-  tribePinColorOrange = 'orange';
-  tribePinColorOrangeCount = 10;
+  private tribePinColor = 'green';
+  private tribePinColorExpired = 'red';
+  private tribePinColorExpiredCount = 17;
+  private tribePinColorOrange = 'orange';
+  private tribePinColorOrangeCount = 10;
 
   constructor(liveMapDTO: LiveMapDTO) {
     this.currentMapProperties = this.getMapProperties()[liveMapDTO.map as MapKey] as MapProperty;
@@ -42,10 +47,10 @@ export class MapService {
 
     this.mapImage.onload = async () => {
       // Define bounds: from [0,0] (bottom-left) to [width, height] (top-right)
-      const bounds: L.LatLngBoundsExpression = this.currentMapProperties.bounds;
+      this.mapBounds = this.currentMapProperties.bounds;
       // Then continue with map init
-      L.imageOverlay(this.mapImage.src, bounds).addTo(this.mapInstance);
-      this.mapInstance.fitBounds(bounds);
+      this.mapOverlay = L.imageOverlay(this.mapImage.src, this.mapBounds).addTo(this.mapInstance);
+      this.mapInstance.fitBounds(this.mapBounds);
       this.mapInstance.setView([50, 50], 3);
       if (this.currentMapProperties.obelisks) {
         this.createObelisks(this.currentMapProperties.obelisks);
@@ -56,6 +61,51 @@ export class MapService {
   getMapProperties(): typeof mapProperties {
     return mapProperties;
   }
+
+  updateMapBounds(bounds: L.LatLngBoundsExpression) {
+    this.mapBounds = bounds;
+
+    if (!this.mapOverlay) {
+      this.mapOverlay = L.imageOverlay(this.mapImage.src, bounds).addTo(this.mapInstance);
+    } else {
+      this.mapOverlay.setBounds(bounds);
+    }
+
+    // Fit map to new bounds
+    this.mapInstance.fitBounds(this.mapBounds);
+
+    // Refresh all marker positions
+    this.repositionAllMarkers();
+  }
+
+  private repositionAllMarkers() {
+    for (const marker of this.tribeMarkers.values()) {
+      const pos = marker.getLatLng();
+      marker.setLatLng([pos.lat, pos.lng]);
+    }
+
+    for (const marker of this.playerMarkers.values()) {
+      const pos = marker.getLatLng();
+      marker.setLatLng([pos.lat, pos.lng]);
+    }
+  }
+
+  private projectLogicalToLatLng(
+    y: number,
+    x: number,
+    bounds: L.LatLngBoundsExpression
+  ): L.LatLng {
+    const [[minLat, minLng], [maxLat, maxLng]] = bounds as [
+      [number, number],
+      [number, number]
+    ];
+
+    const lat = minLat + (y / 100) * (maxLat - minLat);
+    const lng = minLng + (x / 100) * (maxLng - minLng);
+
+    return L.latLng(lat, lng);
+  }
+
 
   updateMarkers(tribes: TribeDTO[], players: PlayerDTO[]) {
     if (tribes != undefined) {
@@ -115,6 +165,7 @@ cheat SetPlayerPos ${t.x_ue4} ${t.y_ue4} ${t.z_ue4}`;
         marker.setLatLng([item.y_pos, item.x_pos]);
       } else {
         // Create new marker
+        // TODO: create all marker with projectLogicalToLatLng()
         const newMarker = this.createMarker(item.y_pos, item.x_pos, icontype, markerColor(item)).bindPopup(getPopupText(item)).addTo(this.mapInstance);
 
         markerMap.set(id, newMarker);
