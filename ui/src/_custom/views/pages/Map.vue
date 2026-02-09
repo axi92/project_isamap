@@ -54,9 +54,8 @@ onMounted(() => {
   nextTick(async () => {
     const mapData = await fetchMapData(mapId);
     if (mapData.map) {
-      mapService = new MapService(mapData); // refaktor to MapService
+      mapService = new MapService(mapData);
       leafletMap.value = mapService.mapInstance;
-      mapService.updateMarkers(mapData.tribes, mapData.players);
       es.requestMapData(mapId);
 
       if (mapService.mapBounds) {
