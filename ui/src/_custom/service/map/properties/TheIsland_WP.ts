@@ -4,8 +4,8 @@ export const TheIsland_WP: MapProperty = {
   name: 'TheIsland_WP',
   displayName: 'The Island',
   bounds: [
-    [-1, -1],
-    [101, 101],
+    [0, 0],
+    [100, 100],
   ],
   mapSrc: '/images/maps/TheIsland_WP.jpg',
   imageLogo: '/images/logo/ASA_Logo_transparent.png',
