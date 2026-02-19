@@ -4,8 +4,8 @@ export const Valguero_WP: MapProperty = {
   name: 'Valguero_WP',
   displayName: 'Valguero',
   bounds: [
-    [0, 0],
-    [100, 100],
+    [-1, -1],
+    [101, 101],
   ],
   mapSrc: '/images/maps/Valguero_WP.jpg',
   imageLogo: '/images/logo/valguero.png',
