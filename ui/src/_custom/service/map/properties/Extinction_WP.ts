@@ -4,8 +4,8 @@ export const Extinction_WP: MapProperty = {
   name: 'Extinction_WP',
   displayName: 'Extinction',
   bounds: [
-    [0, 0],
-    [100, 100],
+    [-1, -1],
+    [101, 101],
   ],
   mapSrc: '/images/maps/Extinction_WP.jpg',
   imageLogo: '/images/logo/extinction.png',

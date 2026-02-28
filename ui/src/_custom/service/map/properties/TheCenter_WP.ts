@@ -4,8 +4,8 @@ export const TheCenter_WP: MapProperty = {
   name: 'TheCenter_WP',
   displayName: 'The Center',
   bounds: [
-    [0, 0],
-    [100, 100],
+    [-1, -1],
+    [101, 101],
   ],
   mapSrc: '/images/maps/TheCenter_WP.jpg',
   imageLogo: '/images/logo/center.png',
