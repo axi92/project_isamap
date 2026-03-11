@@ -6,10 +6,19 @@ import type { MapProperty, MarkerColor, MarkerIcon, Obelisk, PositionDTO } from 
 import type { LiveMapDTO, PlayerDTO, TribeDTO } from './dto/map.dto';
 
 export class MapService {
-  ICONSIZE: number = 24;
-  tribeMarkers = new Map<number, Marker>();
-  playerMarkers = new Map<number, Marker>();
-  CustomCRS = L.extend({}, L.CRS.Simple, {
+  private ICONSIZE: number = 24;
+  tribeMarkers = new Map<string, Marker>();
+  playerMarkers = new Map<string, Marker>();
+  private tribeLogicalPositions = new Map<string, { x: number; y: number }>();
+  private playerLogicalPositions = new Map<string, { x: number; y: number }>();
+  logicalTransform = {
+    offsetX: 0.7,     // logical units
+    offsetY: 0.7,     // logical units
+    scaleX: 0.99,      // usually 1
+    scaleY: 0.99,      // usually 1
+    invertY: false,  // common for image coords
+  };
+  private CustomCRS = L.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0),
     // override the project/unproject to flip Y if needed
     // Longitude is X and increases to the right
@@ -25,13 +34,18 @@ export class MapService {
     minZoom: 2,
     maxZoom: 8,
   }) as LeafletMap;
-  mapImage = new Image();
+  private mapImage = new Image();
+  mapBounds: L.LatLngBoundsExpression = [
+    [-1, -1],
+    [101, 101],
+  ];
+  private mapOverlay?: L.ImageOverlay;
   currentMapProperties: MapProperty;
-  tribePinColor = 'green';
-  tribePinColorExpired = 'red';
-  tribePinColorExpiredCount = 17;
-  tribePinColorOrange = 'orange';
-  tribePinColorOrangeCount = 10;
+  private tribePinColor = 'green';
+  private tribePinColorExpired = 'red';
+  private tribePinColorExpiredCount = 17;
+  private tribePinColorOrange = 'orange';
+  private tribePinColorOrangeCount = 10;
 
   constructor(liveMapDTO: LiveMapDTO) {
     this.currentMapProperties = this.getMapProperties()[liveMapDTO.map as MapKey] as MapProperty;
@@ -42,20 +56,90 @@ export class MapService {
 
     this.mapImage.onload = async () => {
       // Define bounds: from [0,0] (bottom-left) to [width, height] (top-right)
-      const bounds: L.LatLngBoundsExpression = this.currentMapProperties.bounds;
+      this.mapBounds = this.currentMapProperties.bounds;
       // Then continue with map init
-      L.imageOverlay(this.mapImage.src, bounds).addTo(this.mapInstance);
-      this.mapInstance.fitBounds(bounds);
+      console.log('imageOverlay.addTo in onload')
+      this.updateMapBounds(this.currentMapProperties.bounds);
       this.mapInstance.setView([50, 50], 3);
       if (this.currentMapProperties.obelisks) {
         this.createObelisks(this.currentMapProperties.obelisks);
       }
+      this.updateMarkers(liveMapDTO.tribes, liveMapDTO.players);
     };
   }
 
   getMapProperties(): typeof mapProperties {
     return mapProperties;
   }
+
+  updateMapBounds(bounds: L.LatLngBoundsExpression) {
+    this.mapBounds = bounds;
+    if (!this.mapOverlay) {
+      console.log('updateMapBounds - imageOverlay.addTo')
+      this.mapOverlay = L.imageOverlay(this.mapImage.src, bounds).addTo(this.mapInstance);
+    } else {
+      this.mapOverlay.setBounds(bounds);
+    }
+
+    // Fit map to new bounds
+    this.mapInstance.fitBounds(this.mapBounds);
+
+    // TODO: Refresh all marker positions
+    this.repositionAllMarkers();
+  }
+
+  private repositionAllMarkers() {
+    for (const [id, marker] of this.tribeMarkers) {
+      const pos = this.tribeLogicalPositions.get(id);
+      if (!pos) continue;
+
+      marker.setLatLng(
+        this.projectLogicalToLatLng(pos.y, pos.x, this.mapBounds)
+      );
+    }
+
+    for (const [id, marker] of this.playerMarkers) {
+      const pos = this.playerLogicalPositions.get(id);
+      if (!pos) continue;
+
+      marker.setLatLng(
+        this.projectLogicalToLatLng(pos.y, pos.x, this.mapBounds)
+      );
+    }
+  }
+
+  private projectLogicalToLatLng(
+    logicalY: number,
+    logicalX: number,
+    bounds: L.LatLngBoundsExpression
+  ): L.LatLng {
+    const [[minLat, minLng], [maxLat, maxLng]] = bounds as [
+      [number, number],
+      [number, number]
+    ];
+
+    const width = maxLng - minLng;
+    const height = maxLat - minLat;
+
+    // Apply offset & scale
+    let x = (logicalX + this.logicalTransform.offsetX) * this.logicalTransform.scaleX;
+    let y = (logicalY + this.logicalTransform.offsetY) * this.logicalTransform.scaleY;
+
+    // Normalize (0-100 → 0-1)
+    x /= 100;
+    y /= 100;
+
+    // Flip Y if needed
+    if (this.logicalTransform.invertY) {
+      y = 1 - y;
+    }
+
+    const lng = minLng + x * width;
+    const lat = minLat + y * height;
+
+    return L.latLng(lat, lng);
+  }
+
 
   updateMarkers(tribes: TribeDTO[], players: PlayerDTO[]) {
     if (tribes != undefined) {
@@ -69,6 +153,7 @@ Last update: ${lastStructureUpdateTime} days<br>
 cheat SetPlayerPos ${t.x_ue4} ${t.y_ue4} ${t.z_ue4}`;
         },
         this.tribeMarkers,
+        this.tribeLogicalPositions,
         'home',
         (t) => {
           const lastStructureUpdateTime = this.getLastStructureUpdateTimeInDays(t.elapsedTime, t.lastInAllyRangeTime);
@@ -85,37 +170,52 @@ cheat SetPlayerPos ${t.x_ue4} ${t.y_ue4} ${t.z_ue4}`;
         Tribe: ${p.tribename}<br>
         cheat SetPlayerPos ${p.x_ue4} ${p.y_ue4} ${p.z_ue4}`,
         this.playerMarkers,
+        this.playerLogicalPositions,
         'user',
         (p) => 'yellow'
       );
     }
   }
 
-  updateMarkersGeneric<T extends PositionDTO>(
+  private updateMarkersGeneric<T extends PositionDTO>(
     data: T[],
     // eslint-disable-next-line no-unused-vars
-    getId: (_item: T) => string | number,
+    getId: (_item: T) => string,
     // eslint-disable-next-line no-unused-vars
     getPopupText: (_item: T) => string,
-    markerMap: Map<string | number, L.Marker>,
+    markerMap: Map<string, L.Marker>,
+    logicalMap: Map<string, { x: number; y: number }>,
     icontype: MarkerIcon,
     markerColor: (_item: T) => MarkerColor
   ) {
-    const updatedIds = new Set<string | number>();
+    const updatedIds = new Set<string>();
     console.log(data);
     console.log(icontype);
     for (const item of data) {
       const id = getId(item);
       updatedIds.add(id);
 
+      // ✅ SOURCE OF TRUTH
+      logicalMap.set(id, {
+        x: item.x_pos,
+        y: item.y_pos,
+      });
+
+      const projected = this.projectLogicalToLatLng(
+        item.y_pos,
+        item.x_pos,
+        this.mapBounds
+      );
+
       const marker = markerMap.get(id);
 
       if (marker) {
         // Move existing marker
-        marker.setLatLng([item.y_pos, item.x_pos]);
+        marker.setLatLng(projected);
       } else {
         // Create new marker
-        const newMarker = this.createMarker(item.y_pos, item.x_pos, icontype, markerColor(item)).bindPopup(getPopupText(item)).addTo(this.mapInstance);
+        // TODO: create all marker with projectLogicalToLatLng()
+        const newMarker = this.createMarker(projected.lat, projected.lng, icontype, markerColor(item)).bindPopup(getPopupText(item)).addTo(this.mapInstance);
 
         markerMap.set(id, newMarker);
       }
@@ -126,6 +226,7 @@ cheat SetPlayerPos ${t.x_ue4} ${t.y_ue4} ${t.z_ue4}`;
       if (!updatedIds.has(id)) {
         this.mapInstance.removeLayer(marker);
         markerMap.delete(id);
+        logicalMap.delete(id);
       }
     }
   }
