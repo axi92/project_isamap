@@ -8,6 +8,12 @@ export class ServerInfo {
   serverName?: string;
   map?: string;
 }
+
+export class AdminServerInfo extends ServerInfo {
+  ownerUserId: string;
+  ownerUsername?: string;
+}
+
 export class ServerEntry extends ServerCreateDto {
   publicId: string;
   privateId: string;

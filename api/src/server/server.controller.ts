@@ -17,11 +17,15 @@ import { LiveMapDTO, publicIdDTO } from './dto/server.dto';
 import { ServerCreateDto } from './dto/serverCreate.dto';
 import { Request } from 'express';
 import { UserCreatDto } from '@/user/dto/userCreate.dto';
+import { ConfigurationService } from '@/configuration/configuration.service';
 
 @Controller('servers')
 export class ServerController {
   private readonly logger = new Logger('ServerController');
-  constructor(private readonly servers: ServerService) {}
+  constructor(
+    private readonly servers: ServerService,
+    private readonly configurationService: ConfigurationService,
+  ) {}
   /*
   - Get server list for session owner
     GET /servers/list
@@ -43,6 +47,16 @@ export class ServerController {
     } else {
       throw new UnauthorizedException();
     }
+  }
+
+  @Get('admin/list') // GET /servers/admin/list - admin only
+  async adminAllServers(@Req() req: Request) {
+    if (!req.isAuthenticated()) throw new UnauthorizedException();
+    const userSession: UserCreatDto = req.user as UserCreatDto;
+    if (!this.configurationService.isAdmin(userSession.userId)) {
+      throw new ForbiddenException();
+    }
+    return await this.servers.getAllForAdmin();
   }
 
   @Post('data') // Gameserver sending data to webserver

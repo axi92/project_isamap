@@ -23,6 +23,11 @@ const model = computed(() => {
           to: isLoggedIn ? '/servers' : undefined, // ⛔ disable navigation
           disabled: !isLoggedIn, // 👈 pass state to menu item
         },
+        ...(userStore.user?.isAdmin ? [{
+          label: 'Admin',
+          icon: 'pi pi-fw pi-shield',
+          to: '/admin',
+        }] : []),
       ],
     },
   ];

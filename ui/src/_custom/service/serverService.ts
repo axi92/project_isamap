@@ -26,6 +26,20 @@ export async function createServer(modalServerDescription: Ref, owner: string): 
   }
 }
 
+export async function getAdminServerList(): Promise<AdminServerInfo[] | null> {
+  const res = await fetch(API_BASE_URL + '/servers/admin/list', {
+    credentials: 'include',
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (res.status === 200) {
+    return (await res.json()) as AdminServerInfo[];
+  } else {
+    console.error('res.status:', res.status);
+    return null;
+  }
+}
+
 export async function getServerList(debug: boolean = false): Promise<ServerInfo[] | null> {
   const res = await fetch(API_BASE_URL + '/servers/list', {
     credentials: 'include',
@@ -132,6 +146,11 @@ export function calculateProgress(current: number, max: number): number {
   if (max <= 0) return 0; // avoid division by zero
   const value = (current / max) * 100;
   return Math.min(Math.max(value, 0), 100); // clamp between 0-100
+}
+
+export interface AdminServerInfo extends ServerInfo {
+  ownerUserId: string;
+  ownerUsername?: string;
 }
 
 export interface ServerCreateDto {
