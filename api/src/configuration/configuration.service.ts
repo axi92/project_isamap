@@ -16,6 +16,7 @@ export class ConfigurationService {
   private DISCORD_REDIRECT_URI: string;
   private SESSION_SECRET: string;
   private UI_URL: string;
+  private ADMIN_USER_ID: string;
 
   constructor(private configService: ConfigService) {
     const discordClientID = this.configService.get(ENV_VARS.DISCORD_CLIENT_ID);
@@ -27,6 +28,7 @@ export class ConfigurationService {
     );
     const sessionSecret = this.configService.get(ENV_VARS.SESSION_SECRET);
     const uiUrl = this.configService.get(ENV_VARS.UI_URL);
+    this.ADMIN_USER_ID = this.configService.get(ENV_VARS.ADMIN_USER_ID) ?? '';
     // log a warning if any of the private vars are not set
     if (
       !discordClientID ||
@@ -83,5 +85,13 @@ export class ConfigurationService {
 
   getUiUrl(): string {
     return this.UI_URL;
+  }
+
+  getAdminUserId(): string {
+    return this.ADMIN_USER_ID;
+  }
+
+  isAdmin(userId: string): boolean {
+    return !!this.ADMIN_USER_ID && userId === this.ADMIN_USER_ID;
   }
 }

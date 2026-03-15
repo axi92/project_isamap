@@ -5,7 +5,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { LowdbService } from '@/lowdb/lowdb.service';
-import { ServerEntry, ServerInfo } from './server.interface';
+import { ServerEntry, ServerInfo, AdminServerInfo } from './server.interface';
 import { COLLECTION } from '@/lowdb/lowdb.constants';
 import { v4 as uuidv4 } from 'uuid';
 import { ServerCreateDto } from './dto/serverCreate.dto';
@@ -18,6 +18,7 @@ import {
 import { LiveMapDTO } from './dto/server.dto';
 import { calibrationServerData } from './server.test.data';
 import { ServerData } from './dto/serverData.dto';
+import { UserCreatDto } from '@/user/dto/userCreate.dto';
 
 @Injectable()
 export class ServerService {
@@ -103,6 +104,38 @@ export class ServerService {
       } else {
         return resolve(result);
       }
+    });
+  }
+
+  async getAllForAdmin(): Promise<AdminServerInfo[]> {
+    return new Promise(async (resolve) => {
+      const allServers = this.dbService
+        .getDBChain()
+        .get('servers')
+        .value() as ServerEntry[];
+
+      const allUsers = (await this.userService.getAll()) as UserCreatDto[];
+      const userMap = new Map(allUsers.map((u) => [u.userId, u.username]));
+
+      const merged = allServers.map(({ publicId, description, owner }) => {
+        const data = this.serverData.get(publicId);
+        return {
+          publicId,
+          description,
+          ownerUserId: owner,
+          ownerUsername: userMap.get(owner) ?? owner,
+          ...(data
+            ? {
+                lastUpdate: data.lastUpdate,
+                playerCount: data.players ? data.players.length : 0,
+                serverName: data.servername,
+                map: data.map,
+              }
+            : {}),
+        } as AdminServerInfo;
+      });
+
+      resolve(merged);
     });
   }
 

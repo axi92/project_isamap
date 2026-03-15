@@ -13,6 +13,7 @@ import { LowdbModule } from './lowdb/lowdb.module';
 import { UserService } from './user/user.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RedisModule } from './redis/redis.module';
+import { ConfigurationModule } from './configuration/configuration.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { RedisModule } from './redis/redis.module';
     ServerModule,
     LowdbModule,
     ScheduleModule.forRoot(),
+    ConfigurationModule,
   ],
   controllers: [AppController, ServerController],
   providers: [AppService, UserService],

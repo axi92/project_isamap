@@ -11,6 +11,7 @@ import { ServerEntry } from './server.interface';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { ServerCreateDto } from './dto/serverCreate.dto';
 import { Request } from 'express';
+import { ConfigurationService } from '@/configuration/configuration.service';
 
 describe('ServerController', () => {
   let controller: ServerController;
@@ -19,7 +20,17 @@ describe('ServerController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ServerController],
-      providers: [ServerService, LowdbService, UserService],
+      providers: [
+        ServerService,
+        LowdbService,
+        UserService,
+        {
+          provide: ConfigurationService,
+          useValue: {
+            isAdmin: () => false,
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<ServerController>(ServerController);

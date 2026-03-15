@@ -16,4 +16,5 @@ export type UserAuthJson = {
   username: string;
   avatar?: string;
   verified: boolean;
+  isAdmin?: boolean;
 };

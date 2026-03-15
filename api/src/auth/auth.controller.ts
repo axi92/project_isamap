@@ -59,7 +59,11 @@ export class AuthController {
   @Get('me')
   getMe(@Req() req: Request) {
     if (req.isAuthenticated()) {
-      return req.user; // user info from session
+      const user = req.user as UserCreatDto;
+      return {
+        ...user,
+        isAdmin: this.configurationService.isAdmin(user.userId),
+      };
     }
     throw new UnauthorizedException();
   }
