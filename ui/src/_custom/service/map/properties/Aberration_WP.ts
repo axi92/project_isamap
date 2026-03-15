@@ -4,8 +4,8 @@ export const Aberration_WP: MapProperty = {
   name: 'Aberration_WP',
   displayName: 'Aberration',
   bounds: [
-    [0, 0],
-    [100, 100],
+    [-1, -1],
+    [101, 101],
   ],
   mapSrc: '/images/maps/Aberration_WP.jpg',
   imageLogo: '/images/logo/aberration.png',

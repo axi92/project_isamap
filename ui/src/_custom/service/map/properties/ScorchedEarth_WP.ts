@@ -4,8 +4,8 @@ export const ScorchedEarth_WP: MapProperty = {
   name: 'ScorchedEarth_WP',
   displayName: 'Scorched Earth',
   bounds: [
-    [0, 0],
-    [100, 100],
+    [-1, -1],
+    [101, 101],
   ],
   mapSrc: '/images/maps/ScorchedEarth_WP.jpg',
   imageLogo: '/images/logo/scorched.png',

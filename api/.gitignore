@@ -32,7 +32,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-db.json
+db/*.json
 test-db.json
 .env
 coverage
