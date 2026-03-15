@@ -186,14 +186,22 @@ export class ServerService {
     });
   }
 
-  getServerDataByPublicId(publicId: string): LiveMapDTO | null {
+  getServerDataByPublicId(
+    publicId: string,
+  ): Omit<LiveMapDTO, 'privateid'> | null {
     if (publicId.startsWith('fixtures_')) {
       const serverData = structuredClone(calibrationServerData);
       const fixtureName = publicId.slice('fixtures_'.length);
       serverData.map = fixtureName;
-      return serverData;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { privateid, ...safeData } = serverData;
+      return safeData;
     } else {
-      return this.serverData.get(publicId) || null;
+      const data = this.serverData.get(publicId);
+      if (!data) return null;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { privateid, ...safeData } = data;
+      return safeData;
     }
   }
 }
