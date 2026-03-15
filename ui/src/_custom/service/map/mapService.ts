@@ -11,13 +11,7 @@ export class MapService {
   playerMarkers = new Map<string, Marker>();
   private tribeLogicalPositions = new Map<string, { x: number; y: number }>();
   private playerLogicalPositions = new Map<string, { x: number; y: number }>();
-  logicalTransform = {
-    offsetX: 0.7,     // logical units
-    offsetY: 0.7,     // logical units
-    scaleX: 0.99,      // usually 1
-    scaleY: 0.99,      // usually 1
-    invertY: false,  // common for image coords
-  };
+  onReady?: (bounds: L.LatLngBoundsExpression) => void;
   private CustomCRS = L.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0),
     // override the project/unproject to flip Y if needed
@@ -65,6 +59,7 @@ export class MapService {
         this.createObelisks(this.currentMapProperties.obelisks);
       }
       this.updateMarkers(liveMapDTO.tribes, liveMapDTO.players);
+      this.onReady?.(this.mapBounds);
     };
   }
 
@@ -118,24 +113,8 @@ export class MapService {
       [number, number]
     ];
 
-    const width = maxLng - minLng;
-    const height = maxLat - minLat;
-
-    // Apply offset & scale
-    let x = (logicalX + this.logicalTransform.offsetX) * this.logicalTransform.scaleX;
-    let y = (logicalY + this.logicalTransform.offsetY) * this.logicalTransform.scaleY;
-
-    // Normalize (0-100 → 0-1)
-    x /= 100;
-    y /= 100;
-
-    // Flip Y if needed
-    if (this.logicalTransform.invertY) {
-      y = 1 - y;
-    }
-
-    const lng = minLng + x * width;
-    const lat = minLat + y * height;
+    const lat = minLat + (logicalY / 100) * (maxLat - minLat);
+    const lng = minLng + (logicalX / 100) * (maxLng - minLng);
 
     return L.latLng(lat, lng);
   }

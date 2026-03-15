@@ -58,15 +58,13 @@ onMounted(() => {
       leafletMap.value = mapService.mapInstance;
       es.requestMapData(mapId);
 
-      if (mapService.mapBounds) {
-        const [[minLat, minLng], [maxLat, maxLng]] = mapService.mapBounds as [[number, number], [number, number]];
+      mapService.onReady = (bounds) => {
+        const [[minLat, minLng], [maxLat, maxLng]] = bounds as [[number, number], [number, number]];
         debugBounds.minLat = minLat;
         debugBounds.minLng = minLng;
         debugBounds.maxLat = maxLat;
         debugBounds.maxLng = maxLng;
-      }
-
-
+      };
     } else {
       errorMessage.value = true;
     }
@@ -84,7 +82,11 @@ async function fetchMapData(publicID: string): Promise<LiveMapDTO> {
   return data as LiveMapDTO;
 }
 
-
+function copyBounds() {
+  const { minLat, minLng, maxLat, maxLng } = debugBounds;
+  const text = `bounds: [\n  [${minLat}, ${minLng}],\n  [${maxLat}, ${maxLng}],\n],`;
+  navigator.clipboard.writeText(text);
+}
 
 function onKeydown(e: KeyboardEvent) {
   // ignore typing in inputs / dialogs
@@ -135,11 +137,20 @@ function onKeydown(e: KeyboardEvent) {
   </div>
 
   <template #footer>
-    <Button
-      label="Close"
-      severity="secondary"
-      @click="showDebugDialog = false"
-    />
+    <div class="flex justify-between w-full">
+      <Button
+        label="Copy bounds"
+        icon="pi pi-copy"
+        severity="secondary"
+        variant="outlined"
+        @click="copyBounds"
+      />
+      <Button
+        label="Close"
+        severity="secondary"
+        @click="showDebugDialog = false"
+      />
+    </div>
   </template>
 </Dialog>
 </template>
