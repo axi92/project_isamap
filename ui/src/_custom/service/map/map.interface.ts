@@ -5,6 +5,8 @@ export interface MapProperty {
   imageLogo?: string;
   obelisks?: Obelisk[];
   bounds: [[number, number], [number, number]];
+  coordOffset?: { x: number; y: number }; // shifts the marker grid on the image
+  coordScale?: { x: number; y: number };  // stretches the marker grid on the image
 }
 
 export interface Obelisk {

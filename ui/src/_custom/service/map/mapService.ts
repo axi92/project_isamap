@@ -11,6 +11,7 @@ export class MapService {
   playerMarkers = new Map<string, Marker>();
   private tribeLogicalPositions = new Map<string, { x: number; y: number }>();
   private playerLogicalPositions = new Map<string, { x: number; y: number }>();
+  private obeliskMarkers: Marker[] = [];
   onReady?: (bounds: L.LatLngBoundsExpression) => void;
   private CustomCRS = L.extend({}, L.CRS.Simple, {
     transformation: new L.Transformation(1, 0, 1, 0),
@@ -83,7 +84,16 @@ export class MapService {
     this.repositionAllMarkers();
   }
 
-  private repositionAllMarkers() {
+  repositionAllMarkers() {
+    const obelisks = this.currentMapProperties.obelisks ?? [];
+    for (let i = 0; i < this.obeliskMarkers.length; i++) {
+      const obelisk = obelisks[i];
+      const marker = this.obeliskMarkers[i];
+      if (!obelisk || !marker) continue;
+      const projected = this.projectLogicalToLatLng(obelisk.x, obelisk.y, this.mapBounds);
+      marker.setLatLng([projected.lat, projected.lng]);
+    }
+
     for (const [id, marker] of this.tribeMarkers) {
       const pos = this.tribeLogicalPositions.get(id);
       if (!pos) continue;
@@ -113,8 +123,15 @@ export class MapService {
       [number, number]
     ];
 
-    const lat = minLat + (logicalY / 100) * (maxLat - minLat);
-    const lng = minLng + (logicalX / 100) * (maxLng - minLng);
+    const offset = this.currentMapProperties.coordOffset ?? { x: 0, y: 0 };
+    const scale = this.currentMapProperties.coordScale ?? { x: 1, y: 1 };
+
+    // Transform game coords into 0-100 image space
+    const imageX = (logicalX - offset.x) / scale.x;
+    const imageY = (logicalY - offset.y) / scale.y;
+
+    const lat = minLat + (imageY / 100) * (maxLat - minLat);
+    const lng = minLng + (imageX / 100) * (maxLng - minLng);
 
     return L.latLng(lat, lng);
   }
@@ -263,9 +280,11 @@ cheat SetPlayerPos ${t.x_ue4} ${t.y_ue4} ${t.z_ue4}`;
         iconAnchor: [10, 90],
         popupAnchor: [0, -88],
       });
-      new Marker([obelisk.x, obelisk.y], {
+      const projected = this.projectLogicalToLatLng(obelisk.x, obelisk.y, this.mapBounds);
+      const marker = new Marker([projected.lat, projected.lng], {
         icon: icon,
       }).addTo(this.mapInstance);
+      this.obeliskMarkers.push(marker);
     }
   }
 

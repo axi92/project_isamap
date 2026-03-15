@@ -31,15 +31,20 @@ const debugBounds = reactive({
   maxLng: 100,
 });
 
-watch(
-  () => ({ ...debugBounds }),
-  (b) => {
-    if (!mapService) return;
+const debugTransform = reactive({
+  offsetX: 0,
+  offsetY: 0,
+  scaleX: 1,
+  scaleY: 1,
+});
 
-    mapService.updateMapBounds([
-      [b.minLat, b.minLng],
-      [b.maxLat, b.maxLng],
-    ]);
+watch(
+  () => ({ ...debugTransform }),
+  (t) => {
+    if (!mapService) return;
+    mapService.currentMapProperties.coordOffset = { x: t.offsetX, y: t.offsetY };
+    mapService.currentMapProperties.coordScale = { x: t.scaleX, y: t.scaleY };
+    mapService.repositionAllMarkers();
   },
   { deep: true }
 );
@@ -64,6 +69,13 @@ onMounted(() => {
         debugBounds.minLng = minLng;
         debugBounds.maxLat = maxLat;
         debugBounds.maxLng = maxLng;
+
+        const offset = mapService.currentMapProperties.coordOffset ?? { x: 0, y: 0 };
+        const scale = mapService.currentMapProperties.coordScale ?? { x: 1, y: 1 };
+        debugTransform.offsetX = offset.x;
+        debugTransform.offsetY = offset.y;
+        debugTransform.scaleX = scale.x;
+        debugTransform.scaleY = scale.y;
       };
     } else {
       errorMessage.value = true;
@@ -84,7 +96,14 @@ async function fetchMapData(publicID: string): Promise<LiveMapDTO> {
 
 function copyBounds() {
   const { minLat, minLng, maxLat, maxLng } = debugBounds;
-  const text = `bounds: [\n  [${minLat}, ${minLng}],\n  [${maxLat}, ${maxLng}],\n],`;
+  const { offsetX, offsetY, scaleX, scaleY } = debugTransform;
+  const text =
+`bounds: [
+  [${minLat}, ${minLng}],
+  [${maxLat}, ${maxLng}],
+],
+coordOffset: { x: ${offsetX}, y: ${offsetY} },
+coordScale: { x: ${scaleX}, y: ${scaleY} },`;
   navigator.clipboard.writeText(text);
 }
 
@@ -119,20 +138,38 @@ function onKeydown(e: KeyboardEvent) {
       <label class="text-sm">Min Lat</label>
       <InputNumber v-model="debugBounds.minLat" inputClass="w-full" />
     </div>
-
     <div>
       <label class="text-sm">Min Lng</label>
       <InputNumber v-model="debugBounds.minLng" inputClass="w-full" />
     </div>
-
     <div>
       <label class="text-sm">Max Lat</label>
       <InputNumber v-model="debugBounds.maxLat" inputClass="w-full" />
     </div>
-
     <div>
       <label class="text-sm">Max Lng</label>
       <InputNumber v-model="debugBounds.maxLng" inputClass="w-full" />
+    </div>
+  </div>
+
+  <Divider />
+
+  <div class="grid grid-cols-2 gap-3">
+    <div>
+      <label class="text-sm">Offset X</label>
+      <InputNumber v-model="debugTransform.offsetX" inputClass="w-full" :minFractionDigits="1" :maxFractionDigits="4" />
+    </div>
+    <div>
+      <label class="text-sm">Offset Y</label>
+      <InputNumber v-model="debugTransform.offsetY" inputClass="w-full" :minFractionDigits="1" :maxFractionDigits="4" />
+    </div>
+    <div>
+      <label class="text-sm">Scale X</label>
+      <InputNumber v-model="debugTransform.scaleX" inputClass="w-full" :minFractionDigits="2" :maxFractionDigits="4" />
+    </div>
+    <div>
+      <label class="text-sm">Scale Y</label>
+      <InputNumber v-model="debugTransform.scaleY" inputClass="w-full" :minFractionDigits="2" :maxFractionDigits="4" />
     </div>
   </div>
 
