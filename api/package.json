@@ -4,8 +4,9 @@
   "description": "",
   "author": "axi92",
   "license": "PolyForm-Noncommercial-1.0.0",
+  "private": true,
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "scripts": {
     "prebuild": "rimraf dist",
