@@ -43,6 +43,11 @@ export default defineConfig(({ mode }) => {
 
     optimizeDeps: {
       noDiscovery: true,
+      include: [
+        'socket.io-client',
+        'socket.io-parser',
+        'debug'
+      ],
     },
 
     plugins: [
