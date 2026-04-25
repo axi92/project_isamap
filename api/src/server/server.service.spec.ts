@@ -5,11 +5,12 @@ import { UserService } from '@/user/user.service';
 import { exampleServerData, serverCreateTestData } from './server.test.data';
 import { DB_FILENAME } from '@/lowdb/lowdb.constants';
 import { userTestTemplate } from '@/user/user.constants';
-import { ServerEntry, ServerInfo } from './server.interface';
+import { ServerEntry } from './server.interface';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { ERROR_INVALID_OWNER, MAX_SERVERS_PER_USER } from './server.constants';
 import { ServerCreateDto } from './dto/serverCreate.dto';
 import { UserCreatDto } from '@/user/dto/userCreate.dto';
+import { LiveMapDTO } from './dto/server.dto';
 
 describe('ServerService', () => {
   let serverService: ServerService;
@@ -216,17 +217,17 @@ describe('ServerService', () => {
     } as UserCreatDto);
 
     // Create servers for user1
-    const server1 = await serverService.create({
+    await serverService.create({
       owner: userTestTemplate.userId,
       description: 'Server 1 for user1',
     } as ServerCreateDto);
-    const server2 = await serverService.create({
+    await serverService.create({
       owner: userTestTemplate.userId,
       description: 'Server 2 for user1',
     } as ServerCreateDto);
 
     // Create server for user2
-    const server3 = await serverService.create({
+    await serverService.create({
       owner: user2.userId,
       description: 'Server 1 for user2',
     } as ServerCreateDto);
@@ -369,7 +370,7 @@ describe('ServerService', () => {
     const data = serverService.getServerDataByPublicId(entry.publicId);
 
     expect(data).not.toBeNull();
-    expect((data as any).privateid).toBeUndefined();
+    expect((data as Omit<LiveMapDTO, 'privateId'>).privateid).toBeUndefined();
   });
 
   it('should apply server limit when creating servers', async () => {
