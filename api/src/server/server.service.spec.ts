@@ -96,4 +96,31 @@ describe('ServerService', () => {
     const findResult = await serverService.findServerByPublicId(publicId);
     expect(findResult).toBeNull();
   });
+
+  it('should write server entry to SERVERS collection, not USERS collection', async () => {
+    // Get initial state of both collections
+    const initialUsers = await userService.getAll();
+    const initialServers = await serverService.getAll();
+    const initialServersCount = initialServers.length;
+
+    // Create a server
+    await serverService.create({
+      owner: userTestTemplate.userId,
+      description: 'Test server for collection isolation',
+    } as ServerCreateDto);
+
+    // Get final state of both collections
+    const finalUsers = await userService.getAll();
+    const finalServers = await serverService.getAll();
+
+    // Verify USERS collection was NOT modified
+    expect(finalUsers).toEqual(initialUsers);
+
+    // Verify SERVERS collection contains the new entry
+    expect(finalServers.length).toBe(initialServersCount + 1);
+    expect(finalServers[finalServers.length - 1]).toMatchObject({
+      owner: userTestTemplate.userId,
+      description: 'Test server for collection isolation',
+    });
+  });
 });
