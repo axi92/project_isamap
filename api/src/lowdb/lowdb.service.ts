@@ -73,6 +73,12 @@ export class LowdbService implements OnModuleInit, OnModuleDestroy {
     return this.db.chain;
   }
 
+  async forceWriteToDisk() {
+    // Always write to ensure data is persisted
+    await this.getDb().write();
+    this.flushDataToDisk = false;
+  }
+
   async getAllEntries(
     collctionName: 'servers' | 'users',
   ): Promise<ServerEntry[] | UserCreatDto[]> {
