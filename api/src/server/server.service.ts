@@ -56,7 +56,7 @@ export class ServerService {
         description: serverCreateDto.description,
       } as ServerEntry;
       dbData.push(newEntry);
-      chain.set(COLLECTION.USERS, dbData);
+      chain.set(COLLECTION.SERVERS, dbData);
       this.dbService.flushDataToDisk = true;
       return resolve(newEntry);
     });
