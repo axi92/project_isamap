@@ -1,4 +1,4 @@
-FROM node:24.12.0-slim AS builder
+FROM node:24.15.0-slim AS builder
 WORKDIR /tmp
 
 ARG COMMIT_SHA
@@ -13,7 +13,7 @@ RUN npm ci
 RUN npm run postinstall
 RUN npm run build
 
-FROM caddy:2.10
+FROM caddy:2.11.2
 WORKDIR /app
 ARG COMMIT_SHA
 ENV COMMIT_SHA=$COMMIT_SHA

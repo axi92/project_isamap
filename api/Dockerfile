@@ -1,4 +1,4 @@
-FROM node:24.12.0-slim AS builder
+FROM node:24.15.0-slim AS builder
 WORKDIR /tmp
 # Install deps
 COPY package*.json /tmp
@@ -13,7 +13,7 @@ RUN npm run build
 # Remove dev dependencies
 RUN npm prune --omit=dev
 
-FROM node:24.12.0-slim
+FROM node:24.15.0-slim
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /tmp/dist ./dist
