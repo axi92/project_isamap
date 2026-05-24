@@ -1,4 +1,4 @@
-FROM node:24.15.0-slim AS builder
+FROM node:24.16.0-trixie-slim AS builder
 WORKDIR /tmp
 
 ARG COMMIT_SHA
