@@ -109,6 +109,8 @@ export function resolveMapLogo(mapName: string): string {
       return 'center.png';
     case 'ScorchedEarth_WP':
       return 'scorched.png';
+    case 'ScorchedEarthRM_WP':
+      return 'scorched.png';
     case 'Ragnarok_WP':
       return 'ragna.png';
     case 'Aberration_WP':
