@@ -2,7 +2,7 @@ import type { MapProperty } from '../map.interface';
 
 export const Genesis_WP: MapProperty = {
   name: 'Genesis_WP',
-  displayName: 'Genesis',
+  displayName: 'Genesis 1',
   bounds: [
     [0, 0],
     [100, 100],
