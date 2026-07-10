@@ -17,6 +17,7 @@ import { LostColony_WP } from './properties/LostColony_WP';
 import { Forglar_WP } from './properties/Forglar_WP';
 import { Svartalfheim_WP } from './properties/Svartalfheim_WP';
 import { Nyrandil } from './properties/Nyrandil';
+import { Genesis_WP } from './properties/Genesis_WP';
 
 export const mapProperties = {
   TheIsland_WP: TheIsland_WP,
@@ -37,6 +38,7 @@ export const mapProperties = {
   Forglar_WP: Forglar_WP,
   Svartalfheim_WP: Svartalfheim_WP,
   Nyrandil: Nyrandil,
+  Genesis_WP: Genesis_WP,
 } as const satisfies Record<string, MapProperty>;
 
 export type MapKey = keyof typeof mapProperties;

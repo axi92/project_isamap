@@ -36,6 +36,9 @@ export class MapService {
   ];
   private mapOverlay?: L.ImageOverlay;
   currentMapProperties: MapProperty;
+  activeLayerId: string | null = null;
+  private lastTribes: TribeDTO[] = [];
+  private lastPlayers: PlayerDTO[] = [];
   private tribePinColor = 'green';
   private tribePinColorExpired = 'red';
   private tribePinColorExpiredCount = 17;
@@ -47,21 +50,54 @@ export class MapService {
     if (undefined === this.currentMapProperties) {
       this.currentMapProperties = this.getMapProperties()['generic'] as MapProperty;
     }
-    this.mapImage.src = this.currentMapProperties.mapSrc;
+
+    this.activeLayerId = this.currentMapProperties.layers?.[0]?.id ?? null;
+    const activeLayer = this.currentMapProperties.layers?.find(l => l.id === this.activeLayerId);
+    this.mapImage.src = activeLayer?.mapSrc ?? this.currentMapProperties.mapSrc;
 
     this.mapImage.onload = async () => {
-      // Define bounds: from [0,0] (bottom-left) to [width, height] (top-right)
-      this.mapBounds = this.currentMapProperties.bounds;
-      // Then continue with map init
+      this.mapBounds = activeLayer?.bounds ?? this.currentMapProperties.bounds;
       console.log('imageOverlay.addTo in onload')
-      this.updateMapBounds(this.currentMapProperties.bounds);
+      this.updateMapBounds(this.mapBounds);
       this.mapInstance.setView([50, 50], 3);
-      if (this.currentMapProperties.obelisks) {
-        this.createObelisks(this.currentMapProperties.obelisks);
+
+      const obelisks = activeLayer?.obelisks ?? this.currentMapProperties.obelisks;
+      if (obelisks) {
+        this.createObelisks(obelisks);
       }
       this.updateMarkers(liveMapDTO.tribes, liveMapDTO.players);
       this.onReady?.(this.mapBounds);
     };
+  }
+
+  switchLayer(layerId: string) {
+    if (!this.currentMapProperties.layers) return;
+    const layer = this.currentMapProperties.layers.find((l) => l.id === layerId);
+    if (!layer) return;
+
+    this.activeLayerId = layerId;
+    this.mapImage.src = layer.mapSrc;
+
+    const bounds = layer.bounds ?? this.currentMapProperties.bounds;
+    this.mapBounds = bounds;
+
+    if (this.mapOverlay) {
+      this.mapOverlay.setUrl(layer.mapSrc);
+      this.mapOverlay.setBounds(bounds);
+    }
+
+    const obelisks = layer.obelisks ?? this.currentMapProperties.obelisks;
+    if (obelisks) {
+      this.createObelisks(obelisks);
+    } else {
+      for (const marker of this.obeliskMarkers) {
+        this.mapInstance.removeLayer(marker);
+      }
+      this.obeliskMarkers = [];
+    }
+
+    this.mapInstance.fitBounds(this.mapBounds);
+    this.updateMarkers(this.lastTribes, this.lastPlayers);
   }
 
   getMapProperties(): typeof mapProperties {
@@ -85,7 +121,8 @@ export class MapService {
   }
 
   repositionAllMarkers() {
-    const obelisks = this.currentMapProperties.obelisks ?? [];
+    const activeLayer = this.currentMapProperties.layers?.find(l => l.id === this.activeLayerId);
+    const obelisks = activeLayer?.obelisks ?? this.currentMapProperties.obelisks ?? [];
     for (let i = 0; i < this.obeliskMarkers.length; i++) {
       const obelisk = obelisks[i];
       const marker = this.obeliskMarkers[i];
@@ -123,8 +160,9 @@ export class MapService {
       [number, number]
     ];
 
-    const offset = this.currentMapProperties.coordOffset ?? { x: 0, y: 0 };
-    const scale = this.currentMapProperties.coordScale ?? { x: 1, y: 1 };
+    const activeLayer = this.currentMapProperties.layers?.find(l => l.id === this.activeLayerId);
+    const offset = activeLayer?.coordOffset ?? this.currentMapProperties.coordOffset ?? { x: 0, y: 0 };
+    const scale = activeLayer?.coordScale ?? this.currentMapProperties.coordScale ?? { x: 1, y: 1 };
 
     // Transform game coords into 0-100 image space
     const imageX = (logicalX - offset.x) / scale.x;
@@ -136,12 +174,20 @@ export class MapService {
     return L.latLng(lat, lng);
   }
 
-
   updateMarkers(tribes: TribeDTO[], players: PlayerDTO[]) {
-    if (tribes != undefined) {
+    if (tribes !== undefined) this.lastTribes = tribes;
+    if (players !== undefined) this.lastPlayers = players;
+
+    const activeLayer = this.currentMapProperties.layers?.find(l => l.id === this.activeLayerId);
+    const filterFn = activeLayer?.filter;
+
+    const filteredTribes = filterFn ? this.lastTribes.filter(filterFn) : this.lastTribes;
+    const filteredPlayers = filterFn ? this.lastPlayers.filter(filterFn) : this.lastPlayers;
+
+    if (filteredTribes != undefined) {
       this.updateMarkersGeneric<TribeDTO>(
-        tribes,
-        (t) => t.tribeid,
+        filteredTribes,
+        (t) => t.tribeid.toString(),
         (t) => {
           const lastStructureUpdateTime = Math.trunc((Math.trunc(t.elapsedTime) - Math.trunc(t.lastInAllyRangeTime)) / 60 / 60 / 24); // convert seconds to days
           return `Tribe: ${t.tribename}<br>
@@ -158,9 +204,9 @@ cheat SetPlayerPos ${t.x_ue4} ${t.y_ue4} ${t.z_ue4}`;
       );
     }
 
-    if (players != undefined) {
+    if (filteredPlayers != undefined) {
       this.updateMarkersGeneric<PlayerDTO>(
-        players,
+        filteredPlayers,
         (p) => p.steamid,
         (p) => `Player: ${p.playername}<br>
         Tribe: ${p.tribename}<br>
@@ -273,6 +319,12 @@ cheat SetPlayerPos ${t.x_ue4} ${t.y_ue4} ${t.z_ue4}`;
   }
 
   createObelisks(obelisks: Obelisk[]) {
+    // Clear existing obelisk markers first
+    for (const marker of this.obeliskMarkers) {
+      this.mapInstance.removeLayer(marker);
+    }
+    this.obeliskMarkers = [];
+
     for (const obelisk of obelisks) {
       const icon = L.icon({
         iconUrl: obelisk.src,

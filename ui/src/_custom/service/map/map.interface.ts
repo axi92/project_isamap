@@ -7,6 +7,18 @@ export interface MapProperty {
   bounds: [[number, number], [number, number]];
   coordOffset?: { x: number; y: number }; // shifts the marker grid on the image
   coordScale?: { x: number; y: number };  // stretches the marker grid on the image
+  layers?: MapLayer[];
+}
+
+export interface MapLayer {
+  id: string;
+  displayName: string;
+  mapSrc: string;
+  bounds?: [[number, number], [number, number]];
+  coordOffset?: { x: number; y: number };
+  coordScale?: { x: number; y: number };
+  obelisks?: Obelisk[];
+  filter?: (entity: { z_ue4?: number }) => boolean;
 }
 
 export interface Obelisk {

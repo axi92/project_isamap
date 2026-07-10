@@ -8,6 +8,7 @@ import { EventType } from '@/_custom/event/event.interface';
 import { MapService } from '@/_custom/service/map/mapService'; // Maybe implement later when code works and we can refactor
 import { useRoute } from 'vue-router';
 import type { LiveMapDTO } from '@/_custom/service/map/dto/map.dto';
+import type { MapLayer } from '@/_custom/service/map/map.interface';
 
 //TODO: tweak coord system:
 // Some sources:
@@ -21,6 +22,9 @@ const es = inject<EventService>('es')!;
 const leafletMap = ref<Map>();
 let mapService: MapService;
 const errorMessage = ref<Boolean>(false);
+
+const layers = ref<MapLayer[]>([]);
+const activeLayerId = ref<string | null>(null);
 
 const showDebugDialog = ref(false);
 
@@ -42,12 +46,44 @@ watch(
   () => ({ ...debugTransform }),
   (t) => {
     if (!mapService) return;
-    mapService.currentMapProperties.coordOffset = { x: t.offsetX, y: t.offsetY };
-    mapService.currentMapProperties.coordScale = { x: t.scaleX, y: t.scaleY };
+    const activeLayer = mapService.currentMapProperties.layers?.find(
+      (l) => l.id === mapService.activeLayerId
+    );
+    if (activeLayer) {
+      activeLayer.coordOffset = { x: t.offsetX, y: t.offsetY };
+      activeLayer.coordScale = { x: t.scaleX, y: t.scaleY };
+    } else {
+      mapService.currentMapProperties.coordOffset = { x: t.offsetX, y: t.offsetY };
+      mapService.currentMapProperties.coordScale = { x: t.scaleX, y: t.scaleY };
+    }
     mapService.repositionAllMarkers();
   },
   { deep: true }
 );
+
+watch(activeLayerId, (newLayerId) => {
+  if (mapService && newLayerId) {
+    mapService.switchLayer(newLayerId);
+
+    // Sync debug bounds and transform values for active layer
+    const activeLayer = mapService.currentMapProperties.layers?.find(
+      (l) => l.id === newLayerId
+    );
+    const bounds = activeLayer?.bounds ?? mapService.currentMapProperties.bounds;
+    const [[minLat, minLng], [maxLat, maxLng]] = bounds as [[number, number], [number, number]];
+    debugBounds.minLat = minLat;
+    debugBounds.minLng = minLng;
+    debugBounds.maxLat = maxLat;
+    debugBounds.maxLng = maxLng;
+
+    const offset = activeLayer?.coordOffset ?? mapService.currentMapProperties.coordOffset ?? { x: 0, y: 0 };
+    const scale = activeLayer?.coordScale ?? mapService.currentMapProperties.coordScale ?? { x: 1, y: 1 };
+    debugTransform.offsetX = offset.x;
+    debugTransform.offsetY = offset.y;
+    debugTransform.scaleX = scale.x;
+    debugTransform.scaleY = scale.y;
+  }
+});
 
 onMounted(() => {
   es.em().on(EventType.MAPDATA, async (data: LiveMapDTO) => {
@@ -63,6 +99,9 @@ onMounted(() => {
       leafletMap.value = mapService.mapInstance;
       es.requestMapData(mapId);
 
+      layers.value = mapService.currentMapProperties.layers ?? [];
+      activeLayerId.value = mapService.activeLayerId;
+
       mapService.onReady = (bounds) => {
         const [[minLat, minLng], [maxLat, maxLng]] = bounds as [[number, number], [number, number]];
         debugBounds.minLat = minLat;
@@ -70,8 +109,11 @@ onMounted(() => {
         debugBounds.maxLat = maxLat;
         debugBounds.maxLng = maxLng;
 
-        const offset = mapService.currentMapProperties.coordOffset ?? { x: 0, y: 0 };
-        const scale = mapService.currentMapProperties.coordScale ?? { x: 1, y: 1 };
+        const activeLayer = mapService.currentMapProperties.layers?.find(
+          (l) => l.id === mapService.activeLayerId
+        );
+        const offset = activeLayer?.coordOffset ?? mapService.currentMapProperties.coordOffset ?? { x: 0, y: 0 };
+        const scale = activeLayer?.coordScale ?? mapService.currentMapProperties.coordScale ?? { x: 1, y: 1 };
         debugTransform.offsetX = offset.x;
         debugTransform.offsetY = offset.y;
         debugTransform.scaleX = scale.x;
@@ -123,8 +165,23 @@ function onKeydown(e: KeyboardEvent) {
     <Message v-if="errorMessage" severity="error" icon="pi pi-times-circle" class="mb-2">Server not found, or not
       sending data!</Message>
   </div>
-  <div v-if="!errorMessage" class="map-wrapper w-full">
-    <div id="map" class="w-full h-full"></div>
+  <div v-if="!errorMessage" class="map-wrapper w-full relative">
+    <div id="map" class="w-full h-full z-0"></div>
+
+    <!-- Floating Layer Switcher Overlay -->
+    <div
+      v-if="layers && layers.length > 0"
+      class="absolute top-4 right-4 z-[1000] bg-surface-0 dark:bg-surface-900 border border-surface p-2 rounded-border shadow-md flex flex-col gap-2 min-w-32"
+    >
+      <span class="text-xs font-semibold text-muted-color px-1">Map Layer</span>
+      <SelectButton
+        v-model="activeLayerId"
+        :options="layers"
+        optionLabel="displayName"
+        optionValue="id"
+        :allowEmpty="false"
+      />
+    </div>
   </div>
 
 <Dialog
