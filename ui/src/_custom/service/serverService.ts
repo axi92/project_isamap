@@ -139,6 +139,8 @@ export function resolveMapLogo(mapName: string): string {
       return 'Svartalfheim_WP.png';
     case 'Nyrandil':
       return 'Nyrandil.png';
+    case 'Genesis_WP':
+      return 'Genesis_WP.png';
     default:
       return 'ASA_Logo_transparent.png';
   }
