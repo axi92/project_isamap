@@ -41,7 +41,7 @@
         "eslint-plugin-vue": "^10.9.2",
         "jiti": "^2.5.1",
         "patch-package": "8.0.1",
-        "postcss": "^8.5.10",
+        "postcss": "^8.5.23",
         "prettier": "^3.2.5",
         "sass": "^1.55.0",
         "tailwindcss": "^3.4.6",
