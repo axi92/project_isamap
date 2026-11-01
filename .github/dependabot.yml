@@ -1,14 +1,28 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "/client"
+    directory: "/ui"
     schedule:
       interval: "weekly"
     # Enables only security updates:
     open-pull-requests-limit: 0
 
   - package-ecosystem: "npm"
-    directory: "/backend"
+    directory: "/api"
+    schedule:
+      interval: "weekly"
+    # Enables only security updates:
+    open-pull-requests-limit: 0
+
+  - package-ecosystem: "docker"
+    directory: "/ui"
+    schedule:
+      interval: "weekly"
+    # Enables only security updates:
+    open-pull-requests-limit: 0
+
+  - package-ecosystem: "docker"
+    directory: "/api"
     schedule:
       interval: "weekly"
     # Enables only security updates:
