@@ -8,7 +8,6 @@ const config = {
   },
   coverageDirectory: './coverage',
   testEnvironment: 'node',
-  transformIgnorePatterns: ['node_modules/(?!(lowdb|steno|uuid)/)'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },
