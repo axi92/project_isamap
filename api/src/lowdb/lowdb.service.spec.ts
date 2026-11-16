@@ -12,6 +12,7 @@ import { UserService } from '@/user/user.service';
 import { ServerEntry } from '@/server/server.interface';
 import { ServerCreateDto } from '@/server/dto/serverCreate.dto';
 import { testDiscordID1, userTestTemplate } from '@/user/user.constants';
+import type { MockInstance } from 'vitest';
 
 describe('LowdbService', () => {
   let dbService: LowdbService;
@@ -232,8 +233,8 @@ describe('LowdbService', () => {
 
 describe('LowdbService - onModuleDestroy', () => {
   let service: LowdbService;
-  let loggerSpyWarn: jest.SpyInstance;
-  let dbWriteSpy: jest.SpyInstance;
+  let loggerSpyWarn: MockInstance;
+  let dbWriteSpy: MockInstance;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -244,16 +245,16 @@ describe('LowdbService - onModuleDestroy', () => {
 
     // Mock the database initialization
     service['db'] = {
-      write: jest.fn(), // Mock the db.write method
+      write: vi.fn(), // Mock the db.write method
     } as never;
 
     // Spy on Logger.warn
-    loggerSpyWarn = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
-    dbWriteSpy = jest.spyOn(service['db'], 'write');
+    loggerSpyWarn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
+    dbWriteSpy = vi.spyOn(service['db'], 'write');
   });
 
   afterEach(() => {
-    jest.restoreAllMocks(); // Restore original implementations
+    vi.restoreAllMocks(); // Restore original implementations
   });
 
   it('should log two warn messages and call db.write', async () => {

@@ -27,7 +27,7 @@
         "./src/*"
       ]
     },
-    "types": ["node", "jest"]
+    "types": ["node", "vitest/globals"]
   },
   "exclude": [
     "node_modules",

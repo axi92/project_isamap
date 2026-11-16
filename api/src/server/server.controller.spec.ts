@@ -49,7 +49,7 @@ describe('ServerController', () => {
   });
 
   it('should process data and return undefined if response is not null', async () => {
-    jest.spyOn(serverService, 'processData').mockResolvedValueOnce(undefined);
+    vi.spyOn(serverService, 'processData').mockResolvedValueOnce(undefined);
     const dto = plainToInstance(LiveMapDTO, exampleServerData);
     const result = await controller.processData(dto);
     expect(result).toBeUndefined();
@@ -57,7 +57,7 @@ describe('ServerController', () => {
   });
 
   it('should throw NotFoundException if processData returns null', async () => {
-    jest.spyOn(serverService, 'processData').mockResolvedValueOnce(null);
+    vi.spyOn(serverService, 'processData').mockResolvedValueOnce(null);
     const dto = plainToInstance(LiveMapDTO, exampleServerData);
     await expect(controller.processData(dto)).rejects.toThrow(
       NotFoundException,
@@ -66,7 +66,7 @@ describe('ServerController', () => {
 
   it('should get data by public id and return response', () => {
     const id = { publicId: 'fixture_publicId123' } as publicIdDTO;
-    jest
+    vi
       .spyOn(serverService, 'getServerDataByPublicId')
       .mockReturnValueOnce(exampleServerData);
     const result = controller.getData(id);
@@ -78,7 +78,7 @@ describe('ServerController', () => {
 
   it('should throw NotFoundException if getServerDataByPublicId returns null', () => {
     const id = { publicId: 'fixture_publicId123' } as publicIdDTO;
-    jest
+    vi
       .spyOn(serverService, 'getServerDataByPublicId')
       .mockReturnValueOnce(null);
     expect(() => controller.getData(id)).toThrow(NotFoundException);
@@ -97,9 +97,9 @@ describe('ServerController', () => {
     } as ServerEntry;
     const mockReq = {
       user: { userId: 'owner' },
-      isAuthenticated: jest.fn().mockReturnValue(true),
+      isAuthenticated: vi.fn().mockReturnValue(true),
     } as unknown as Request;
-    jest.spyOn(serverService, 'create').mockResolvedValueOnce(mockResult);
+    vi.spyOn(serverService, 'create').mockResolvedValueOnce(mockResult);
     const result = await controller.createServer(serverCreateDto, mockReq);
     expect(result).toEqual(mockResult);
     expect(serverService.create).toHaveBeenCalledWith(serverCreateDto);
@@ -112,7 +112,7 @@ describe('ServerController', () => {
     } as ServerCreateDto;
     const mockReq = {
       user: { userId: 'anotherUser' },
-      isAuthenticated: jest.fn().mockReturnValue(true),
+      isAuthenticated: vi.fn().mockReturnValue(true),
     } as unknown as Request;
     await expect(
       controller.createServer(serverCreateDto, mockReq),

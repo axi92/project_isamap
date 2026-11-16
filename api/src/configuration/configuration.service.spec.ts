@@ -7,25 +7,26 @@ import {
   WARN_CONFIG_EMPTY,
 } from '@/configuration/configuration.constants';
 import { Logger } from '@nestjs/common';
+import type { MockInstance } from 'vitest';
 
 describe('ConfigurationServiceWithMissingConfig', () => {
   let mockConfigService: Partial<ConfigService>;
-  let loggerSpyWarn: jest.SpyInstance;
-  let loggerSpyError: jest.SpyInstance;
+  let loggerSpyWarn: MockInstance;
+  let loggerSpyError: MockInstance;
 
   beforeEach(async () => {
     mockConfigService = {
-      get: jest.fn().mockReturnValue(undefined), // Simulate missing config values
+      get: vi.fn().mockReturnValue(undefined), // Simulate missing config values
     };
 
     // Spy on Logger methods
-    loggerSpyWarn = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
-    loggerSpyError = jest.spyOn(Logger.prototype, 'error').mockImplementation();
+    loggerSpyWarn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
+    loggerSpyError = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => {});
     expect.hasAssertions();
   });
 
   afterEach(() => {
-    jest.restoreAllMocks(); // Restore original Logger methods
+    vi.restoreAllMocks(); // Restore original Logger methods
   });
 
   it('should log a warning and an error on empty config', async () => {
@@ -54,7 +55,7 @@ describe('ConfigurationServiceWithValidConfig', () => {
 
   beforeAll(async () => {
     mockConfigService = {
-      get: jest.fn((key: string) => {
+      get: vi.fn((key: string) => {
         const mockConfig = {
           [ENV_VARS.DISCORD_CLIENT_ID]: clientID,
           [ENV_VARS.DISCORD_CLIENT_SECRET]: secret,
