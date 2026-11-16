@@ -66,9 +66,9 @@ describe('ServerController', () => {
 
   it('should get data by public id and return response', () => {
     const id = { publicId: 'fixture_publicId123' } as publicIdDTO;
-    vi
-      .spyOn(serverService, 'getServerDataByPublicId')
-      .mockReturnValueOnce(exampleServerData);
+    vi.spyOn(serverService, 'getServerDataByPublicId').mockReturnValueOnce(
+      exampleServerData,
+    );
     const result = controller.getData(id);
     expect(result).toEqual(exampleServerData);
     expect(serverService.getServerDataByPublicId).toHaveBeenCalledWith(
@@ -78,9 +78,9 @@ describe('ServerController', () => {
 
   it('should throw NotFoundException if getServerDataByPublicId returns null', () => {
     const id = { publicId: 'fixture_publicId123' } as publicIdDTO;
-    vi
-      .spyOn(serverService, 'getServerDataByPublicId')
-      .mockReturnValueOnce(null);
+    vi.spyOn(serverService, 'getServerDataByPublicId').mockReturnValueOnce(
+      null,
+    );
     expect(() => controller.getData(id)).toThrow(NotFoundException);
   });
 

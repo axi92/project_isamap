@@ -249,7 +249,9 @@ describe('LowdbService - onModuleDestroy', () => {
     } as never;
 
     // Spy on Logger.warn
-    loggerSpyWarn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
+    loggerSpyWarn = vi
+      .spyOn(Logger.prototype, 'warn')
+      .mockImplementation(() => {});
     dbWriteSpy = vi.spyOn(service['db'], 'write');
   });
 

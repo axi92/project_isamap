@@ -20,8 +20,12 @@ describe('ConfigurationServiceWithMissingConfig', () => {
     };
 
     // Spy on Logger methods
-    loggerSpyWarn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
-    loggerSpyError = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => {});
+    loggerSpyWarn = vi
+      .spyOn(Logger.prototype, 'warn')
+      .mockImplementation(() => {});
+    loggerSpyError = vi
+      .spyOn(Logger.prototype, 'error')
+      .mockImplementation(() => {});
     expect.hasAssertions();
   });
 
