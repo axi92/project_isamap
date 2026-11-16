@@ -15,7 +15,7 @@ import {
 import { ServerService } from './server.service';
 import { LiveMapDTO, publicIdDTO } from './dto/server.dto';
 import { ServerCreateDto } from './dto/serverCreate.dto';
-import { Request } from 'express';
+import type { Request } from 'express';
 import { UserCreatDto } from '@/user/dto/userCreate.dto';
 import { ConfigurationService } from '@/configuration/configuration.service';
 

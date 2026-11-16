@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { UserCreatDto } from '@/user/dto/userCreate.dto';
 import { ConfigurationService } from '@/configuration/configuration.service';
 // import { sign } from 'jsonwebtoken';
